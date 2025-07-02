@@ -23,9 +23,9 @@ export const Navbar = ({
   const { language, setLanguage, currency, setCurrency, t } = useLanguage();
 
   const breadcrumbSteps = [
-    { number: 1, title: "Classe do serviço", active: currentStep >= 1 },
-    { number: 2, title: "Dados do Passageiro", active: currentStep >= 2 },
-    { number: 3, title: "Checkout", active: currentStep >= 3 }
+    { number: 1, title: t('nav.serviceClass'), active: currentStep >= 1 },
+    { number: 2, title: t('nav.passengerData'), active: currentStep >= 2 },
+    { number: 3, title: t('nav.checkout'), active: currentStep >= 3 }
   ];
 
   return (

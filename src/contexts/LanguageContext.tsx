@@ -46,7 +46,37 @@ const translations = {
     'currency.dollar': 'DÓLAR',
     'hero.title': 'SEU CHAUFFEUR',
     'hero.subtitle': 'DE LUXO',
-    'hero.description': 'Experimente o mais alto padrão em transporte executivo premium'
+    'hero.description': 'Experimente o mais alto padrão em transporte executivo premium',
+    // VehicleSelection page
+    'vehicle.pickup': 'COLETA',
+    'vehicle.arrival': 'CHEGADA',
+    'vehicle.estimatedAt': 'ESTIMADA ÀS',
+    'vehicle.estimatedTime': 'Tempo estimado',
+    'vehicle.priceFactors': 'Fatores considerados no preço',
+    'vehicle.from': 'DE',
+    'vehicle.to': 'PARA',
+    'vehicle.priceFrom': 'VALOR A PARTIR DE',
+    'vehicle.priceNote': '*Preços podem variar conforme categoria selecionada e fatores da viagem',
+    'vehicle.up_to': 'até',
+    'vehicle.passengers': 'passageiros',
+    'vehicle.mediumBags': 'malas de tamanho médio',
+    'vehicle.largeBags': 'malas de tamanho grande',
+    'vehicle.totalPrice': 'O preço total inclui impostos, pedágio e outros encargos.',
+    'vehicle.benefitsTitle': 'Está incluso em todas as classes:',
+    'vehicle.benefit1': 'Cancelamento gratuito até 2 horas antes da corrida',
+    'vehicle.benefit2': 'Encontro e recepção',
+    'vehicle.benefit3': 'Amenities exclusivos',
+    'vehicle.benefit4': '15 minutos gratuitos de tempo de espera',
+    'vehicle.observationsTitle': 'Observações:',
+    'vehicle.observationsText': 'As capacidades de hóspedes/bagagens devem ser respeitadas por razões de segurança. Se não tiver certeza, selecione uma classe maior, pois os motoristas podem recusar o serviço quando elas forem excedidas.',
+    'vehicle.terms': 'Ver termos e condições',
+    'vehicle.continue': 'CONTINUAR',
+    // Breadcrumb navigation
+    'nav.serviceClass': 'Classe do serviço',
+    'nav.passengerData': 'Dados do Passageiro',
+    'nav.checkout': 'Checkout',
+    // Date formatting
+    'date.of': 'DE'
   },
   es: {
     'quote.title': 'COTIZACIÓN POR DESTINO',
@@ -81,7 +111,37 @@ const translations = {
     'currency.dollar': 'DÓLAR',
     'hero.title': 'TU CHOFER',
     'hero.subtitle': 'DE LUJO',
-    'hero.description': 'Experimenta el más alto estándar en transporte ejecutivo premium'
+    'hero.description': 'Experimenta el más alto estándar en transporte ejecutivo premium',
+    // VehicleSelection page
+    'vehicle.pickup': 'RECOGIDA',
+    'vehicle.arrival': 'LLEGADA',
+    'vehicle.estimatedAt': 'ESTIMADA A LAS',
+    'vehicle.estimatedTime': 'Tiempo estimado',
+    'vehicle.priceFactors': 'Factores considerados en el precio',
+    'vehicle.from': 'DESDE',
+    'vehicle.to': 'HASTA',
+    'vehicle.priceFrom': 'PRECIO DESDE',
+    'vehicle.priceNote': '*Los precios pueden variar según la categoría seleccionada y factores del viaje',
+    'vehicle.up_to': 'hasta',
+    'vehicle.passengers': 'pasajeros',
+    'vehicle.mediumBags': 'maletas de tamaño mediano',
+    'vehicle.largeBags': 'maletas de tamaño grande',
+    'vehicle.totalPrice': 'El precio total incluye impuestos, peaje y otros cargos.',
+    'vehicle.benefitsTitle': 'Incluido en todas las clases:',
+    'vehicle.benefit1': 'Cancelación gratuita hasta 2 horas antes del viaje',
+    'vehicle.benefit2': 'Encuentro y recepción',
+    'vehicle.benefit3': 'Amenities exclusivos',
+    'vehicle.benefit4': '15 minutos gratuitos de tiempo de espera',
+    'vehicle.observationsTitle': 'Observaciones:',
+    'vehicle.observationsText': 'Las capacidades de huéspedes/equipajes deben respetarse por razones de seguridad. Si no está seguro, seleccione una clase mayor, ya que los conductores pueden rechazar el servicio cuando se excedan.',
+    'vehicle.terms': 'Ver términos y condiciones',
+    'vehicle.continue': 'CONTINUAR',
+    // Breadcrumb navigation
+    'nav.serviceClass': 'Clase de servicio',
+    'nav.passengerData': 'Datos del Pasajero',
+    'nav.checkout': 'Checkout',
+    // Date formatting
+    'date.of': 'DE'
   },
   en: {
     'quote.title': 'QUOTE BY DESTINATION',
@@ -116,7 +176,37 @@ const translations = {
     'currency.dollar': 'DOLLAR',
     'hero.title': 'YOUR LUXURY',
     'hero.subtitle': 'CHAUFFEUR',
-    'hero.description': 'Experience the highest standard in premium executive transportation'
+    'hero.description': 'Experience the highest standard in premium executive transportation',
+    // VehicleSelection page
+    'vehicle.pickup': 'PICKUP',
+    'vehicle.arrival': 'ARRIVAL',
+    'vehicle.estimatedAt': 'ESTIMATED AT',
+    'vehicle.estimatedTime': 'Estimated time',
+    'vehicle.priceFactors': 'Price factors considered',
+    'vehicle.from': 'FROM',
+    'vehicle.to': 'TO',
+    'vehicle.priceFrom': 'PRICE FROM',
+    'vehicle.priceNote': '*Prices may vary based on selected category and trip factors',
+    'vehicle.up_to': 'up to',
+    'vehicle.passengers': 'passengers',
+    'vehicle.mediumBags': 'medium-sized bags',
+    'vehicle.largeBags': 'large-sized bags',
+    'vehicle.totalPrice': 'Total price includes taxes, tolls and other charges.',
+    'vehicle.benefitsTitle': 'Included in all classes:',
+    'vehicle.benefit1': 'Free cancellation up to 2 hours before the ride',
+    'vehicle.benefit2': 'Meet and greet',
+    'vehicle.benefit3': 'Exclusive amenities',
+    'vehicle.benefit4': '15 minutes free waiting time',
+    'vehicle.observationsTitle': 'Observations:',
+    'vehicle.observationsText': 'Guest/baggage capacities must be respected for safety reasons. If unsure, select a larger class as drivers may refuse service when exceeded.',
+    'vehicle.terms': 'View terms and conditions',
+    'vehicle.continue': 'CONTINUE',
+    // Breadcrumb navigation
+    'nav.serviceClass': 'Service Class',
+    'nav.passengerData': 'Passenger Data',
+    'nav.checkout': 'Checkout',
+    // Date formatting
+    'date.of': 'OF'
   }
 };
 

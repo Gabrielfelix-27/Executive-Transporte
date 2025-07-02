@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock } from "lucide-react";
-import { AddressAutocomplete } from "@/components/AddressAutocomplete";
+import { MapPin, Navigation, Calendar, Clock } from "lucide-react";
+import { GoogleMapsPlacePicker } from "@/components/GoogleMapsPlacePicker";
 import { calculateTripPrice } from "@/utils/locationUtils";
+import { isGoogleMapsConfigured } from "@/config/maps";
 
 export const QuoteForm = () => {
   const navigate = useNavigate();
@@ -12,6 +13,9 @@ export const QuoteForm = () => {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [isCalculating, setIsCalculating] = useState(false);
+
+  // Verificar se Google Maps está configurado
+  const useGoogleMaps = isGoogleMapsConfigured();
 
   // Preencher data e horário automaticamente
   useEffect(() => {
@@ -48,10 +52,11 @@ export const QuoteForm = () => {
 
       // Preparar dados para navegação
       const tripData = {
-        pickup,
-        destination,
+        pickup: pickup.trim(),
+        destination: destination.trim(),
         date,
         time,
+        passengers: 1,
         distance: executivoData.distance,
         estimatedTime: executivoData.estimatedTime,
         priceFactors: executivoData.priceFactors,
@@ -101,96 +106,150 @@ export const QuoteForm = () => {
     }
   };
 
-  const formatDate = (dateString: string): string => {
-    if (!dateString) return '';
-    
-    const date = new Date(dateString + 'T00:00:00');
-    const weekdays = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
-    const months = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 
-                   'jul', 'ago', 'set', 'out', 'nov', 'dez'];
-    
-    const weekday = weekdays[date.getDay()];
-    const day = date.getDate();
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-    
-    return `${weekday}, ${day} ${month}, ${year}`;
-  };
-
-  const formatTime = (timeString: string): string => {
-    if (!timeString) return '';
-    return `${timeString} GMT-3 Horário de Brasília`;
-  };
-
   return (
-    <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-sm mx-auto quote-form-container">
-      <h2 className="text-lg font-bold text-gray-800 mb-6 text-center">
-        COTAÇÃO POR DESTINO
-      </h2>
+    <div className="bg-white rounded-none shadow-lg p-8 w-full max-w-md mx-auto">
+      {/* Cabeçalho */}
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 tracking-wide">
+          SEU CHAUFFEUR DE LUXO
+        </h2>
+        <div className="flex justify-center mt-4 space-x-2">
+          <button className="px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-none">
+            POR DESTINO
+          </button>
+          <button className="px-6 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-none">
+            POR HORA
+          </button>
+        </div>
+      </div>
       
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Campo Origem */}
-        <AddressAutocomplete
-          placeholder="Digite o endereço de origem"
-          value={pickup}
-          onChange={setPickup}
-          icon="pickup"
-        />
+        <div className="space-y-2">
+          <label className="flex items-center text-sm font-medium text-gray-600 mb-2">
+            <MapPin className="w-4 h-4 mr-2" />
+            Origem
+          </label>
+          {useGoogleMaps ? (
+            <GoogleMapsPlacePicker
+              id="pickup-field"
+              placeholder="Endereço, aeroporto, hotel"
+              value={pickup}
+              onChange={(newValue, place) => {
+                console.log('🏠 Pickup mudou:', newValue);
+                setPickup(newValue);
+                
+                // Se é uma seleção do Google Maps, salvar coordenadas
+                if (place && place.geometry && place.geometry.location) {
+                  const { cacheSelectedAddressCoordinates } = require('@/utils/locationUtils');
+                  const coords = {
+                    lat: typeof place.geometry.location.lat === 'function' 
+                      ? place.geometry.location.lat() 
+                      : place.geometry.location.lat,
+                    lng: typeof place.geometry.location.lng === 'function' 
+                      ? place.geometry.location.lng() 
+                      : place.geometry.location.lng
+                  };
+                  cacheSelectedAddressCoordinates(newValue, coords);
+                }
+              }}
+              className="w-full"
+            />
+          ) : (
+            <input
+              type="text"
+              placeholder="Endereço, aeroporto, hotel"
+              value={pickup}
+              onChange={(e) => setPickup(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700 placeholder-gray-400"
+            />
+          )}
+        </div>
 
         {/* Campo Destino */}
-        <AddressAutocomplete
-          placeholder="Digite o endereço de destino"
-          value={destination}
-          onChange={setDestination}
-          icon="destination"
-        />
+        <div className="space-y-2">
+          <label className="flex items-center text-sm font-medium text-gray-600 mb-2">
+            <Navigation className="w-4 h-4 mr-2" />
+            Destino
+          </label>
+          {useGoogleMaps ? (
+            <GoogleMapsPlacePicker
+              id="destination-field"
+              placeholder="Endereço, aeroporto, hotel"
+              value={destination}
+              onChange={(newValue, place) => {
+                console.log('🎯 Destination mudou:', newValue);
+                setDestination(newValue);
+                
+                // Se é uma seleção do Google Maps, salvar coordenadas
+                if (place && place.geometry && place.geometry.location) {
+                  const { cacheSelectedAddressCoordinates } = require('@/utils/locationUtils');
+                  const coords = {
+                    lat: typeof place.geometry.location.lat === 'function' 
+                      ? place.geometry.location.lat() 
+                      : place.geometry.location.lat,
+                    lng: typeof place.geometry.location.lng === 'function' 
+                      ? place.geometry.location.lng() 
+                      : place.geometry.location.lng
+                  };
+                  cacheSelectedAddressCoordinates(newValue, coords);
+                }
+              }}
+              className="w-full"
+            />
+          ) : (
+            <input
+              type="text"
+              placeholder="Endereço, aeroporto, hotel"
+              value={destination}
+              onChange={(e) => setDestination(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700 placeholder-gray-400"
+            />
+          )}
+        </div>
 
         {/* Campo Data */}
-        <div className="form-field">
-          <div className="flex items-center">
-            <Calendar className="h-5 w-5 text-blue-600 mr-3 flex-shrink-0" />
-            <div className="flex-1">
-              <label className="text-xs text-gray-500 block mb-1">Data</label>
-              <input
-                type="date"
-                className="form-input w-full"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                min={new Date().toISOString().split('T')[0]}
-              />
-            </div>
-          </div>
+        <div className="space-y-2">
+          <label className="flex items-center text-sm font-medium text-gray-600 mb-2">
+            <Calendar className="w-4 h-4 mr-2" />
+            Data
+          </label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            min={new Date().toISOString().split('T')[0]}
+            className="w-full px-4 py-3 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700"
+          />
         </div>
 
         {/* Campo Horário */}
-        <div className="form-field">
-          <div className="flex items-center">
-            <Clock className="h-5 w-5 text-purple-600 mr-3 flex-shrink-0" />
-            <div className="flex-1">
-              <label className="text-xs text-gray-500 block mb-1">Horário</label>
-              <input
-                type="time"
-                className="form-input w-full"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-              />
-            </div>
-          </div>
+        <div className="space-y-2">
+          <label className="flex items-center text-sm font-medium text-gray-600 mb-2">
+            <Clock className="w-4 h-4 mr-2" />
+            Horário
+          </label>
+          <input
+            type="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            className="w-full px-4 py-3 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700"
+          />
         </div>
 
         {/* Botão de Envio */}
         <Button 
           type="submit" 
-          className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-6 rounded-lg mt-6 transition-all duration-200 hover:scale-105"
+          className="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-6 rounded-none mt-8 transition-all duration-200 text-lg"
           disabled={isCalculating || !pickup || !destination}
         >
           {isCalculating ? (
-            <>
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-              Calculando preços...
-            </>
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+              Calculando...
+            </div>
           ) : (
-            'RESERVAR'
+            'RESERVE'
           )}
         </Button>
       </form>

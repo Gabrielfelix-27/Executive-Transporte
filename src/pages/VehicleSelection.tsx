@@ -15,6 +15,7 @@ interface QuoteData {
   passengers: number;
   calculatedDistance?: number;
   estimatedTime?: string;
+  estimatedTimeMinutes?: number;
   priceFactors?: string[];
 }
 
@@ -37,22 +38,53 @@ interface VehicleCategory {
 const VehicleSelection = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { t, formatCurrency } = useLanguage();
+  const { t, formatCurrency, language } = useLanguage();
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleCategory | null>(null);
 
   // Pegar dados da cotação da navegação anterior
   const tripData = location.state || {};
   
+  // Função para formatar tempo estimado
+  const formatEstimatedTime = (minutes: number): string => {
+    if (!minutes) return "";
+    
+    if (minutes < 60) {
+      return `${minutes} mins`;
+    } else {
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      
+      if (remainingMinutes === 0) {
+        return `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
+      } else {
+        return `${hours} ${hours === 1 ? 'hour' : 'hours'} ${remainingMinutes} mins`;
+      }
+    }
+  };
+
+  // Debug: Log dos dados recebidos
+  console.log('🚗 Dados recebidos no VehicleSelection:', tripData);
+
   const quoteData: QuoteData = {
-    pickup: tripData.pickup || "Endereço de origem",
-    destination: tripData.destination || "Endereço de destino", 
+    pickup: tripData.pickup || "Endereço de origem não informado",
+    destination: tripData.destination || "Endereço de destino não informado", 
     date: tripData.date || new Date().toISOString().split('T')[0],
     time: tripData.time || "14:30",
-    passengers: 1,
-    calculatedDistance: tripData.distance,
-    estimatedTime: tripData.estimatedTime,
+    passengers: tripData.passengers || 1,
+    calculatedDistance: tripData.distance, // Corrigido: vem como 'distance' do QuoteForm
+    estimatedTimeMinutes: tripData.estimatedTime, // Corrigido: vem como 'estimatedTime' em minutos
+    estimatedTime: tripData.estimatedTime ? formatEstimatedTime(tripData.estimatedTime) : undefined,
     priceFactors: tripData.priceFactors
   };
+
+  // Debug melhorado: verificar se os dados estão chegando corretamente
+  console.log('🔍 [DEBUG] QuoteData processado:', {
+    pickup: quoteData.pickup,
+    destination: quoteData.destination,
+    distance: quoteData.calculatedDistance,
+    estimatedTime: quoteData.estimatedTime,
+    estimatedTimeMinutes: quoteData.estimatedTimeMinutes
+  });
 
   // Converter objeto categories para array no formato esperado
   const getVehicleImage = (categoryKey: string) => {
@@ -81,25 +113,73 @@ const VehicleSelection = () => {
     }
   })) : [];
 
-  // Função para formatar data
+  // Função para formatar data multilíngue
   const formatDateDisplay = (dateString: string) => {
     if (!dateString) return "";
     const date = new Date(dateString + 'T00:00:00');
-    const diasSemana = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
-    const meses = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
     
-    const diaSemana = diasSemana[date.getDay()];
-    const dia = date.getDate();
-    const mes = meses[date.getMonth()];
-    const ano = date.getFullYear();
+    const weekdaysTranslations = {
+      pt: ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'],
+      es: ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'],
+      en: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+    };
     
-    return `${dia} DE ${mes}, ${ano}`;
+    const monthsTranslations = {
+      pt: ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'],
+      es: ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'],
+      en: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+    };
+    
+    const weekdays = weekdaysTranslations[language as keyof typeof weekdaysTranslations];
+    const months = monthsTranslations[language as keyof typeof monthsTranslations];
+    
+    const weekday = weekdays[date.getDay()];
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    
+    return `${day} ${t('date.of')} ${month}, ${year}`;
   };
 
   // Função para formatar horário
   const formatTimeDisplay = (timeString: string) => {
     if (!timeString) return "";
-    return `${timeString} PM (GMT-3)`;
+    return `${timeString} (GMT-3)`;
+  };
+
+  // Função para calcular horário de chegada estimado
+  const calculateArrivalTime = (departureTime: string, estimatedDurationMinutes?: number) => {
+    if (!departureTime || !estimatedDurationMinutes || estimatedDurationMinutes === 0) {
+      console.log('🕐 Dados insuficientes para calcular chegada:', { departureTime, estimatedDurationMinutes });
+      return "Calculando...";
+    }
+    
+    try {
+      // Parse do horário de saída (formato HH:MM)
+      const [hours, minutes] = departureTime.split(':').map(Number);
+      
+      if (isNaN(hours) || isNaN(minutes)) {
+        console.warn('⚠️ Horário de partida inválido:', departureTime);
+        return "Calculando...";
+      }
+      
+      const departureDate = new Date();
+      departureDate.setHours(hours, minutes, 0, 0);
+      
+      // Calcular horário de chegada usando os minutos diretamente
+      const arrivalDate = new Date(departureDate.getTime() + estimatedDurationMinutes * 60 * 1000);
+      
+      // Formatar como HH:MM
+      const arrivalHours = arrivalDate.getHours().toString().padStart(2, '0');
+      const arrivalMinutes = arrivalDate.getMinutes().toString().padStart(2, '0');
+      
+      const result = `${arrivalHours}:${arrivalMinutes}`;
+      console.log('🕐 Horário de chegada calculado:', result);
+      return result;
+    } catch (error) {
+      console.error('❌ Erro ao calcular horário de chegada:', error);
+      return "Calculando...";
+    }
   };
 
   const handleContinue = () => {
@@ -117,19 +197,19 @@ const VehicleSelection = () => {
   const benefitsIncluded = [
     {
       icon: <Gift className="h-5 w-5" />,
-      title: "Cancelamento gratuito até 2 horas antes da corrida"
+      title: t('vehicle.benefit1')
     },
     {
       icon: <UserCheck className="h-5 w-5" />,
-      title: "Encontro e recepção"
+      title: t('vehicle.benefit2')
     },
     {
       icon: <Gift className="h-5 w-5" />,
-      title: "Amenities exclusivos"
+      title: t('vehicle.benefit3')
     },
     {
       icon: <Clock3 className="h-5 w-5" />,
-      title: "15 minutos gratuitos de tempo de espera"
+      title: t('vehicle.benefit4')
     }
   ];
 
@@ -148,23 +228,23 @@ const VehicleSelection = () => {
               <div>
                 <div className="flex items-center mb-2">
                   <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
-                  <span className="text-sm font-medium text-gray-600">PICKUP</span>
+                  <span className="text-sm font-medium text-gray-600">{t('vehicle.pickup')}</span>
                 </div>
                 <div className="text-sm font-bold text-gray-900 mb-1">
                   {formatDateDisplay(quoteData.date)}, {formatTimeDisplay(quoteData.time)}
                 </div>
-                <div className="text-sm text-gray-600 mb-2">ARRIVAL</div>
+                <div className="text-sm text-gray-600 mb-2">{t('vehicle.arrival')}</div>
                 <div className="text-sm text-gray-600">
-                  ESTIMATED AT 06:00 PM (GMT-3) • {quoteData.calculatedDistance ? Math.round(quoteData.calculatedDistance) : 25} KM
+                  {t('vehicle.estimatedAt')} {formatTimeDisplay(calculateArrivalTime(quoteData.time, quoteData.estimatedTimeMinutes))} • {quoteData.calculatedDistance && quoteData.calculatedDistance > 0 ? `${quoteData.calculatedDistance.toFixed(1)} KM` : 'Calculando distância...'}
                 </div>
                 {quoteData.estimatedTime && (
                   <div className="text-sm text-blue-600 font-medium mt-1">
-                    ⏱️ Tempo estimado: {quoteData.estimatedTime}
+                    ⏱️ {t('vehicle.estimatedTime')}: {quoteData.estimatedTime}
                   </div>
                 )}
                 {quoteData.priceFactors && quoteData.priceFactors.length > 0 && (
                   <div className="text-xs text-gray-500 mt-2">
-                    <div className="font-medium mb-1">📊 Fatores considerados no preço:</div>
+                    <div className="font-medium mb-1">📊 {t('vehicle.priceFactors')}:</div>
                     <div className="grid gap-1">
                       {quoteData.priceFactors.map((factor, index) => (
                         <div key={index} className="flex items-center">
@@ -177,22 +257,56 @@ const VehicleSelection = () => {
                 )}
               </div>
 
-              {/* Destination */}
+              {/* Route Information */}
               <div>
-                <div className="text-sm font-medium text-gray-600 mb-2">DE</div>
-                <div className="text-sm font-bold text-gray-900 mb-2">{quoteData.pickup}</div>
-                <div className="text-sm font-medium text-gray-600 mb-2">PARA</div>
-                <div className="text-sm font-bold text-gray-900">{quoteData.destination}</div>
+                <div className="mb-4">
+                  <div className="text-sm font-medium text-gray-600 mb-2">{t('vehicle.from')}</div>
+                  <div className="text-sm font-bold text-gray-900 mb-2 p-2 bg-green-50 border-l-4 border-green-500 rounded" title={`Origem: ${quoteData.pickup}`}>
+                    📍 {quoteData.pickup || 'Origem não informada'}
+                  </div>
+                </div>
+                
+                <div className="mb-4">
+                  <div className="text-sm font-medium text-gray-600 mb-2">{t('vehicle.to')}</div>
+                  <div className="text-sm font-bold text-gray-900 p-2 bg-blue-50 border-l-4 border-blue-500 rounded" title={`Destino: ${quoteData.destination}`}>
+                    🎯 {quoteData.destination || 'Destino não informado'}
+                  </div>
+                </div>
+                
+                {/* Route Summary */}
+                <div className="text-xs text-gray-600 mt-4 p-3 bg-gray-50 rounded-lg border">
+                  <div className="font-medium mb-2">📊 Resumo da Viagem:</div>
+                  <div className="grid gap-1">
+                    <div>📏 Distância: {quoteData.calculatedDistance ? `${quoteData.calculatedDistance.toFixed(1)} KM` : 'Calculando...'}</div>
+                    <div>⏱️ Tempo estimado: {quoteData.estimatedTime || 'Calculando...'}</div>
+                    {quoteData.priceFactors && quoteData.priceFactors.length > 0 && (
+                      <div>💰 Fatores: {quoteData.priceFactors.join(', ')}</div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
 
             <div className="mt-4 pt-4 border-t">
               <div className="text-sm text-gray-600 mb-3">
-                💰 VALOR A PARTIR DE: <span className="text-2xl font-bold text-green-600">{formatCurrency(Math.min(...categories.map(c => c.price || 184)))}</span>
+                💰 {t('vehicle.priceFrom')}: 
+                <span className="text-2xl font-bold text-green-600">
+                  {categories.length > 0 
+                    ? formatCurrency(Math.min(...categories.map(c => c.price || 184))) 
+                    : formatCurrency(184)
+                  }
+                </span>
               </div>
               <div className="text-xs text-gray-500">
-                *Preços podem variar conforme categoria selecionada e fatores da viagem
+                {t('vehicle.priceNote')}
               </div>
+              
+              {/* Debug das categorias */}
+              {categories.length === 0 && (
+                <div className="text-xs text-orange-600 mt-2 p-2 bg-orange-50 rounded">
+                  ⚠️ Nenhuma categoria de veículo carregada. Verifique os dados recebidos.
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -231,15 +345,15 @@ const VehicleSelection = () => {
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center text-sm text-gray-600">
                     <Users className="h-4 w-4 mr-2" />
-                    até {category.capacity} passageiros
+                    {t('vehicle.up_to')} {category.capacity} {t('vehicle.passengers')}
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
                     <Luggage className="h-4 w-4 mr-2" />
-                    até 3 malas de tamanho médio
+                    {t('vehicle.up_to')} 3 {t('vehicle.mediumBags')}
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
                     <Luggage className="h-4 w-4 mr-2" />
-                    até 2 malas de tamanho grande
+                    {t('vehicle.up_to')} 2 {t('vehicle.largeBags')}
                   </div>
                 </div>
 
@@ -249,7 +363,7 @@ const VehicleSelection = () => {
                     {formatCurrency(category.price)}
                   </div>
                   <div className="text-xs text-gray-500">
-                    O preço total inclui impostos, pedágio e outros encargos.
+                    {t('vehicle.totalPrice')}
                   </div>
                 </div>
               </CardContent>
@@ -260,7 +374,7 @@ const VehicleSelection = () => {
         {/* Benefits Included */}
         <Card className="mb-8">
           <CardContent className="p-6">
-            <h3 className="font-bold text-gray-900 mb-4">Está incluso em todas as classes:</h3>
+            <h3 className="font-bold text-gray-900 mb-4">{t('vehicle.benefitsTitle')}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {benefitsIncluded.map((benefit, index) => (
                 <div key={index} className="flex items-center text-sm text-gray-600">
@@ -276,14 +390,12 @@ const VehicleSelection = () => {
 
         {/* Observations */}
         <div className="mb-8">
-          <h4 className="font-bold text-gray-900 mb-2">Observações:</h4>
+          <h4 className="font-bold text-gray-900 mb-2">{t('vehicle.observationsTitle')}</h4>
           <p className="text-sm text-gray-600">
-            As capacidades de hóspedes/bagagens devem ser respeitadas por razões de segurança. 
-            Se não tiver certeza, selecione uma classe maior, pois os motoristas podem recusar 
-            o serviço quando elas forem excedidas.
+            {t('vehicle.observationsText')}
           </p>
           <button className="text-sm text-blue-600 hover:underline mt-2">
-            Ver termos e condições
+            {t('vehicle.terms')}
           </button>
         </div>
 
@@ -293,7 +405,7 @@ const VehicleSelection = () => {
           disabled={!selectedVehicle}
           className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg font-medium"
         >
-          CONTINUAR
+          {t('vehicle.continue')}
         </Button>
       </div>
     </div>
