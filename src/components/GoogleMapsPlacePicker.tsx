@@ -8,7 +8,7 @@ interface GoogleMapsPlacePickerProps {
   id: string;
   placeholder?: string;
   value: string;
-  onChange: (value: string, place?: google.maps.places.PlaceResult) => void;
+  onChange: (value: string, place?: any) => void;
   className?: string;
 }
 
@@ -20,8 +20,9 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
   className = ""
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const autocompleteRef = useRef<any>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const listenersRef = useRef<any[]>([]);
 
   useEffect(() => {
     if (!isGoogleMapsConfigured()) {
@@ -31,7 +32,7 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
 
     // Aguardar o carregamento do Google Maps
     const checkGoogleMaps = () => {
-      if (window.google && window.google.maps && window.google.maps.places) {
+      if ((window as any).google && (window as any).google.maps && (window as any).google.maps.places) {
         setIsLoaded(true);
         initializeAutocomplete();
       } else {
@@ -42,17 +43,35 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
     checkGoogleMaps();
 
     return () => {
-      if (autocompleteRef.current) {
-        google.maps.event.clearInstanceListeners(autocompleteRef.current);
-      }
+      cleanup();
     };
   }, []);
 
+  const cleanup = () => {
+    // Limpar todos os listeners
+    listenersRef.current.forEach(listener => {
+      if (listener && (window as any).google?.maps?.event) {
+        (window as any).google.maps.event.removeListener(listener);
+      }
+    });
+    listenersRef.current = [];
+
+    // Limpar autocomplete
+    if (autocompleteRef.current && (window as any).google?.maps?.event) {
+      (window as any).google.maps.event.clearInstanceListeners(autocompleteRef.current);
+      autocompleteRef.current = null;
+    }
+  };
+
   const initializeAutocomplete = () => {
-    if (!inputRef.current || !window.google?.maps?.places) return;
+    if (!inputRef.current || !(window as any).google?.maps?.places) return;
 
     try {
+      // Limpar instância anterior se existir
+      cleanup();
+
       // Configuração do autocomplete
+      const google = (window as any).google;
       const autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
         types: ['establishment', 'geocode'],
         componentRestrictions: { country: 'BR' },
@@ -62,7 +81,7 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
       autocompleteRef.current = autocomplete;
 
       // Listener para quando uma opção é selecionada
-      autocomplete.addListener('place_changed', () => {
+      const placeChangedListener = autocomplete.addListener('place_changed', () => {
         const place = autocomplete.getPlace();
         
         if (place && (place.formatted_address || place.name)) {
@@ -77,6 +96,9 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
         }
       });
 
+      // Armazenar listener para limpeza posterior
+      listenersRef.current.push(placeChangedListener);
+
       console.log(`✅ ${id} - Autocomplete inicializado com sucesso`);
     } catch (error) {
       console.error(`❌ ${id} - Erro ao inicializar autocomplete:`, error);
@@ -84,8 +106,24 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation(); // Impedir propagação do evento
     const newValue = e.target.value;
     onChange(newValue);
+  };
+
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.stopPropagation(); // Impedir propagação do evento
+    console.log(`🔍 ${id} - Input focado`);
+  };
+
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.stopPropagation(); // Impedir propagação do evento
+    console.log(`👋 ${id} - Input desfocado`);
+  };
+
+  const handleInputClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    e.stopPropagation(); // Impedir propagação do evento
+    console.log(`👆 ${id} - Input clicado`);
   };
 
   if (!isGoogleMapsConfigured()) {
@@ -95,13 +133,16 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={handleInputChange}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
+        onClick={handleInputClick}
         className={`w-full px-4 py-3 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700 placeholder-gray-400 ${className}`}
       />
     );
   }
 
   return (
-    <div className="relative">
+    <div className="relative" onClick={(e) => e.stopPropagation()}>
       <input
         ref={inputRef}
         type="text"
@@ -109,11 +150,14 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={handleInputChange}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
+        onClick={handleInputClick}
         className={`w-full px-4 py-3 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700 placeholder-gray-400 ${className}`}
         autoComplete="off"
       />
       {!isLoaded && (
-        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
         </div>
       )}
