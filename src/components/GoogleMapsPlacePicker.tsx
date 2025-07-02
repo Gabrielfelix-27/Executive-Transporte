@@ -12,6 +12,49 @@ interface GoogleMapsPlacePickerProps {
   className?: string;
 }
 
+// Função para carregar a API do Google Maps dinamicamente
+const loadGoogleMapsAPI = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    // Se já está carregado, resolver imediatamente
+    if ((window as any).google && (window as any).google.maps) {
+      resolve();
+      return;
+    }
+
+    // Verificar se já existe um script sendo carregado
+    if (document.querySelector('script[src*="maps.googleapis.com"]')) {
+      // Aguardar o carregamento
+      const checkLoaded = () => {
+        if ((window as any).google && (window as any).google.maps) {
+          resolve();
+        } else {
+          setTimeout(checkLoaded, 100);
+        }
+      };
+      checkLoaded();
+      return;
+    }
+
+    // Carregar a API do Google Maps
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBdVl-cTICSwYKrZ95SuvNw7dbMuDt1KG0&libraries=places&language=pt-BR&region=BR`;
+    script.async = true;
+    script.defer = true;
+    
+    script.onload = () => {
+      console.log('✅ Google Maps API carregada com sucesso');
+      resolve();
+    };
+    
+    script.onerror = () => {
+      console.error('❌ Erro ao carregar Google Maps API');
+      reject(new Error('Falha ao carregar Google Maps API'));
+    };
+    
+    document.head.appendChild(script);
+  });
+};
+
 export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
   id,
   placeholder = "Digite um endereço...",
@@ -22,30 +65,43 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<any>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const listenersRef = useRef<any[]>([]);
 
   useEffect(() => {
-    if (!isGoogleMapsConfigured()) {
-      console.warn('Google Maps não está configurado');
-      return;
-    }
-
-    // Aguardar o carregamento do Google Maps
-    const checkGoogleMaps = () => {
-      if ((window as any).google && (window as any).google.maps && (window as any).google.maps.places) {
-        setIsLoaded(true);
-        initializeAutocomplete();
-      } else {
-        setTimeout(checkGoogleMaps, 100);
-      }
-    };
-
-    checkGoogleMaps();
+    initializeGoogleMaps();
 
     return () => {
       cleanup();
     };
   }, []);
+
+  const initializeGoogleMaps = async () => {
+    setIsLoading(true);
+    setLoadError(false);
+
+    try {
+      // Tentar carregar a API do Google Maps
+      await loadGoogleMapsAPI();
+      
+      // Aguardar um pouco para garantir que a API está totalmente carregada
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      if ((window as any).google && (window as any).google.maps && (window as any).google.maps.places) {
+        setIsLoaded(true);
+        initializeAutocomplete();
+        console.log('✅ Google Maps Autocomplete inicializado');
+      } else {
+        throw new Error('Google Maps API não carregou completamente');
+      }
+    } catch (error) {
+      console.error('❌ Erro ao inicializar Google Maps:', error);
+      setLoadError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const cleanup = () => {
     // Limpar todos os listeners
@@ -126,18 +182,24 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
     console.log(`👆 ${id} - Input clicado`);
   };
 
-  if (!isGoogleMapsConfigured()) {
+  // Se houve erro ao carregar, mostrar input simples
+  if (loadError) {
     return (
-      <input
-        type="text"
-        placeholder={placeholder}
-        value={value}
-        onChange={handleInputChange}
-        onFocus={handleInputFocus}
-        onBlur={handleInputBlur}
-        onClick={handleInputClick}
-        className={`w-full px-4 py-3 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700 placeholder-gray-400 ${className}`}
-      />
+      <div>
+        <input
+          type="text"
+          placeholder={placeholder}
+          value={value}
+          onChange={handleInputChange}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+          onClick={handleInputClick}
+          className={`w-full px-4 py-3 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700 placeholder-gray-400 ${className}`}
+        />
+        <div className="text-xs text-gray-500 mt-1">
+          💡 Google Maps não disponível - usando input manual
+        </div>
+      </div>
     );
   }
 
@@ -156,9 +218,14 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
         className={`w-full px-4 py-3 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700 placeholder-gray-400 ${className}`}
         autoComplete="off"
       />
-      {!isLoaded && (
+      {(isLoading || !isLoaded) && (
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
+        </div>
+      )}
+      {isLoaded && (
+        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
         </div>
       )}
     </div>
