@@ -114,10 +114,16 @@ export const QuoteForm = () => {
           SEU CHAUFFEUR DE LUXO
         </h2>
         <div className="flex justify-center mt-4 space-x-2">
-          <button className="px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-none">
+          <button 
+            type="button"
+            className="px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-none"
+          >
             POR DESTINO
           </button>
-          <button className="px-6 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-none">
+          <button 
+            type="button"
+            className="px-6 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-none"
+          >
             POR HORA
           </button>
         </div>
@@ -126,10 +132,10 @@ export const QuoteForm = () => {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Campo Origem */}
         <div className="space-y-2">
-          <label className="flex items-center text-sm font-medium text-gray-600 mb-2">
+          <div className="flex items-center text-sm font-medium text-gray-600 mb-2 pointer-events-none">
             <MapPin className="w-4 h-4 mr-2" />
-            Origem
-          </label>
+            <span>Origem</span>
+          </div>
           {useGoogleMaps ? (
             <GoogleMapsPlacePicker
               id="pickup-field"
@@ -158,6 +164,7 @@ export const QuoteForm = () => {
           ) : (
             <input
               type="text"
+              id="pickup-field"
               placeholder="Endereço, aeroporto, hotel"
               value={pickup}
               onChange={(e) => setPickup(e.target.value)}
@@ -168,10 +175,10 @@ export const QuoteForm = () => {
 
         {/* Campo Destino */}
         <div className="space-y-2">
-          <label className="flex items-center text-sm font-medium text-gray-600 mb-2">
+          <div className="flex items-center text-sm font-medium text-gray-600 mb-2 pointer-events-none">
             <Navigation className="w-4 h-4 mr-2" />
-            Destino
-          </label>
+            <span>Destino</span>
+          </div>
           {useGoogleMaps ? (
             <GoogleMapsPlacePicker
               id="destination-field"
@@ -200,6 +207,7 @@ export const QuoteForm = () => {
           ) : (
             <input
               type="text"
+              id="destination-field"
               placeholder="Endereço, aeroporto, hotel"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
@@ -210,12 +218,13 @@ export const QuoteForm = () => {
 
         {/* Campo Data */}
         <div className="space-y-2">
-          <label className="flex items-center text-sm font-medium text-gray-600 mb-2">
+          <label htmlFor="date-field" className="flex items-center text-sm font-medium text-gray-600 mb-2 cursor-pointer">
             <Calendar className="w-4 h-4 mr-2" />
             Data
           </label>
           <input
             type="date"
+            id="date-field"
             value={date}
             onChange={(e) => setDate(e.target.value)}
             min={new Date().toISOString().split('T')[0]}
@@ -225,12 +234,13 @@ export const QuoteForm = () => {
 
         {/* Campo Horário */}
         <div className="space-y-2">
-          <label className="flex items-center text-sm font-medium text-gray-600 mb-2">
+          <label htmlFor="time-field" className="flex items-center text-sm font-medium text-gray-600 mb-2 cursor-pointer">
             <Clock className="w-4 h-4 mr-2" />
             Horário
           </label>
           <input
             type="time"
+            id="time-field"
             value={time}
             onChange={(e) => setTime(e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700"
