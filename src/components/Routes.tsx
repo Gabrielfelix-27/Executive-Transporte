@@ -1,48 +1,51 @@
-
-const routes = [
-  {
-    from: "AEROPORTO INTERNACIONAL DE GUARULHOS (GRU)",
-    to: "ROSEWOOD HOTEL SÃO PAULO",
-    duration: "55min"
-  },
-  {
-    from: "AEROPORTO DE CONGONHAS (CGH)",
-    to: "JW MARRIOTT SÃO PAULO",
-    duration: "60min"
-  },
-  {
-    from: "AEROPORTO DE CONGONHAS (CGH)",
-    to: "ROSEWOOD HOTEL SÃO PAULO",
-    duration: "35min"
-  },
-  {
-    from: "AEROPORTO INTERNACIONAL DE GUARULHOS (GRU)",
-    to: "HOTEL UNIQUE SÃO PAULO",
-    duration: "80min"
-  },
-  {
-    from: "AEROPORTO INTERNACIONAL DE GUARULHOS (GRU)",
-    to: "HOTEL FASANO JARDINS SÃO PAULO",
-    duration: "60min"
-  },
-  {
-    from: "AEROPORTO INTERNACIONAL DE GUARULHOS (GRU)",
-    to: "TIVOLI MOFARREJ SÃO PAULO",
-    duration: "35min"
-  }
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const Routes = () => {
+  const { t } = useLanguage();
+
+  const routes = [
+    {
+      from: t('routes.guarulhos'),
+      to: t('routes.rosewood'),
+      duration: "55min"
+    },
+    {
+      from: t('routes.congonhas'),
+      to: t('routes.marriott'),
+      duration: "60min"
+    },
+    {
+      from: t('routes.congonhas'),
+      to: t('routes.rosewood'),
+      duration: "35min"
+    },
+    {
+      from: t('routes.guarulhos'),
+      to: t('routes.unique'),
+      duration: "80min"
+    },
+    {
+      from: t('routes.guarulhos'),
+      to: t('routes.fasano'),
+      duration: "60min"
+    },
+    {
+      from: t('routes.guarulhos'),
+      to: t('routes.tivoliMofarrej'),
+      duration: "35min"
+    }
+  ];
+
   return (
     <section className="py-20 bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex justify-between items-center mb-12">
           <div>
-            <p className="text-sm text-gray-400 mb-2">TOP ROUTES</p>
-            <h2 className="text-3xl font-bold">CONFIRA AS ROTAS</h2>
+            <p className="text-sm text-gray-400 mb-2">{t('routes.topTitle')}</p>
+            <h2 className="text-3xl font-bold">{t('routes.title')}</h2>
           </div>
           <button className="text-sm text-white hover:text-yellow-400">
-            TODAS AS ROTAS →
+            {t('routes.allRoutes')}
           </button>
         </div>
 

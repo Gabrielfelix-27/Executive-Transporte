@@ -1,17 +1,11 @@
 // Configurações para APIs de mapas e geolocalização
 
-// Google Maps API Key - obtida das variáveis de ambiente
-export const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-
-// Debug da variável de ambiente
-console.log('🔍 [MAPS CONFIG] import.meta.env.VITE_GOOGLE_MAPS_API_KEY:', import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
-console.log('🔍 [MAPS CONFIG] GOOGLE_MAPS_API_KEY:', GOOGLE_MAPS_API_KEY);
-console.log('🔍 [MAPS CONFIG] Todas as variáveis VITE_:', Object.keys(import.meta.env).filter(key => key.startsWith('VITE_')));
+// Google Maps API Key - usar a chave válida
+export const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyAm_EEkVb9g5H7YdYGW6elk5OA0IdudtR8';
 
 // Verificação se a chave está configurada
 export const isGoogleMapsConfigured = (): boolean => {
   const isConfigured = Boolean(GOOGLE_MAPS_API_KEY && GOOGLE_MAPS_API_KEY !== 'your_google_maps_api_key_here');
-  console.log('🔍 [MAPS CONFIG] isGoogleMapsConfigured:', isConfigured);
   return isConfigured;
 };
 

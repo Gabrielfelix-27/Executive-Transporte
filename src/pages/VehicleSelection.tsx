@@ -46,18 +46,27 @@ const VehicleSelection = () => {
   
   // Função para formatar tempo estimado
   const formatEstimatedTime = (minutes: number): string => {
-    if (!minutes) return "";
+    console.log('🕐 formatEstimatedTime recebeu:', minutes, typeof minutes);
+    
+    if (minutes === undefined || minutes === null || isNaN(minutes)) {
+      console.log('⚠️ Tempo inválido:', minutes);
+      return "";
+    }
+    
+    if (minutes === 0) {
+      return "0 min";
+    }
     
     if (minutes < 60) {
-      return `${minutes} mins`;
+      return `${minutes} min`;
     } else {
       const hours = Math.floor(minutes / 60);
       const remainingMinutes = minutes % 60;
       
       if (remainingMinutes === 0) {
-        return `${hours} ${hours === 1 ? 'hour' : 'hours'}`;
+        return `${hours} ${hours === 1 ? 'hora' : 'horas'}`;
       } else {
-        return `${hours} ${hours === 1 ? 'hour' : 'hours'} ${remainingMinutes} mins`;
+        return `${hours} ${hours === 1 ? 'hora' : 'horas'} ${remainingMinutes} min`;
       }
     }
   };
@@ -73,7 +82,9 @@ const VehicleSelection = () => {
     passengers: tripData.passengers || 1,
     calculatedDistance: tripData.distance, // Corrigido: vem como 'distance' do QuoteForm
     estimatedTimeMinutes: tripData.estimatedTime, // Corrigido: vem como 'estimatedTime' em minutos
-    estimatedTime: tripData.estimatedTime ? formatEstimatedTime(tripData.estimatedTime) : undefined,
+    estimatedTime: (tripData.estimatedTime !== undefined && tripData.estimatedTime !== null) 
+      ? formatEstimatedTime(tripData.estimatedTime) 
+      : undefined,
     priceFactors: tripData.priceFactors
   };
 
@@ -83,13 +94,15 @@ const VehicleSelection = () => {
     destination: quoteData.destination,
     distance: quoteData.calculatedDistance,
     estimatedTime: quoteData.estimatedTime,
-    estimatedTimeMinutes: quoteData.estimatedTimeMinutes
+    estimatedTimeMinutes: quoteData.estimatedTimeMinutes,
+    estimatedTimeRaw: tripData.estimatedTime,
+    vehicles: tripData.vehicles
   });
 
-  // Converter objeto categories para array no formato esperado
+  // Converter objeto vehicles para array no formato esperado
   const getVehicleImage = (categoryKey: string) => {
     const images = {
-      'economico': 'https://images.unsplash.com/photo-1549924231-f129b911e442?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      'economy': 'https://images.unsplash.com/photo-1549924231-f129b911e442?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       'executivo': 'https://images.unsplash.com/photo-1563720223185-11003d516935?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       'luxo': 'https://images.unsplash.com/photo-1580414819951-3b5bb3d7e1f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
       'suv': 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
@@ -97,7 +110,8 @@ const VehicleSelection = () => {
     return images[categoryKey as keyof typeof images] || images.executivo;
   };
 
-  const categories = tripData.categories ? Object.entries(tripData.categories).map(([key, value]: [string, any]) => ({
+  // CORRIGIDO: usar tripData.vehicles em vez de tripData.categories
+  const categories = tripData.vehicles ? Object.entries(tripData.vehicles).map(([key, value]: [string, any]) => ({
     id: key,
     type: value.name,
     name: value.name,
@@ -144,7 +158,7 @@ const VehicleSelection = () => {
   // Função para formatar horário
   const formatTimeDisplay = (timeString: string) => {
     if (!timeString) return "";
-    return `${timeString} (GMT-3)`;
+    return `${timeString} (horário de Brasília)`;
   };
 
   // Função para calcular horário de chegada estimado
@@ -397,6 +411,61 @@ const VehicleSelection = () => {
           <button className="text-sm text-blue-600 hover:underline mt-2">
             {t('vehicle.terms')}
           </button>
+        </div>
+
+        {/* Resumo da viagem */}
+        <div className="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-6">
+          <h3 className="text-lg font-semibold text-blue-900 mb-4">📍 Resumo da Viagem</h3>
+          <div className="space-y-2 text-blue-800">
+            <div className="flex justify-between items-center">
+              <span className="font-medium">📍 Origem:</span>
+              <span className="text-right flex-1 ml-4 text-sm">{quoteData.pickup}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="font-medium">🎯 Destino:</span>
+              <span className="text-right flex-1 ml-4 text-sm">{quoteData.destination}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="font-medium">📏 Distância:</span>
+              <span className="font-bold text-blue-900">
+                {quoteData.calculatedDistance ? `${quoteData.calculatedDistance.toFixed(1)} KM` : 'Calculando...'}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="font-medium">⏱️ Tempo estimado:</span>
+              <span className="font-bold text-blue-900">
+                {quoteData.estimatedTime || 'Calculando...'}
+              </span>
+            </div>
+            {quoteData.date && (
+              <div className="flex justify-between items-center">
+                <span className="font-medium">📅 Data:</span>
+                <span>{formatDateDisplay(quoteData.date)}</span>
+              </div>
+            )}
+            {quoteData.time && (
+              <div className="flex justify-between items-center">
+                <span className="font-medium">⏰ Horário:</span>
+                <span>{formatTimeDisplay(quoteData.time)}</span>
+              </div>
+            )}
+            {quoteData.priceFactors && quoteData.priceFactors.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-blue-200">
+                <span className="font-medium">💰 Fatores de preço:</span>
+                <div className="mt-1 space-y-1">
+                  {quoteData.priceFactors.map((factor, index) => (
+                    <div key={index} className="text-sm flex items-center">
+                      <div className="w-1 h-1 bg-blue-400 rounded-full mr-2"></div>
+                      {factor}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="mt-4 text-xs text-blue-600 bg-blue-100 p-2 rounded">
+            ✅ Distâncias e tempos calculados usando dados reais do Google Maps para máxima precisão
+          </div>
         </div>
 
         {/* Continue Button */}

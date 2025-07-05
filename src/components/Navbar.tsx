@@ -6,6 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { ChevronDown, Globe, Menu, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useEffect, useState } from "react";
 
 interface NavbarProps {
   showBackButton?: boolean;
@@ -21,6 +22,13 @@ export const Navbar = ({
   currentStep = 0
 }: NavbarProps) => {
   const { language, setLanguage, currency, setCurrency, t } = useLanguage();
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const breadcrumbSteps = [
     { number: 1, title: t('nav.serviceClass'), active: currentStep >= 1 },
@@ -31,7 +39,15 @@ export const Navbar = ({
   return (
     <>
       {/* Header Principal */}
-      <header className="bg-black border-b border-gray-800 shadow-sm">
+      <header 
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out"
+        style={{
+          background: `linear-gradient(135deg, rgba(0,0,0,${Math.min(0.95, 0.8 + scrollY * 0.001)}) 0%, rgba(0,0,0,${Math.min(0.85, 0.6 + scrollY * 0.001)}) 70%)`,
+          backdropFilter: `blur(${Math.min(30, 15 + scrollY * 0.05)}px) saturate(180%)`,
+          borderBottom: `1px solid rgba(255,255,255,${Math.min(0.3, 0.1 + scrollY * 0.0005)})`,
+          boxShadow: `0 8px 32px rgba(0,0,0,${Math.min(0.4, 0.1 + scrollY * 0.001)})`
+        }}
+      >
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
@@ -121,7 +137,7 @@ export const Navbar = ({
                 <PopoverTrigger asChild>
                   <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent">
                     <Menu className="h-4 w-4 mr-2" />
-                    MENU
+                    {t('header.menu')}
                     <ChevronDown className="h-4 w-4 ml-2" />
                   </Button>
                 </PopoverTrigger>
@@ -131,18 +147,18 @@ export const Navbar = ({
                       to="/"
                       className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700"
                     >
-                      🏠 Página Principal
+                      🏠 {t('header.homepage')}
                     </Link>
                     <Link 
                       to="/google-maps-demo"
                       className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700"
                     >
                       <MapPin className="h-4 w-4 mr-2" />
-                      🗺️ Google Maps Demo
+                      🗺️ {t('header.mapsDemo')}
                     </Link>
                     <div className="h-px bg-gray-200 my-1"></div>
                     <div className="px-3 py-2 text-xs text-gray-500">
-                      Mais opções em breve...
+                      {t('header.moreOptions')}
                     </div>
                   </div>
                 </PopoverContent>

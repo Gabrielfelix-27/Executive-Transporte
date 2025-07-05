@@ -4,6 +4,9 @@ import { isGoogleMapsConfigured } from '@/config/maps';
 // Cache global para coordenadas de endereços selecionados via autocomplete
 const selectedAddressCoordinatesCache = new Map<string, { lat: number; lng: number }>();
 
+// Cache para dados do Distance Matrix API
+const distanceMatrixCache = new Map<string, { distance: number; duration: number }>();
+
 // Função para armazenar coordenadas de endereços selecionados
 export const cacheSelectedAddressCoordinates = (address: string, coords: { lat: number; lng: number }) => {
   const normalizedAddress = address.toLowerCase().trim();
@@ -11,7 +14,7 @@ export const cacheSelectedAddressCoordinates = (address: string, coords: { lat: 
   console.log(`💾 Coordenadas armazenadas em cache para "${address}":`, coords);
 };
 
-// Função para calcular distância entre dois pontos usando a fórmula de Haversine
+// Função para calcular distância entre dois pontos usando a fórmula de Haversine (FALLBACK)
 export const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
   const R = 6371; // Raio da Terra em km
   const dLat = toRad(lat2 - lat1);
@@ -25,6 +28,104 @@ export const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2
 
 const toRad = (value: number): number => {
   return value * Math.PI / 180;
+};
+
+// Nova função para obter distância real usando Google Maps Distance Matrix API
+export const getGoogleMapsDistanceAndTime = async (
+  origin: string,
+  destination: string
+): Promise<{ distance: number; duration: number } | null> => {
+  try {
+    console.log(`🗺️ [DEBUG] getGoogleMapsDistanceAndTime iniciado: "${origin}" → "${destination}"`);
+    
+    // Criar chave de cache
+    const cacheKey = `${origin.toLowerCase().trim()}|${destination.toLowerCase().trim()}`;
+    
+    // Verificar cache primeiro
+    if (distanceMatrixCache.has(cacheKey)) {
+      const cached = distanceMatrixCache.get(cacheKey)!;
+      console.log(`📋 [DEBUG] Distance Matrix cache hit: ${cached.distance}km, ${cached.duration}min`);
+      return cached;
+    }
+
+    // Verificar se Google Maps está configurado
+    const isConfigured = isGoogleMapsConfigured();
+    const hasGoogleMaps = !!window.google?.maps;
+    
+    console.log(`🔧 [DEBUG] Verificações Google Maps:`, {
+      isConfigured,
+      hasGoogleMaps,
+      windowGoogle: !!window.google,
+      googleMaps: !!window.google?.maps
+    });
+    
+    if (!isConfigured || !hasGoogleMaps) {
+      console.warn('⚠️ [DEBUG] Google Maps não configurado para Distance Matrix');
+      return null;
+    }
+
+    console.log(`🚀 [DEBUG] Iniciando chamada ao Google Maps Distance Matrix API`);
+
+    const service = new window.google.maps.DistanceMatrixService();
+    
+    const result = await new Promise<google.maps.DistanceMatrixResponse>((resolve, reject) => {
+      service.getDistanceMatrix(
+        {
+          origins: [origin],
+          destinations: [destination],
+          travelMode: google.maps.TravelMode.DRIVING,
+          unitSystem: google.maps.UnitSystem.METRIC,
+          avoidHighways: false,
+          avoidTolls: false,
+          region: 'BR'
+        },
+        (response, status) => {
+          console.log(`📡 [DEBUG] Distance Matrix resposta:`, { status, response });
+          
+          if (status === 'OK' && response) {
+            resolve(response);
+          } else {
+            reject(new Error(`Distance Matrix API error: ${status}`));
+          }
+        }
+      );
+    });
+
+    const element = result.rows[0]?.elements[0];
+    console.log(`🔍 [DEBUG] Elemento da resposta:`, element);
+    
+    if (element?.status === 'OK' && element.distance && element.duration) {
+      const distanceKm = element.distance.value / 1000; // Converter metros para km
+      const durationMin = Math.round(element.duration.value / 60); // Converter segundos para minutos
+      
+      const data = { distance: distanceKm, duration: durationMin };
+      
+      // Salvar no cache
+      distanceMatrixCache.set(cacheKey, data);
+      
+      // Limitar tamanho do cache
+      if (distanceMatrixCache.size > 50) {
+        const firstKey = distanceMatrixCache.keys().next().value;
+        distanceMatrixCache.delete(firstKey);
+      }
+      
+      console.log(`✅ [DEBUG] Google Maps Distance Matrix sucesso: ${distanceKm.toFixed(1)}km, ${durationMin}min`);
+      console.log(`📊 [DEBUG] Dados detalhados:`, {
+        distance: element.distance,
+        duration: element.duration,
+        status: element.status
+      });
+      
+      return data;
+    } else {
+      console.warn('⚠️ [DEBUG] Google Maps Distance Matrix retornou dados inválidos:', element);
+      return null;
+    }
+
+  } catch (error) {
+    console.error('❌ [DEBUG] Erro no Google Maps Distance Matrix:', error);
+    return null;
+  }
 };
 
 // Coordenadas de pontos conhecidos (fallback)
@@ -142,6 +243,17 @@ export const calculateDistanceBetweenAddresses = async (origin: string, destinat
   try {
     console.log(`🗺️ Calculando distância entre "${origin}" e "${destination}"`);
     
+    // Primeiro, tentar usar Google Maps Distance Matrix API para obter distância real da rota
+    const googleMapsData = await getGoogleMapsDistanceAndTime(origin, destination);
+    
+    if (googleMapsData) {
+      console.log(`✅ Usando distância real do Google Maps: ${googleMapsData.distance.toFixed(1)} KM`);
+      return Math.round(googleMapsData.distance * 10) / 10;
+    }
+    
+    // Fallback: usar coordenadas e cálculo de Haversine
+    console.log(`⚠️ Fallback: usando cálculo de Haversine (linha reta)`);
+    
     const [originCoords, destCoords] = await Promise.all([
       getCoordinatesFromAddress(origin),
       getCoordinatesFromAddress(destination)
@@ -170,9 +282,13 @@ export const calculateDistanceBetweenAddresses = async (origin: string, destinat
       destCoords.lng
     );
     
-    console.log(`📏 Distância calculada: ${distance.toFixed(1)} KM`);
+    // Aplicar fator de correção para distância de rota real (aproximadamente 1.4x a distância em linha reta)
+    const routeDistance = distance * 1.4;
     
-    return Math.round(distance * 10) / 10; // Arredondar para 1 casa decimal
+    console.log(`📏 Distância linha reta: ${distance.toFixed(1)} KM`);
+    console.log(`📏 Distância estimada da rota: ${routeDistance.toFixed(1)} KM`);
+    
+    return Math.round(routeDistance * 10) / 10; // Arredondar para 1 casa decimal
   } catch (error) {
     console.error('❌ Erro ao calcular distância:', error);
     return 15; // Distância padrão em caso de erro
@@ -181,6 +297,14 @@ export const calculateDistanceBetweenAddresses = async (origin: string, destinat
 
 // Função para estimar tempo de viagem (considerando trânsito urbano)
 export const estimateTravelTime = (distance: number): number => {
+  console.log(`⏰ [DEBUG] estimateTravelTime recebeu: ${distance} (tipo: ${typeof distance})`);
+  
+  // Validar entrada
+  if (isNaN(distance) || distance <= 0) {
+    console.warn(`⚠️ [DEBUG] Distância inválida para estimativa de tempo: ${distance}, usando 15 min padrão`);
+    return 15;
+  }
+  
   // Velocidade média em São Paulo considerando trânsito
   let avgSpeed: number;
   
@@ -196,8 +320,17 @@ export const estimateTravelTime = (distance: number): number => {
   
   const timeInHours = distance / avgSpeed;
   const timeInMinutes = Math.round(timeInHours * 60);
+  const finalTime = Math.max(timeInMinutes, 15); // Mínimo de 15 minutos
   
-  return Math.max(timeInMinutes, 15); // Mínimo de 15 minutos
+  console.log(`⏰ [DEBUG] Cálculo do tempo estimado:`, {
+    distance,
+    avgSpeed,
+    timeInHours,
+    timeInMinutes,
+    finalTime
+  });
+  
+  return finalTime;
 };
 
 // Função para detectar tipo de local (aeroporto, rodoviária, etc.)
@@ -267,11 +400,45 @@ export const calculateTripPrice = async (
   try {
     console.log(`💰 Calculando preço da viagem [${vehicleType}]: "${origin}" → "${destination}"`);
     
-    // Calcular distância real entre os endereços
-    const distance = await calculateDistanceBetweenAddresses(origin, destination);
-    const estimatedTime = estimateTravelTime(distance);
+    // Primeiro, tentar obter dados reais do Google Maps
+    const googleMapsData = await getGoogleMapsDistanceAndTime(origin, destination);
+    console.log(`🗺️ [DEBUG] Google Maps retornou:`, googleMapsData);
     
-    console.log(`📊 Resultados do cálculo:`, { distance, estimatedTime });
+    let distance: number;
+    let estimatedTime: number;
+    
+    if (googleMapsData) {
+      // Usar dados reais do Google Maps
+      distance = googleMapsData.distance;
+      estimatedTime = googleMapsData.duration;
+      console.log(`✅ Usando dados reais do Google Maps: ${distance.toFixed(1)}km, ${estimatedTime}min`);
+    } else {
+      // Fallback: calcular usando função existente
+      console.log(`⚠️ Fallback: usando cálculo estimado`);
+      distance = await calculateDistanceBetweenAddresses(origin, destination);
+      estimatedTime = estimateTravelTime(distance);
+      console.log(`⚠️ Fallback resultou em: ${distance.toFixed(1)}km, ${estimatedTime}min`);
+    }
+    
+    console.log(`📊 Resultados finais do cálculo:`, { 
+      distance: distance.toFixed(1), 
+      estimatedTime,
+      distanceType: typeof distance,
+      estimatedTimeType: typeof estimatedTime
+    });
+    
+    // Validar dados antes de continuar
+    if (isNaN(distance) || distance <= 0) {
+      console.warn('⚠️ Distância inválida, usando padrão');
+      distance = 15;
+    }
+    
+    if (isNaN(estimatedTime) || estimatedTime <= 0) {
+      console.warn('⚠️ Tempo estimado inválido, calculando baseado na distância');
+      estimatedTime = estimateTravelTime(distance);
+    }
+    
+    console.log(`📊 Dados validados:`, { distance, estimatedTime });
     
     // Preço base por km baseado no tipo de veículo
     const basePricePerKm = {
@@ -319,23 +486,30 @@ export const calculateTripPrice = async (
       priceFactors.push(`Preço mínimo R$ ${minimumPrice}`);
     }
     
-    return {
+    const result = {
       distance: Math.round(distance * 10) / 10,
-      estimatedTime,
+      estimatedTime: Math.round(estimatedTime),
       basePrice: Math.round(basePrice * 100) / 100,
       finalPrice: Math.round(finalPrice * 100) / 100,
       priceFactors
     };
+    
+    console.log(`💰 [DEBUG] Resultado final da viagem:`, result);
+    
+    return result;
   } catch (error) {
     console.error('Erro ao calcular preço da viagem:', error);
     
     // Retornar valores padrão em caso de erro
-    return {
+    const fallbackResult = {
       distance: 15,
       estimatedTime: 45,
       basePrice: 52.5,
       finalPrice: 80,
       priceFactors: ['Cálculo aproximado']
     };
+    
+    console.log(`💰 [DEBUG] Resultado fallback:`, fallbackResult);
+    return fallbackResult;
   }
 }; 

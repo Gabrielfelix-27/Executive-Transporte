@@ -43,7 +43,7 @@ interface PassengerInfo {
 const PassengerData = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { formatCurrency } = useLanguage();
+  const { formatCurrency, t } = useLanguage();
 
   // Dados recebidos da navegação anterior
   const quoteData: QuoteData = location.state?.quoteData;
@@ -52,7 +52,7 @@ const PassengerData = () => {
   const [passengerInfo, setPassengerInfo] = useState<PassengerInfo>({
     reserveFor: "para-mim",
     flightNumber: "",
-    plateNameShow: "Executive Transporte Premium",
+    plateNameShow: t('passenger.executiveTransport'),
     luggageCount: 2,
     additionalInfo: "",
     passengerName: "",
@@ -161,12 +161,12 @@ Reserva feita através do site Executive Premium`;
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center">
-          <h1 className="text-2xl font-bold mb-4">Dados não encontrados</h1>
+          <h1 className="text-2xl font-bold mb-4">{t('passenger.dataNotFound')}</h1>
           <p className="text-gray-600 mb-6">
-            Por favor, faça uma nova cotação.
+            {t('passenger.newQuote')}
           </p>
           <Button onClick={() => navigate('/')} className="w-full">
-            Voltar ao Início
+            {t('passenger.backHome')}
           </Button>
         </div>
       </div>
@@ -187,22 +187,22 @@ Reserva feita através do site Executive Premium`;
               {/* Left: Trip Details */}
               <div>
                 <h3 className="font-bold text-gray-900 mb-4">
-                  CLASSE: <span className="text-blue-600">{selectedVehicle.name.toUpperCase()}</span>
+                  {t('passenger.class')} <span className="text-blue-600">{selectedVehicle.name.toUpperCase()}</span>
                 </h3>
                 
                 <div className="space-y-4">
                   <div>
-                    <div className="text-sm font-medium text-gray-600 mb-1">PICKUP</div>
+                    <div className="text-sm font-medium text-gray-600 mb-1">{t('passenger.pickup')}</div>
                     <div className="text-sm font-bold text-gray-900">
                       {formatDateDisplay(quoteData.date)}, {formatTimeDisplay(quoteData.time)}
                     </div>
-                    <div className="text-sm text-gray-600 mt-1">ARRIVAL</div>
+                    <div className="text-sm text-gray-600 mt-1">{t('passenger.arrival')}</div>
                     <div className="text-sm text-gray-600">
-                      ESTIMATED AT 07:43 PM (GMT-3) • {location.state?.calculatedDistance ? Math.round(location.state.calculatedDistance) : 25} KM
+                      {t('passenger.estimatedAt')} 07:43 PM (GMT-3) • {location.state?.calculatedDistance ? Math.round(location.state.calculatedDistance) : 25} KM
                     </div>
                     {location.state?.estimatedTime && (
                       <div className="text-sm text-blue-600 font-medium mt-1">
-                        ⏱️ Tempo estimado: {location.state.estimatedTime}
+                        ⏱️ {t('passenger.estimatedTime')}: {location.state.estimatedTime}
                       </div>
                     )}
                   </div>
@@ -212,16 +212,16 @@ Reserva feita através do site Executive Premium`;
               {/* Right: Vehicle and Route Details */}
               <div>
                 <h3 className="font-bold text-gray-900 mb-4">
-                  VEÍCULO: <span className="text-blue-600">{selectedVehicle.type.toUpperCase()}</span>
+                  {t('passenger.vehicle')} <span className="text-blue-600">{selectedVehicle.type.toUpperCase()}</span>
                 </h3>
                 
                 <div className="space-y-2">
                   <div>
-                    <div className="text-sm font-medium text-gray-600">DE</div>
+                    <div className="text-sm font-medium text-gray-600">{t('passenger.from')}</div>
                     <div className="text-sm font-bold text-gray-900">{quoteData.pickup}</div>
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-gray-600">PARA</div>
+                    <div className="text-sm font-medium text-gray-600">{t('passenger.to')}</div>
                     <div className="text-sm font-bold text-gray-900">{quoteData.destination}</div>
                   </div>
                 </div>
@@ -233,7 +233,7 @@ Reserva feita através do site Executive Premium`;
         {/* Passenger Information Form */}
         <Card>
           <CardContent className="p-6">
-            <h3 className="text-lg font-bold text-gray-900 mb-6">PARA QUEM É ESSA VIAGEM</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-6">{t('passenger.tripFor')}</h3>
             
             {/* Reserve For */}
             <div className="mb-6">
@@ -244,11 +244,11 @@ Reserva feita através do site Executive Premium`;
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="para-mim" id="para-mim" />
-                  <Label htmlFor="para-mim">Reservar para mim</Label>
+                  <Label htmlFor="para-mim">{t('passenger.forMe')}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="para-outro" id="para-outro" />
-                  <Label htmlFor="para-outro">Reservar para outra pessoa</Label>
+                  <Label htmlFor="para-outro">{t('passenger.forOther')}</Label>
                 </div>
               </RadioGroup>
             </div>
@@ -272,7 +272,7 @@ Reserva feita através do site Executive Premium`;
                     <div>
                       <Label className="text-sm text-gray-600 mb-2 block flex items-center">
                         <Plane className="h-4 w-4 mr-2" />
-                        Número do Voo *
+                        {t('passenger.flightNumber')} *
                       </Label>
                       <Input
                         placeholder="Ex: G31234"
@@ -318,7 +318,7 @@ Reserva feita através do site Executive Premium`;
                   {/* Passenger Name */}
                   <div>
                     <Label className="text-sm text-gray-600 mb-2 block">
-                      Nome do Passageiro *
+                      {t('passenger.fullName')} *
                     </Label>
                     <Input
                       placeholder="Nome completo"
@@ -335,7 +335,7 @@ Reserva feita através do site Executive Premium`;
                   {/* Name on Plate */}
                   <div>
                     <Label className="text-sm text-gray-600 mb-2 block">
-                      Nome na Placa
+                      {t('passenger.plateName')}
                     </Label>
                     <Input
                       className="bg-gray-100"
@@ -347,7 +347,7 @@ Reserva feita através do site Executive Premium`;
                   {/* Phone Number */}
                   <div>
                     <Label className="text-sm text-gray-600 mb-2 block">
-                      Telefone *
+                      {t('passenger.phone')} *
                     </Label>
                     <Input
                       type="tel"
@@ -362,7 +362,7 @@ Reserva feita através do site Executive Premium`;
                   {/* Email */}
                   <div>
                     <Label className="text-sm text-gray-600 mb-2 block">
-                      Email *
+                      {t('passenger.email')} *
                     </Label>
                     <Input
                       type="email"
@@ -397,7 +397,7 @@ Reserva feita através do site Executive Premium`;
                 disabled={!isFormValid()}
                 className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg font-medium"
               >
-                FINALIZAR RESERVA VIA WHATSAPP
+                {t('passenger.finishReservation')}
               </Button>
               
               {!isFormValid() && (

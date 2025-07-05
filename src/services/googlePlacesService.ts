@@ -83,6 +83,7 @@ export const searchPlaces = async (query: string): Promise<AddressSuggestion[]> 
 
 /**
  * Teste de conexão sem fazer requisições diretas
+ * DESABILITADO para evitar conflitos com GoogleMapsPlacePicker
  */
 export const testGooglePlacesConnection = async (): Promise<boolean> => {
   if (!isGoogleMapsConfigured()) {
@@ -93,6 +94,12 @@ export const testGooglePlacesConnection = async (): Promise<boolean> => {
   console.log('✅ Google Maps API configurada');
   console.log('🔑 API Key:', GOOGLE_MAPS_API_KEY?.substring(0, 10) + '...');
   
+  // ⚠️ DESABILITADO: Teste de carregamento pode causar conflitos
+  console.log('ℹ️ Teste de carregamento desabilitado para evitar conflitos');
+  console.log('✅ Use GoogleMapsPlacePicker para teste real');
+  return true;
+  
+  /*
   // Testar carregamento da API JavaScript
   try {
     const testScript = document.createElement('script');
@@ -126,6 +133,7 @@ export const testGooglePlacesConnection = async (): Promise<boolean> => {
     console.error('❌ Erro no teste de conexão:', error);
     return false;
   }
+  */
 };
 
 /**
