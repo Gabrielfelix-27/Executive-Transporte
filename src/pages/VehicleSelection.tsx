@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Navbar } from "@/components/Navbar";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { CheckCircle, User, MapPin, Target, Calendar, Clock, Users, Luggage, Gift, Car, Clock3, UserCheck } from "lucide-react";
+import { CheckCircle, User, MapPin, Target, Calendar, Clock, Users, Luggage, Gift, Car, Clock3, UserCheck, Navigation2, Timer } from "lucide-react";
 
 interface QuoteData {
   pickup: string;
@@ -165,7 +165,7 @@ const VehicleSelection = () => {
   const calculateArrivalTime = (departureTime: string, estimatedDurationMinutes?: number) => {
     if (!departureTime || !estimatedDurationMinutes || estimatedDurationMinutes === 0) {
       console.log('🕐 Dados insuficientes para calcular chegada:', { departureTime, estimatedDurationMinutes });
-      return "Calculando...";
+      return "";
     }
     
     try {
@@ -174,7 +174,7 @@ const VehicleSelection = () => {
       
       if (isNaN(hours) || isNaN(minutes)) {
         console.warn('⚠️ Horário de partida inválido:', departureTime);
-        return "Calculando...";
+        return "";
       }
       
       const departureDate = new Date();
@@ -192,7 +192,7 @@ const VehicleSelection = () => {
       return result;
     } catch (error) {
       console.error('❌ Erro ao calcular horário de chegada:', error);
-      return "Calculando...";
+      return "";
     }
   };
 
@@ -241,7 +241,7 @@ const VehicleSelection = () => {
               {/* Pickup */}
               <div>
                 <div className="flex items-center mb-2">
-                  <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
+                  <CheckCircle className="h-5 w-5 text-black mr-2" />
                   <span className="text-sm font-medium text-gray-600">{t('vehicle.pickup')}</span>
                 </div>
                 <div className="text-sm font-bold text-gray-900 mb-1">
@@ -249,10 +249,15 @@ const VehicleSelection = () => {
                 </div>
                 <div className="text-sm text-gray-600 mb-2">{t('vehicle.arrival')}</div>
                 <div className="text-sm text-gray-600">
-                  {t('vehicle.estimatedAt')} {formatTimeDisplay(calculateArrivalTime(quoteData.time, quoteData.estimatedTimeMinutes))} • {quoteData.calculatedDistance && quoteData.calculatedDistance > 0 ? `${quoteData.calculatedDistance.toFixed(1)} KM` : 'Calculando distância...'}
+                  {calculateArrivalTime(quoteData.time, quoteData.estimatedTimeMinutes) && (
+                    <span>{formatTimeDisplay(calculateArrivalTime(quoteData.time, quoteData.estimatedTimeMinutes))}</span>
+                  )}
+                  {quoteData.calculatedDistance && quoteData.calculatedDistance > 0 && (
+                    <span>{calculateArrivalTime(quoteData.time, quoteData.estimatedTimeMinutes) ? ' • ' : ''}Distância: {quoteData.calculatedDistance.toFixed(1)} KM</span>
+                  )}
                 </div>
                 {quoteData.estimatedTime && (
-                  <div className="text-sm text-blue-600 font-medium mt-1">
+                  <div className="text-sm text-gray-600 font-medium mt-1">
                     ⏱️ {t('vehicle.estimatedTime')}: {quoteData.estimatedTime}
                   </div>
                 )}
@@ -262,7 +267,7 @@ const VehicleSelection = () => {
                     <div className="grid gap-1">
                       {quoteData.priceFactors.map((factor, index) => (
                         <div key={index} className="flex items-center">
-                          <div className="w-1 h-1 bg-blue-400 rounded-full mr-2"></div>
+                          <div className="w-1 h-1 bg-gray-400 rounded-full mr-2"></div>
                           {factor}
                         </div>
                       ))}
@@ -275,36 +280,26 @@ const VehicleSelection = () => {
               <div>
                 <div className="mb-4">
                   <div className="text-sm font-medium text-gray-600 mb-2">{t('vehicle.from')}</div>
-                  <div className="text-sm font-bold text-gray-900 mb-2 p-2 bg-green-50 border-l-4 border-green-500 rounded" title={`Origem: ${quoteData.pickup}`}>
+                  <div className="text-sm font-bold text-gray-900 mb-2 p-3 border border-gray-200 rounded-lg bg-white shadow-sm" title={`Origem: ${quoteData.pickup}`}>
                     📍 {quoteData.pickup || 'Origem não informada'}
                   </div>
                 </div>
                 
                 <div className="mb-4">
                   <div className="text-sm font-medium text-gray-600 mb-2">{t('vehicle.to')}</div>
-                  <div className="text-sm font-bold text-gray-900 p-2 bg-blue-50 border-l-4 border-blue-500 rounded" title={`Destino: ${quoteData.destination}`}>
+                  <div className="text-sm font-bold text-gray-900 p-3 border border-gray-200 rounded-lg bg-white shadow-sm" title={`Destino: ${quoteData.destination}`}>
                     🎯 {quoteData.destination || 'Destino não informado'}
                   </div>
                 </div>
                 
-                {/* Route Summary */}
-                <div className="text-xs text-gray-600 mt-4 p-3 bg-gray-50 rounded-lg border">
-                  <div className="font-medium mb-2">📊 Resumo da Viagem:</div>
-                  <div className="grid gap-1">
-                    <div>📏 Distância: {quoteData.calculatedDistance ? `${quoteData.calculatedDistance.toFixed(1)} KM` : 'Calculando...'}</div>
-                    <div>⏱️ Tempo estimado: {quoteData.estimatedTime || 'Calculando...'}</div>
-                    {quoteData.priceFactors && quoteData.priceFactors.length > 0 && (
-                      <div>💰 Fatores: {quoteData.priceFactors.join(', ')}</div>
-                    )}
-                  </div>
-                </div>
+
               </div>
             </div>
 
             <div className="mt-4 pt-4 border-t">
               <div className="text-sm text-gray-600 mb-3">
                 💰 {t('vehicle.priceFrom')}: 
-                <span className="text-2xl font-bold text-green-600">
+                <span className="text-2xl font-bold text-black">
                   {categories.length > 0 
                     ? formatCurrency(Math.min(...categories.map(c => c.price || 184))) 
                     : formatCurrency(184)
@@ -408,71 +403,98 @@ const VehicleSelection = () => {
           <p className="text-sm text-gray-600">
             {t('vehicle.observationsText')}
           </p>
-          <button className="text-sm text-blue-600 hover:underline mt-2">
+          <button className="text-sm text-black hover:underline mt-2">
             {t('vehicle.terms')}
           </button>
         </div>
 
         {/* Resumo da viagem */}
-        <div className="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-6">
-          <h3 className="text-lg font-semibold text-blue-900 mb-4">📍 Resumo da Viagem</h3>
-          <div className="space-y-2 text-blue-800">
-            <div className="flex justify-between items-center">
-              <span className="font-medium">📍 Origem:</span>
-              <span className="text-right flex-1 ml-4 text-sm">{quoteData.pickup}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="font-medium">🎯 Destino:</span>
-              <span className="text-right flex-1 ml-4 text-sm">{quoteData.destination}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="font-medium">📏 Distância:</span>
-              <span className="font-bold text-blue-900">
-                {quoteData.calculatedDistance ? `${quoteData.calculatedDistance.toFixed(1)} KM` : 'Calculando...'}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="font-medium">⏱️ Tempo estimado:</span>
-              <span className="font-bold text-blue-900">
-                {quoteData.estimatedTime || 'Calculando...'}
-              </span>
-            </div>
-            {quoteData.date && (
-              <div className="flex justify-between items-center">
-                <span className="font-medium">📅 Data:</span>
-                <span>{formatDateDisplay(quoteData.date)}</span>
+        <Card className="mb-6 border border-gray-200 shadow-sm bg-white">
+          <CardContent className="p-8">
+            <div className="flex items-center mb-6">
+              <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center mr-4">
+                <Navigation2 className="h-6 w-6 text-white" />
               </div>
-            )}
-            {quoteData.time && (
-              <div className="flex justify-between items-center">
-                <span className="font-medium">⏰ Horário:</span>
-                <span>{formatTimeDisplay(quoteData.time)}</span>
+              <h3 className="text-2xl font-light text-gray-800 tracking-wide">Resumo da Viagem</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <div className="flex items-start">
+                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                    <MapPin className="h-4 w-4 text-black" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-medium text-gray-500 mb-1">Origem</div>
+                    <div className="text-gray-900 font-medium">{quoteData.pickup}</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                    <Navigation2 className="h-4 w-4 text-black" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-medium text-gray-500 mb-1">Destino</div>
+                    <div className="text-gray-900 font-medium">{quoteData.destination}</div>
+                  </div>
+                </div>
               </div>
-            )}
-            {quoteData.priceFactors && quoteData.priceFactors.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-blue-200">
-                <span className="font-medium">💰 Fatores de preço:</span>
-                <div className="mt-1 space-y-1">
-                  {quoteData.priceFactors.map((factor, index) => (
-                    <div key={index} className="text-sm flex items-center">
-                      <div className="w-1 h-1 bg-blue-400 rounded-full mr-2"></div>
-                      {factor}
+              
+              <div className="space-y-6">
+                <div className="flex items-start">
+                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                    <Calendar className="h-4 w-4 text-black" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-medium text-gray-500 mb-1">Data e Horário</div>
+                    <div className="text-gray-900 font-medium">
+                      {formatDateDisplay(quoteData.date)}
                     </div>
+                    <div className="text-gray-600 text-sm">
+                      {formatTimeDisplay(quoteData.time)}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                    <Timer className="h-4 w-4 text-black" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-medium text-gray-500 mb-1">Distância</div>
+                    <div className="text-gray-900 font-medium">
+                      {quoteData.calculatedDistance ? `${quoteData.calculatedDistance.toFixed(1)} KM` : '—'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {quoteData.priceFactors && quoteData.priceFactors.length > 0 && (
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <div className="text-sm font-medium text-gray-700 mb-3">Fatores de Preço</div>
+                <div className="flex flex-wrap gap-2">
+                  {quoteData.priceFactors.map((factor, index) => (
+                    <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
+                      {factor}
+                    </span>
                   ))}
                 </div>
               </div>
             )}
-          </div>
-          <div className="mt-4 text-xs text-blue-600 bg-blue-100 p-2 rounded">
-            ✅ Distâncias e tempos calculados usando dados reais do Google Maps para máxima precisão
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Continue Button */}
         <Button 
           onClick={handleContinue}
           disabled={!selectedVehicle}
-          className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg font-medium"
+          className={`w-full text-white py-4 text-lg font-medium ${
+            selectedVehicle 
+              ? 'bg-green-600 hover:bg-green-700' 
+              : 'bg-black hover:bg-gray-800'
+          }`}
         >
           {t('vehicle.continue')}
         </Button>

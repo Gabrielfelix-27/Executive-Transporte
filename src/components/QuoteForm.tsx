@@ -310,13 +310,13 @@ export const QuoteForm = () => {
         {/* Botão de Envio */}
         <Button 
           type="submit" 
-          className="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-6 rounded-none mt-4 transition-all duration-200 text-base"
           disabled={isCalculating || !pickup || !destination}
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition-colors duration-200"
         >
           {isCalculating ? (
             <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-              {t('quote.calculating')}
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+              Calculando...
             </div>
           ) : (
             t('quote.button')
