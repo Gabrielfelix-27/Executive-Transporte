@@ -36,7 +36,7 @@ const translations = {
     'quote.byHour': 'POR HORA',
     'quote.origin': 'Origem',
     'quote.selectDate': 'Por favor, selecione data e horário',
-    'quote.minAdvance': '⚠️ Atenção: As reservas devem ser feitas com pelo menos 2 horas de antecedência. Por favor, selecione um horário válido.',
+    'quote.minAdvance': '⚠️ Atenção: Por favor, selecione um horário válido.',
     'quote.priceError': 'Erro ao calcular preços. Tente novamente.',
     
     // Vehicle Categories
@@ -227,7 +227,7 @@ const translations = {
     'quote.byHour': 'POR HORA',
     'quote.origin': 'Origen',
     'quote.selectDate': 'Por favor, seleccione fecha y hora',
-    'quote.minAdvance': '⚠️ Atención: Las reservas deben hacerse con al menos 2 horas de anticipación. Por favor, seleccione una hora válida.',
+    'quote.minAdvance': '⚠️ Atención: Por favor, seleccione una hora válida.',
     'quote.priceError': 'Error al calcular precios. Inténtelo de nuevo.',
     
     // Vehicle Categories
@@ -417,7 +417,7 @@ const translations = {
     'quote.byHour': 'BY HOUR',
     'quote.origin': 'Origin',
     'quote.selectDate': 'Please select date and time',
-    'quote.minAdvance': '⚠️ Attention: Bookings must be made at least 2 hours in advance. Please select a valid time.',
+    'quote.minAdvance': '⚠️ Attention: Please select a valid time.',
     'quote.priceError': 'Error calculating prices. Please try again.',
     
     // Vehicle Categories

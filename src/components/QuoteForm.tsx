@@ -19,10 +19,9 @@ export const QuoteForm = () => {
   const [isCalculating, setIsCalculating] = useState(false);
   const [useGoogleMaps] = useState(isGoogleMapsConfigured());
 
-  // Função para calcular horário com 2 horas à frente
-  const getTwoHoursAhead = () => {
+  // Função para obter horário atual
+  const getCurrentTime = () => {
     const now = new Date();
-    now.setHours(now.getHours() + 2);
     return now.toTimeString().slice(0, 5); // HH:MM
   };
 
@@ -34,23 +33,20 @@ export const QuoteForm = () => {
   // Inicializar campos com valores padrão
   useEffect(() => {
     const currentDate = getCurrentDate();
-    const twoHoursAhead = getTwoHoursAhead();
+    const currentTime = getCurrentTime();
     
     setSelectedDate(currentDate);
-    setSelectedTime(twoHoursAhead);
+    setSelectedTime(currentTime);
   }, []);
 
-  // Validar se o horário é pelo menos 2 horas à frente
+  // Validar se o horário é válido (não no passado)
   const validateBookingTime = (date: Date, time: string) => {
     const now = new Date();
     const selectedDateTime = new Date(date);
     const [hours, minutes] = time.split(':').map(Number);
     selectedDateTime.setHours(hours, minutes, 0, 0);
     
-    const twoHoursFromNow = new Date();
-    twoHoursFromNow.setHours(twoHoursFromNow.getHours() + 2);
-    
-    return selectedDateTime >= twoHoursFromNow;
+    return selectedDateTime >= now;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,9 +62,9 @@ export const QuoteForm = () => {
       return;
     }
 
-    // Validar se o horário é pelo menos 2 horas à frente
+    // Validar se o horário não é no passado
     if (!validateBookingTime(selectedDate, selectedTime)) {
-      alert(t('quote.minAdvance'));
+      alert(t('quote.selectDate'));
       return;
     }
 
@@ -142,13 +138,18 @@ export const QuoteForm = () => {
   const handleDateChange = (newDate: Date | undefined) => {
     setSelectedDate(newDate);
     
-    // Se a data foi alterada, validar o horário novamente
-    if (newDate && selectedTime && !validateBookingTime(newDate, selectedTime)) {
-      // Atualizar o horário para 2 horas à frente se a data for hoje
+    // Se a data for hoje e o horário atual for no passado, sugerir horário atual
+    // Mas fazer isso silenciosamente, sem mostrar erro
+    if (newDate && selectedTime) {
       const today = new Date();
       
       if (newDate.toDateString() === today.toDateString()) {
-        setSelectedTime(getTwoHoursAhead());
+        const currentMinTime = getCurrentTime();
+        
+        // Se o horário selecionado for antes do horário mínimo, atualizar silenciosamente
+        if (selectedTime < currentMinTime) {
+          setSelectedTime(currentMinTime);
+        }
       }
     }
   };
@@ -159,9 +160,9 @@ export const QuoteForm = () => {
     
     const today = new Date();
     
-    // Se a data selecionada for hoje, o horário mínimo é 2 horas à frente
+    // Se a data selecionada for hoje, o horário mínimo é o horário atual
     if (selectedDate.toDateString() === today.toDateString()) {
-      return getTwoHoursAhead();
+      return getCurrentTime();
     }
     
     // Se for uma data futura, pode ser qualquer horário
