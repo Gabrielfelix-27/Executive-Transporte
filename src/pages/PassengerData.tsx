@@ -297,49 +297,49 @@ const PassengerData = () => {
         }
       } catch (emailError) {
         console.error('❌ Erro ao enviar email:', emailError);
-        console.log('📧 Verifique se a Vercel API está configurada corretamente');
+        console.log('● Verifique se a Vercel API está configurada corretamente');
         // Continua mesmo se o email falhar
       }
       
       // Criar mensagem para WhatsApp
-      const message = `🚗 *NOVA RESERVA - EXECUTIVE PREMIUM*
+      const message = `● *NOVA RESERVA - EXECUTIVE PREMIUM*
 
-📋 *DADOS DA VIAGEM:*
+● *DADOS DA VIAGEM:*
 • Data: ${formatDateDisplay(quoteData?.date || "")}
 • Horário: ${formatTimeDisplay(quoteData?.time || "")}
 • Origem: ${quoteData?.pickup}
 • Destino: ${quoteData?.destination}
 • Distância: ${location.state?.calculatedDistance ? Math.round(location.state.calculatedDistance) : 25} KM
 
-🚙 *VEÍCULO SELECIONADO:*
+● *VEÍCULO SELECIONADO:*
 • Categoria: ${selectedVehicle?.name}
 • Tipo: ${selectedVehicle?.type}
 • Valor: ${formatCurrency(selectedVehicle?.price || 0)}
 
-👤 *DADOS DO PASSAGEIRO:*
+● *DADOS DO PASSAGEIRO:*
 • Nome: ${passengerInfo.passengerName}
 • Telefone: ${passengerInfo.phoneNumber}
 • Email: ${passengerInfo.email}
 • Reserva: ${passengerInfo.reserveFor === 'para-mim' ? 'Para mim' : 'Para outra pessoa'}
 
-${isAirportTransfer() ? `✈️ *DETALHES DO VOO:*
+${isAirportTransfer() ? `● *DETALHES DO VOO:*
 • Número do voo: ${passengerInfo.flightNumber}` : ''}
 
-${isBusStationTransfer() ? `🚌 *DETALHES DO TERMINAL:*
+${isBusStationTransfer() ? `● *DETALHES DO TERMINAL:*
 • Informações adicionais: ${passengerInfo.additionalInfo}` : ''}
 
-📋 *DETALHES ADICIONAIS:*
+● *DETALHES ADICIONAIS:*
 • Nome na placa: ${passengerInfo.plateNameShow}
 • Número de malas: ${passengerInfo.luggageCount}
 
-${passengerInfo.additionalInfo ? `💬 *OBSERVAÇÕES:*
+${passengerInfo.additionalInfo ? `● *OBSERVAÇÕES:*
 ${passengerInfo.additionalInfo}` : ''}
 
 ---
-📄 *IMPORTANTE:* Um arquivo PDF foi baixado automaticamente com todos os detalhes da reserva.
-👆 *Por favor, anexe o arquivo PDF "${fileName}" nesta conversa.*
-📧 *A equipe da Executive Premium já foi notificada automaticamente por email via Vercel API.*
-📎 *O PDF foi enviado automaticamente para gabriel.gbllima10@gmail.com*
+● *IMPORTANTE:* Um arquivo PDF foi baixado automaticamente com todos os detalhes da reserva.
+● *Por favor, anexe o arquivo PDF "${fileName}" nesta conversa.*
+● *A equipe da Executive Premium já foi notificada automaticamente por email via Vercel API.*
+● *O PDF foi enviado automaticamente para gabriel.gbllima10@gmail.com*
 
 Reserva feita através do site Executive Premium`;
 
@@ -355,7 +355,7 @@ Reserva feita através do site Executive Premium`;
       }, 1000);
       
       // Mostrar alerta para o usuário
-      alert('✅ PDF baixado com sucesso!\n📧 Equipe notificada por email automaticamente via Vercel API!\n📎 PDF enviado automaticamente para gabriel.gbllima10@gmail.com\n🚀 Agora você será redirecionado para o WhatsApp.\n\nNão se esqueça de anexar o arquivo PDF baixado na conversa.');
+      alert('✅ PDF baixado com sucesso!\n● Equipe notificada por email automaticamente via Vercel API!\n● PDF enviado automaticamente para gabriel.gbllima10@gmail.com\n● Agora você será redirecionado para o WhatsApp.\n\nNão se esqueça de anexar o arquivo PDF baixado na conversa.');
       
     } catch (error) {
       console.error('❌ Erro ao processar reserva:', error);
@@ -612,8 +612,8 @@ Reserva feita através do site Executive Premium`;
                     <ul className="text-sm text-blue-800 space-y-1">
                       <li>• Um PDF será gerado automaticamente com todos os detalhes</li>
                       <li>• O arquivo será baixado no seu computador</li>
-                      <li>• 📧 A equipe da Executive Premium será notificada automaticamente por email</li>
-                      <li>• 📎 O PDF será enviado automaticamente para a equipe via Vercel API</li>
+                                              <li>• ● A equipe da Executive Premium será notificada automaticamente por email</li>
+                        <li>• ● O PDF será enviado automaticamente para a equipe via Vercel API</li>
                       <li>• Você será redirecionado para o WhatsApp da Executive Premium</li>
                       <li>• Anexe o PDF baixado na conversa para confirmar a reserva</li>
                     </ul>

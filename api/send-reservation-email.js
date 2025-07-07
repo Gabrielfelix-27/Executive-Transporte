@@ -28,28 +28,54 @@ export default async function handler(req, res) {
   }
 
   try {
+    console.log('🚀 Iniciando envio de email...');
+    
+    // Verificar variáveis de ambiente
+    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+      console.error('❌ Variáveis de ambiente não configuradas');
+      return res.status(500).json({
+        success: false,
+        error: 'Variáveis de ambiente não configuradas',
+        details: 'GMAIL_USER ou GMAIL_APP_PASSWORD não encontradas'
+      });
+    }
+
+    console.log('✅ Variáveis de ambiente encontradas');
+    console.log('📧 Email configurado:', process.env.GMAIL_USER);
+
     // Parse dos dados recebidos
     const { reservationData, pdfData } = req.body;
 
     // Validar dados obrigatórios
     if (!reservationData || !pdfData) {
+      console.error('❌ Dados inválidos recebidos');
       return res.status(400).json({ 
         success: false, 
         error: 'Dados da reserva ou PDF não fornecidos' 
       });
     }
 
+    console.log('✅ Dados da reserva recebidos:', reservationData.passengerName);
+
     // Criar transportador de email
     const transporter = createTransporter();
+    
+    // Testar conexão
+    console.log('🔄 Verificando conexão com Gmail...');
+    await transporter.verify();
+    console.log('✅ Conexão com Gmail estabelecida');
 
     // Converter PDF base64 para buffer
+    console.log('🔄 Convertendo PDF base64 para buffer...');
     const pdfBuffer = Buffer.from(pdfData, 'base64');
+    console.log('✅ PDF convertido. Tamanho:', Math.round(pdfBuffer.length / 1024) + 'KB');
 
     // Configurar opções do email
+    console.log('🔄 Configurando opções do email...');
     const mailOptions = {
       from: process.env.GMAIL_USER,
       to: 'gabriel.gbllima10@gmail.com',
-      subject: `🚗 Nova Reserva - ${reservationData.passengerName}`,
+      subject: `● Nova Reserva - ${reservationData.passengerName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background-color: #000; color: #fff; padding: 20px; text-align: center;">
@@ -118,8 +144,12 @@ export default async function handler(req, res) {
       ]
     };
 
+    console.log('✅ Configurações do email preparadas');
+
     // Enviar email
+    console.log('🔄 Enviando email para:', mailOptions.to);
     const result = await transporter.sendMail(mailOptions);
+    console.log('✅ Email enviado com sucesso! Message ID:', result.messageId);
 
     return res.status(200).json({
       success: true,
@@ -128,12 +158,19 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error('Erro ao enviar email:', error);
+    console.error('❌ Erro ao enviar email:', error);
+    console.error('❌ Stack trace:', error.stack);
+    
+    // Verificar se é erro de autenticação
+    if (error.code === 'EAUTH') {
+      console.error('❌ Erro de autenticação Gmail. Verifique GMAIL_USER e GMAIL_APP_PASSWORD');
+    }
     
     return res.status(500).json({
       success: false,
       error: 'Erro ao enviar email',
-      details: error.message
+      details: error.message,
+      code: error.code || 'UNKNOWN'
     });
   }
 } 

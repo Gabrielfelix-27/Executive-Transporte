@@ -69,7 +69,27 @@ A API Route `/api/send-reservation-email.js` será automaticamente configurada p
 3. Verifique se:
    - [ ] PDF é gerado e baixado
    - [ ] Email é enviado para `gabriel.gbllima10@gmail.com`
-   - [ ] WhatsApp abre corretamente
+   - [ ] WhatsApp abre corretamente com ● (bullet points) em vez de emojis quebrados
+
+### 🔍 Debug de Email
+Se o email não chegar:
+
+1. **Verificar logs da função:**
+   - Acesse **Vercel Dashboard > Functions**
+   - Clique na função `send-reservation-email`
+   - Veja os logs em tempo real
+
+2. **Logs importantes:**
+   ```
+   ✅ Variáveis de ambiente encontradas
+   ✅ Conexão com Gmail estabelecida  
+   ✅ Email enviado com sucesso! Message ID: xxxxx
+   ```
+
+3. **Erros comuns:**
+   - `❌ Variáveis de ambiente não configuradas` → Configure GMAIL_USER e GMAIL_APP_PASSWORD
+   - `❌ Erro de autenticação Gmail` → Verifique se a senha de app está correta
+   - `EAUTH error` → Regenere a senha de app no Gmail
 
 ## 📊 Passo 5: Configurações Adicionais
 
