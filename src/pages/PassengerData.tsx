@@ -277,9 +277,9 @@ const PassengerData = () => {
         observations: passengerInfo.additionalInfo
       };
 
-      // Enviar email automaticamente para a equipe via Netlify Function
+      // Enviar email automaticamente para a equipe via Vercel API
       try {
-        const response = await fetch('/.netlify/functions/send-reservation-email', {
+        const response = await fetch('/api/send-reservation-email', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -297,7 +297,7 @@ const PassengerData = () => {
         }
       } catch (emailError) {
         console.error('❌ Erro ao enviar email:', emailError);
-        console.log('📧 Verifique se o Netlify Functions está configurado corretamente');
+        console.log('📧 Verifique se a Vercel API está configurada corretamente');
         // Continua mesmo se o email falhar
       }
       
@@ -338,7 +338,7 @@ ${passengerInfo.additionalInfo}` : ''}
 ---
 📄 *IMPORTANTE:* Um arquivo PDF foi baixado automaticamente com todos os detalhes da reserva.
 👆 *Por favor, anexe o arquivo PDF "${fileName}" nesta conversa.*
-📧 *A equipe da Executive Premium já foi notificada automaticamente por email via Netlify Functions.*
+📧 *A equipe da Executive Premium já foi notificada automaticamente por email via Vercel API.*
 📎 *O PDF foi enviado automaticamente para gabriel.gbllima10@gmail.com*
 
 Reserva feita através do site Executive Premium`;
@@ -355,7 +355,7 @@ Reserva feita através do site Executive Premium`;
       }, 1000);
       
       // Mostrar alerta para o usuário
-      alert('✅ PDF baixado com sucesso!\n📧 Equipe notificada por email automaticamente via Netlify Functions!\n📎 PDF enviado automaticamente para gabriel.gbllima10@gmail.com\n🚀 Agora você será redirecionado para o WhatsApp.\n\nNão se esqueça de anexar o arquivo PDF baixado na conversa.');
+      alert('✅ PDF baixado com sucesso!\n📧 Equipe notificada por email automaticamente via Vercel API!\n📎 PDF enviado automaticamente para gabriel.gbllima10@gmail.com\n🚀 Agora você será redirecionado para o WhatsApp.\n\nNão se esqueça de anexar o arquivo PDF baixado na conversa.');
       
     } catch (error) {
       console.error('❌ Erro ao processar reserva:', error);
@@ -613,7 +613,7 @@ Reserva feita através do site Executive Premium`;
                       <li>• Um PDF será gerado automaticamente com todos os detalhes</li>
                       <li>• O arquivo será baixado no seu computador</li>
                       <li>• 📧 A equipe da Executive Premium será notificada automaticamente por email</li>
-                      <li>• 📎 O PDF será enviado automaticamente para a equipe via Netlify Functions</li>
+                      <li>• 📎 O PDF será enviado automaticamente para a equipe via Vercel API</li>
                       <li>• Você será redirecionado para o WhatsApp da Executive Premium</li>
                       <li>• Anexe o PDF baixado na conversa para confirmar a reserva</li>
                     </ul>

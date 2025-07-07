@@ -1,8 +1,20 @@
-# Welcome to your Lovable project
+# 🚗 Executive Premium - Transporte Executivo
 
-## Project info
+Sistema completo de reservas para transporte executivo de alto padrão com geração automática de PDF e notificação por email.
 
-**URL**: https://lovable.dev/projects/7bef9512-02b4-4248-8248-1204dd8877a2
+## 🚀 Deploy & Produção
+
+**Plataforma:** Vercel (migrado do Netlify)  
+**Status:** ✅ Produção  
+**Funcionalidades:**
+- 📄 Geração automática de PDF com jsPDF
+- 📧 Envio automático de emails via Gmail/Nodemailer  
+- 🗺️ Integração com Google Maps API
+- 📱 Interface responsiva com Tailwind CSS
+
+## 📋 Project info
+
+**URL Desenvolvimento**: https://lovable.dev/projects/7bef9512-02b4-4248-8248-1204dd8877a2
 
 ## How can I edit this code?
 
@@ -50,19 +62,43 @@ npm run dev
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
+## 🛠️ What technologies are used for this project?
 
-This project is built with:
+### Frontend
+- **Vite** - Build tool e dev server
+- **TypeScript** - Tipagem estática
+- **React** - Library de UI
+- **shadcn-ui** - Componentes de UI
+- **Tailwind CSS** - Estilização
+- **React Router** - Roteamento
+- **React Hook Form** - Gerenciamento de formulários
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Backend & APIs
+- **Vercel API Routes** - Funções serverless
+- **Nodemailer** - Envio de emails via Gmail
+- **jsPDF** - Geração de PDF no frontend
+- **Google Maps API** - Geocodificação e mapas
 
-## How can I deploy this project?
+### Integração & Deploy
+- **Vercel** - Hospedagem e deploy
+- **GitHub** - Controle de versão
+- **Gmail SMTP** - Envio de emails
 
+## 🚀 How can I deploy this project?
+
+### Opção 1: Deploy Automático via Vercel (Recomendado)
+1. Conecte seu repositório GitHub ao [Vercel](https://vercel.com)
+2. Configure as variáveis de ambiente (ver `VERCEL_SETUP.md`)
+3. Deploy automático a cada push
+
+### Opção 2: Deploy via Lovable
 Simply open [Lovable](https://lovable.dev/projects/7bef9512-02b4-4248-8248-1204dd8877a2) and click on Share -> Publish.
+
+### ⚙️ Configuração Necessária
+- **GMAIL_USER**: Seu email Gmail
+- **GMAIL_APP_PASSWORD**: Senha de app do Gmail
+
+📖 **Guia completo:** Veja `VERCEL_SETUP.md` para instruções detalhadas
 
 ## Can I connect a custom domain to my Lovable project?
 

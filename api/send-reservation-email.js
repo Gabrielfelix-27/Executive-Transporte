@@ -11,18 +11,33 @@ const createTransporter = () => {
   });
 };
 
-exports.handler = async (event, context) => {
+export default async function handler(req, res) {
+  // Configurar CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Responder OPTIONS para preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   // Permitir apenas POST
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: 'Método não permitido' })
-    };
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Método não permitido' });
   }
 
   try {
     // Parse dos dados recebidos
-    const { reservationData, pdfData } = JSON.parse(event.body);
+    const { reservationData, pdfData } = req.body;
+
+    // Validar dados obrigatórios
+    if (!reservationData || !pdfData) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Dados da reserva ou PDF não fornecidos' 
+      });
+    }
 
     // Criar transportador de email
     const transporter = createTransporter();
@@ -106,25 +121,19 @@ exports.handler = async (event, context) => {
     // Enviar email
     const result = await transporter.sendMail(mailOptions);
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        success: true,
-        message: 'Email enviado com sucesso!',
-        messageId: result.messageId
-      })
-    };
+    return res.status(200).json({
+      success: true,
+      message: 'Email enviado com sucesso!',
+      messageId: result.messageId
+    });
 
   } catch (error) {
     console.error('Erro ao enviar email:', error);
     
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        success: false,
-        error: 'Erro ao enviar email',
-        details: error.message
-      })
-    };
+    return res.status(500).json({
+      success: false,
+      error: 'Erro ao enviar email',
+      details: error.message
+    });
   }
-}; 
+} 
