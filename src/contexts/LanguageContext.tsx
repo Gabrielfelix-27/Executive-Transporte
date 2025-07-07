@@ -63,7 +63,7 @@ const translations = {
     'features.sustainableTripDesc': 'Frota híbrida do luxo sustentável, nossos carros híbridos unem sofisticação, conforto e exclusividade, preservando o meio ambiente em cada trajeto.',
     
     // Services translations
-    'services.title': 'VEÍCULOS BLINDADOS DE LUXO COM CHAUFFEURS',
+    'services.title': 'VEÍCULOS BLINDADOS DE LUXO COM CHOFERES',
     'services.subtitle': 'OS SERVIÇOS MAIS ESCOLHIDOS',
     'services.onDemand': 'SERVIÇO À DISPOSIÇÃO',
     'services.onDemandDesc': 'Motoristas inteiramente exclusivos para atender as suas demandas.',
