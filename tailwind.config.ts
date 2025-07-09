@@ -19,7 +19,8 @@ const config = {
 		},
 		extend: {
 			fontFamily: {
-				sans: ["Inter", "sans-serif"],
+				sans: ["Red Hat Display", "Inter", "sans-serif"],
+				redhat: ["Red Hat Display", "sans-serif"],
 			},
 			colors: {
 				border: 'hsl(var(--border))',

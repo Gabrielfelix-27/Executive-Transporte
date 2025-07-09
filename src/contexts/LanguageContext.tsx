@@ -81,9 +81,11 @@ const translations = {
     // Footer translations
     'footer.company': 'EXECUTIVE',
     'footer.helpCenter': 'ACESSAR CENTRAL DE AJUDA',
-    'footer.companyFull': 'Executive | Executive Transporte de Luxo LTDA',
-    'footer.address': 'R. Brasília, 196 - Sumaré, São Paulo - SP',
-    'footer.cep': '01259-000, Brasil',
+    'footer.companyFull': 'Executive Premium',
+    'footer.address': 'Rua Baronesa de Bela Vista, 411 - Vila Congonhas, São Paulo - SP, Brasil',
+    'footer.phone': '(11) 91585-3292',
+    'footer.email': 'executivetransportepremium@gmail.com',
+    'footer.instagram': 'Instagram',
     'footer.aboutUs': 'QUEM SOMOS',
     'footer.workWithUs': 'TRABALHE CONOSCO',
     'footer.routes': 'ROTAS',
@@ -135,7 +137,7 @@ const translations = {
     'header.spanish': 'ESPAÑOL',
     'header.english': 'ENGLISH',
     'header.homepage': 'Página Principal',
-    'header.mapsDemo': 'Google Maps Demo',
+    'header.aboutUs': 'Sobre Nós',
     'header.moreOptions': 'Mais opções em breve...',
     'currency.real': 'REAL',
     'currency.dollar': 'DÓLAR',
@@ -199,7 +201,13 @@ const translations = {
     'passenger.finishReservation': 'FINALIZAR RESERVA VIA WHATSAPP',
     
     // Date formatting
-    'date.of': 'DE'
+    'date.of': 'DE',
+    
+    // About Us translations
+    'about.title': 'Sobre Nós',
+    'about.description1': 'Na Executive Transporte Premium, oferecemos uma experiência de mobilidade sofisticada e confiável para pessoas e empresas exigentes. Atuamos em São Paulo com foco em pontualidade, conforto e segurança, seja para compromissos corporativos, eventos, traslados executivos ou momentos especiais.',
+    'about.description2': 'Contamos com uma equipe de motoristas altamente qualificados, frota premium e atendimento personalizado, ideal para quem busca profissionalismo em cada trajeto.',
+    'about.description3': 'Seja para viagens de negócios, recepção de executivos, translados para aeroportos ou passeios personalizados, conte com a Executive para proporcionar uma jornada à altura da sua necessidade.'
   },
   es: {
     // QuoteForm translations
@@ -269,9 +277,11 @@ const translations = {
     // Footer translations
     'footer.company': 'EXECUTIVE',
     'footer.helpCenter': 'ACCEDER CENTRO DE AYUDA',
-    'footer.companyFull': 'Executive | Executive Transporte de Lujo LTDA',
-    'footer.address': 'R. Brasília, 196 - Sumaré, São Paulo - SP',
-    'footer.cep': '01259-000, Brasil',
+    'footer.companyFull': 'Executive Premium',
+    'footer.address': 'Rua Baronesa de Bela Vista, 411 - Vila Congonhas, São Paulo - SP, Brasil',
+    'footer.phone': '(11) 91585-3292',
+    'footer.email': 'executivetransportepremium@gmail.com',
+    'footer.instagram': 'Instagram',
     'footer.aboutUs': 'QUIÉNES SOMOS',
     'footer.workWithUs': 'TRABAJE CON NOSOTROS',
     'footer.routes': 'RUTAS',
@@ -323,7 +333,7 @@ const translations = {
     'header.spanish': 'ESPAÑOL',
     'header.english': 'ENGLISH',
     'header.homepage': 'Página Principal',
-    'header.mapsDemo': 'Google Maps Demo',
+    'header.aboutUs': 'Acerca de Nosotros',
     'header.moreOptions': 'Más opciones próximamente...',
     'currency.real': 'REAL',
     'currency.dollar': 'DÓLAR',
@@ -388,7 +398,13 @@ const translations = {
     'passenger.optional': 'Opcional',
     'passenger.finishReservation': 'FINALIZAR RESERVA',
     // Date formatting
-    'date.of': 'DE'
+    'date.of': 'DE',
+    
+    // About Us translations
+    'about.title': 'Acerca de Nosotros',
+    'about.description1': 'En Executive Transporte Premium, ofrecemos una experiencia de movilidad sofisticada y confiable para personas y empresas exigentes. Operamos en São Paulo con enfoque en puntualidad, comodidad y seguridad, ya sea para compromisos corporativos, eventos, traslados ejecutivos o momentos especiales.',
+    'about.description2': 'Contamos con un equipo de conductores altamente calificados, flota premium y atención personalizada, ideal para quienes buscan profesionalismo en cada trayecto.',
+    'about.description3': 'Ya sea para viajes de negocios, recepción de ejecutivos, traslados a aeropuertos o paseos personalizados, cuente con Executive para proporcionar un viaje a la altura de su necesidad.'
   },
   en: {
     // QuoteForm translations
@@ -458,9 +474,11 @@ const translations = {
     // Footer translations
     'footer.company': 'EXECUTIVE',
     'footer.helpCenter': 'ACCESS HELP CENTER',
-    'footer.companyFull': 'Executive | Executive Luxury Transportation LTDA',
-    'footer.address': 'R. Brasília, 196 - Sumaré, São Paulo - SP',
-    'footer.cep': '01259-000, Brazil',
+    'footer.companyFull': 'Executive Premium',
+    'footer.address': 'Rua Baronesa de Bela Vista, 411 - Vila Congonhas, São Paulo - SP, Brasil',
+    'footer.phone': '(11) 91585-3292',
+    'footer.email': 'executivetransportepremium@gmail.com',
+    'footer.instagram': 'Instagram',
     'footer.aboutUs': 'ABOUT US',
     'footer.workWithUs': 'WORK WITH US',
     'footer.routes': 'ROUTES',
@@ -512,7 +530,7 @@ const translations = {
     'header.spanish': 'ESPAÑOL',
     'header.english': 'ENGLISH',
     'header.homepage': 'Home Page',
-    'header.mapsDemo': 'Google Maps Demo',
+    'header.aboutUs': 'About Us',
     'header.moreOptions': 'More options coming soon...',
     'currency.real': 'REAL',
     'currency.dollar': 'DOLLAR',
@@ -575,7 +593,13 @@ const translations = {
     'passenger.optional': 'Optional',
     'passenger.finishReservation': 'FINISH BOOKING',
     // Date formatting
-    'date.of': 'OF'
+    'date.of': 'OF',
+    
+    // About Us translations
+    'about.title': 'About Us',
+    'about.description1': 'At Executive Premium Transport, we offer a sophisticated and reliable mobility experience for demanding individuals and companies. We operate in São Paulo with a focus on punctuality, comfort, and safety, whether for corporate commitments, events, executive transfers, or special moments.',
+    'about.description2': 'We have a team of highly qualified drivers, premium fleet, and personalized service, ideal for those seeking professionalism in every journey.',
+    'about.description3': 'Whether for business trips, executive reception, airport transfers, or personalized tours, count on Executive to provide a journey worthy of your needs.'
   }
 };
 

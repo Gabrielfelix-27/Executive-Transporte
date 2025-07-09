@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ChevronDown, Globe, Menu, MapPin } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect, useState } from "react";
@@ -50,8 +50,42 @@ export const Navbar = ({
       >
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <div className="flex items-center">
+            {/* Menu à esquerda */}
+            <div className="flex items-center justify-start flex-1">
+              {/* Menu Principal */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent font-redhat">
+                    <Menu className="h-4 w-4 mr-2" />
+                    {t('header.menu')}
+                    <ChevronDown className="h-4 w-4 ml-2" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-56 p-2" align="start">
+                  <div className="grid gap-1">
+                    <Link 
+                      to="/"
+                      className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700"
+                    >
+                      🏠 {t('header.homepage')}
+                    </Link>
+                    <Link 
+                      to="/about-us"
+                      className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700"
+                    >
+                      ℹ️ {t('header.aboutUs')}
+                    </Link>
+                    <div className="h-px bg-gray-200 my-1"></div>
+                    <div className="px-3 py-2 text-xs text-gray-500">
+                      {t('header.moreOptions')}
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+            
+            {/* Logo centralizado */}
+            <div className="flex items-center justify-center flex-1">
               <Link to="/" className="flex items-center">
                 <img 
                   src="/Logos/Logo Letras.png" 
@@ -62,13 +96,12 @@ export const Navbar = ({
             </div>
             
             {/* Controles do lado direito */}
-            <div className="flex items-center space-x-4 text-sm">
+            <div className="flex items-center justify-end space-x-4 text-sm flex-1">
               {/* Seletor de Idioma */}
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent">
-                    <Globe className="h-4 w-4 mr-2" />
-                    {language.toUpperCase()}
+                    {language === 'pt' ? 'PORTUGUÊS' : language === 'es' ? 'ESPAÑOL' : 'ENGLISH'}
                     <ChevronDown className="h-4 w-4 ml-2" />
                   </Button>
                 </PopoverTrigger>
@@ -131,38 +164,7 @@ export const Navbar = ({
                   </div>
                 </PopoverContent>
               </Popover>
-              
-              {/* Menu Principal */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent">
-                    <Menu className="h-4 w-4 mr-2" />
-                    {t('header.menu')}
-                    <ChevronDown className="h-4 w-4 ml-2" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-56 p-2" align="end">
-                  <div className="grid gap-1">
-                    <Link 
-                      to="/"
-                      className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700"
-                    >
-                      🏠 {t('header.homepage')}
-                    </Link>
-                    <Link 
-                      to="/google-maps-demo"
-                      className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700"
-                    >
-                      <MapPin className="h-4 w-4 mr-2" />
-                      🗺️ {t('header.mapsDemo')}
-                    </Link>
-                    <div className="h-px bg-gray-200 my-1"></div>
-                    <div className="px-3 py-2 text-xs text-gray-500">
-                      {t('header.moreOptions')}
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
+
             </div>
           </div>
         </div>
