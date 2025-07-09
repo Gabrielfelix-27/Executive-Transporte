@@ -82,7 +82,10 @@ export const QuoteForm = () => {
         destination,
         date: selectedDate.toISOString().split('T')[0],
         time: selectedTime,
+        passengers: 1,
         distance: economyData.distance,
+        estimatedTime: economyData.estimatedTime,
+        priceFactors: economyData.priceFactors,
         vehicles: {
           economy: {
             name: t('vehicle.economic'),
@@ -119,6 +122,9 @@ export const QuoteForm = () => {
         }
       };
 
+      // Debug: Log dos dados sendo enviados
+      console.log('📤 QuoteForm enviando dados:', tripData);
+      
       // Navegar para página de seleção de veículo
       navigate('/vehicle-selection', { state: tripData });
     } catch (error) {

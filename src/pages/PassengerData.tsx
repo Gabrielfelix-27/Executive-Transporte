@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useCurrency } from '@/hooks/useCurrency';
 import { Navbar } from '@/components/Navbar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -44,7 +45,8 @@ interface PassengerInfo {
 const PassengerData = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { formatCurrency, t } = useLanguage();
+  const { t } = useLanguage();
+  const { formatPrice } = useCurrency();
 
   // Dados recebidos da navegação anterior
   const quoteData: QuoteData = location.state?.quoteData;
@@ -176,7 +178,7 @@ const PassengerData = () => {
     doc.text(`Tipo: ${selectedVehicle?.type}`, 25, yPosition);
     yPosition += 8;
     doc.setFont('helvetica', 'bold');
-    doc.text(`Valor: ${formatCurrency(selectedVehicle?.price || 0)}`, 25, yPosition);
+    doc.text(`Valor: ${formatPrice(selectedVehicle?.price || 0)}`, 25, yPosition);
     doc.setFont('helvetica', 'normal');
     
     // Seção - Dados do Passageiro
@@ -274,7 +276,7 @@ const PassengerData = () => {
         distance: `${location.state?.calculatedDistance ? Math.round(location.state.calculatedDistance) : 25} KM`,
         vehicleCategory: selectedVehicle?.name,
         vehicleType: selectedVehicle?.type,
-        price: formatCurrency(selectedVehicle?.price || 0),
+        price: formatPrice(selectedVehicle?.price || 0),
         flightNumber: isAirportTransfer() ? passengerInfo.flightNumber : null,
         plateName: passengerInfo.plateNameShow,
         luggageCount: passengerInfo.luggageCount,
@@ -340,7 +342,7 @@ const PassengerData = () => {
 ● *VEÍCULO SELECIONADO:*
 • Categoria: ${selectedVehicle?.name}
 • Tipo: ${selectedVehicle?.type}
-• Valor: ${formatCurrency(selectedVehicle?.price || 0)}
+• Valor: ${formatPrice(selectedVehicle?.price || 0)}
 
 ● *DADOS DO PASSAGEIRO:*
 • Nome: ${passengerInfo.passengerName}

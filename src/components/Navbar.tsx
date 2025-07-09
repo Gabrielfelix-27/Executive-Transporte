@@ -6,6 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { ChevronDown, Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCurrency } from "@/hooks/useCurrency";
 import { useEffect, useState } from "react";
 
 interface NavbarProps {
@@ -21,7 +22,8 @@ export const Navbar = ({
   showBreadcrumb = false,
   currentStep = 0
 }: NavbarProps) => {
-  const { language, setLanguage, currency, setCurrency, t } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
+  const { currency, setCurrency, exchangeRate, loading } = useCurrency();
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
@@ -140,10 +142,11 @@ export const Navbar = ({
                 <PopoverTrigger asChild>
                   <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent">
                     {currency === 'BRL' ? 'BRL R$' : 'USD $'}
+                    {loading && <span className="ml-1 text-xs">⏳</span>}
                     <ChevronDown className="h-4 w-4 ml-2" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-40 p-2" align="end">
+                <PopoverContent className="w-48 p-2" align="end">
                   <div className="grid gap-1">
                     <button 
                       onClick={() => setCurrency('BRL')}
@@ -161,6 +164,11 @@ export const Navbar = ({
                     >
                       🇺🇸 {t('currency.dollar')}
                     </button>
+                    {currency === 'USD' && exchangeRate && (
+                      <div className="px-3 py-2 text-xs text-gray-500 border-t">
+                        1 USD = R$ {exchangeRate.toFixed(2)}
+                      </div>
+                    )}
                   </div>
                 </PopoverContent>
               </Popover>

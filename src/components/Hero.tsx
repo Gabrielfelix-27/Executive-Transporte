@@ -1,8 +1,10 @@
 import { QuoteForm } from "./QuoteForm";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCurrency } from "@/hooks/useCurrency";
 
 export const Hero = () => {
-  const { language, setLanguage, currency, setCurrency, t } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
+  const { currency, setCurrency, exchangeRate, loading } = useCurrency();
 
   return (
     <div 

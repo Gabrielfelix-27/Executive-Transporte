@@ -483,7 +483,7 @@ export const calculateTripPrice = async (
     const minimumPrice = vehicleType === 'luxo' ? 120 : vehicleType === 'suv' ? 100 : 80;
     if (finalPrice < minimumPrice) {
       finalPrice = minimumPrice;
-      priceFactors.push(`Preço mínimo R$ ${minimumPrice}`);
+      priceFactors.push(`Preço mínimo R$ ${minimumPrice.toFixed(2)}`);
     }
     
     const result = {

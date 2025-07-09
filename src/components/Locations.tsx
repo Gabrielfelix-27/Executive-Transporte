@@ -27,7 +27,6 @@ export const Locations = () => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex justify-between items-center mb-12">
           <div>
-            <p className="text-sm text-gray-600 mb-2">{t('locations.topTitle')}</p>
             <h2 className="text-3xl font-bold text-gray-900">
               {t('locations.title')}
             </h2>

@@ -1,10 +1,14 @@
-import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Navbar } from "@/components/Navbar";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useState, useEffect } from 'react';
+import { ChevronRight } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Navbar } from '@/components/Navbar';
+import { VehicleCategories } from '@/components/VehicleCategories';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useCurrency } from '@/hooks/useCurrency';
 import { CheckCircle, User, MapPin, Target, Calendar, Clock, Users, Luggage, Gift, Car, Clock3, UserCheck, Navigation2, Timer } from "lucide-react";
 
 interface QuoteData {
@@ -35,11 +39,12 @@ interface VehicleCategory {
   };
 }
 
-const VehicleSelection = () => {
-  const navigate = useNavigate();
+export default function VehicleSelection() {
   const location = useLocation();
-  const { t, formatCurrency, language } = useLanguage();
-  const [selectedVehicle, setSelectedVehicle] = useState<VehicleCategory | null>(null);
+  const navigate = useNavigate();
+  const { t, language } = useLanguage();
+  const { formatPrice } = useCurrency();
+  const [selectedCategory, setSelectedCategory] = useState<VehicleCategory | null>(null);
 
   // Pegar dados da cotação da navegação anterior
   const tripData = location.state || {};
@@ -73,6 +78,8 @@ const VehicleSelection = () => {
 
   // Debug: Log dos dados recebidos
   console.log('🚗 Dados recebidos no VehicleSelection:', tripData);
+  console.log('🚗 Location state:', location.state);
+  console.log('🚗 TripData.vehicles:', tripData.vehicles);
 
   const quoteData: QuoteData = {
     pickup: tripData.pickup || "Endereço de origem não informado",
@@ -125,7 +132,78 @@ const VehicleSelection = () => {
       medium: value.luggage,
       large: 1
     }
-  })) : [];
+  })) : [
+    // Fallback categories caso não venham dados do QuoteForm
+    {
+      id: 'economy',
+      type: 'ECONÔMICO',
+      name: 'ECONÔMICO',
+      description: 'Conforto básico para trajetos curtos',
+      image: getVehicleImage('economy'),
+      capacity: 4,
+      price: 184,
+      features: ['Conforto básico para trajetos curtos'],
+      luggage: {
+        small: 2,
+        medium: 2,
+        large: 1
+      }
+    },
+    {
+      id: 'executivo',
+      type: 'EXECUTIVO',
+      name: 'EXECUTIVO',
+      description: 'Conforto premium para executivos',
+      image: getVehicleImage('executivo'),
+      capacity: 4,
+      price: 230,
+      features: ['Conforto premium para executivos'],
+      luggage: {
+        small: 2,
+        medium: 3,
+        large: 1
+      }
+    },
+    {
+      id: 'luxo',
+      type: 'LUXO',
+      name: 'LUXO',
+      description: 'Máximo luxo e sofisticação',
+      image: getVehicleImage('luxo'),
+      capacity: 4,
+      price: 368,
+      features: ['Máximo luxo e sofisticação'],
+      luggage: {
+        small: 2,
+        medium: 4,
+        large: 1
+      }
+    },
+    {
+      id: 'suv',
+      type: 'SUV',
+      name: 'SUV',
+      description: 'Espaço e conforto para grupos',
+      image: getVehicleImage('suv'),
+      capacity: 7,
+      price: 300,
+      features: ['Espaço e conforto para grupos'],
+      luggage: {
+        small: 2,
+        medium: 5,
+        large: 1
+      }
+    }
+  ];
+  
+  // Debug: Log das categorias processadas
+  console.log('🚗 Categories processadas:', categories);
+  console.log('🚗 Categories length:', categories.length);
+  
+  // Teste de conversão manual
+  const testPrice = 259.51;
+  const convertedTestPrice = formatPrice(testPrice);
+  console.log(`💱 Teste conversão: R$ ${testPrice.toFixed(2)} → ${convertedTestPrice}`);
 
   // Função para formatar data multilíngue
   const formatDateDisplay = (dateString: string) => {
@@ -197,13 +275,13 @@ const VehicleSelection = () => {
   };
 
   const handleContinue = () => {
-    if (!selectedVehicle) return;
+    if (!selectedCategory) return;
     
     // Navegar para próxima etapa (dados do passageiro)
     navigate('/passenger-data', {
       state: {
         quoteData,
-        selectedVehicle
+        selectedVehicle: selectedCategory
       }
     });
   };
@@ -301,8 +379,8 @@ const VehicleSelection = () => {
                 💰 {t('vehicle.priceFrom')}: 
                 <span className="text-2xl font-bold text-black">
                   {categories.length > 0 
-                    ? formatCurrency(Math.min(...categories.map(c => c.price || 184))) 
-                    : formatCurrency(184)
+                    ? formatPrice(Math.min(...categories.map(c => c.price || 184))) 
+                    : formatPrice(184)
                   }
                 </span>
               </div>
@@ -313,7 +391,7 @@ const VehicleSelection = () => {
               {/* Debug das categorias */}
               {categories.length === 0 && (
                 <div className="text-xs text-orange-600 mt-2 p-2 bg-orange-50 rounded">
-                  ⚠️ Nenhuma categoria de veículo carregada. Verifique os dados recebidos.
+                  ⚠️ Nenhuma categoria de veículo carregada. Usando categorias padrão.
                 </div>
               )}
             </div>
@@ -326,9 +404,9 @@ const VehicleSelection = () => {
             <Card 
               key={category.id} 
               className={`cursor-pointer transition-all ${
-                selectedVehicle?.id === category.id ? 'ring-2 ring-green-500 bg-green-50' : 'hover:shadow-lg'
+                selectedCategory?.id === category.id ? 'ring-2 ring-green-500 bg-green-50' : 'hover:shadow-lg'
               }`}
-              onClick={() => setSelectedVehicle(category)}
+              onClick={() => setSelectedCategory(category)}
             >
               <CardContent className="p-6">
                 {/* Vehicle Image */}
@@ -369,7 +447,7 @@ const VehicleSelection = () => {
                 {/* Price */}
                 <div className="text-center">
                   <div className="text-2xl font-bold text-gray-900 mb-2">
-                    {formatCurrency(category.price)}
+                    {formatPrice(category.price)}
                   </div>
                   <div className="text-xs text-gray-500">
                     {t('vehicle.totalPrice')}
@@ -489,9 +567,9 @@ const VehicleSelection = () => {
         {/* Continue Button */}
         <Button 
           onClick={handleContinue}
-          disabled={!selectedVehicle}
+          disabled={!selectedCategory}
           className={`w-full text-white py-4 text-lg font-medium ${
-            selectedVehicle 
+            selectedCategory 
               ? 'bg-green-600 hover:bg-green-700' 
               : 'bg-black hover:bg-gray-800'
           }`}
@@ -501,6 +579,4 @@ const VehicleSelection = () => {
       </div>
     </div>
   );
-};
-
-export default VehicleSelection; 
+}; 

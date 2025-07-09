@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Users, Car } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCurrency } from "@/hooks/useCurrency";
 
 interface VehicleCategory {
   id: string;
@@ -17,11 +18,11 @@ interface VehicleCategory {
 interface VehicleCategoriesProps {
   categories: VehicleCategory[];
   onSelect: (category: VehicleCategory) => void;
-  formatCurrency: (amount: number) => string;
 }
 
-export const VehicleCategories = ({ categories, onSelect, formatCurrency }: VehicleCategoriesProps) => {
+export const VehicleCategories = ({ categories, onSelect }: VehicleCategoriesProps) => {
   const { t } = useLanguage();
+  const { formatPrice } = useCurrency();
 
   return (
     <div className="space-y-4">
@@ -60,7 +61,7 @@ export const VehicleCategories = ({ categories, onSelect, formatCurrency }: Vehi
                 
                 <div className="flex items-center justify-between pt-2">
                   <div className="text-lg font-bold text-gray-900">
-                    {formatCurrency(category.price)}
+                    {formatPrice(category.price)}
                   </div>
                   <Button 
                     onClick={() => onSelect(category)}
