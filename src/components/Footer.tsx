@@ -78,7 +78,7 @@ export const Footer = () => {
           {/* Desenvolvido por */}
           <div className="text-center mt-8">
             <a 
-              href="https://dreamsetfilms.com" 
+              href="https://dreamsetfilms.com.br" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-sm text-gray-400 hover:text-white transition-colors"
