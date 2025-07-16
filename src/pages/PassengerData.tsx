@@ -67,6 +67,8 @@ const PassengerData = () => {
   const [currentStep, setCurrentStep] = useState<'form' | 'confirmation' | 'thanks'>('form');
   const [actionTaken, setActionTaken] = useState<'pdf' | 'whatsapp' | 'both' | null>(null);
   const [generatedPDF, setGeneratedPDF] = useState<jsPDF | null>(null);
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'success' | 'warning' | 'error'>('idle');
+  const [emailMessage, setEmailMessage] = useState<string>('');
 
   // Detectar se é aeroporto ou rodoviária
   const isAirportTransfer = () => {
@@ -111,27 +113,37 @@ const PassengerData = () => {
   const generatePDF = () => {
     const doc = new jsPDF();
     
+    // Configurações de página
+    const pageWidth = 210;
+    const pageHeight = 297;
+    const margin = 20;
+    const contentWidth = pageWidth - (margin * 2);
+    
     // Configurar fonte
     doc.setFont('helvetica');
     
     // Cabeçalho com fundo elegante
-    doc.setFillColor(0, 0, 0); // Fundo preto
-    doc.rect(0, 0, 210, 55, 'F'); // Retângulo preenchido
+    doc.setFillColor(0, 0, 0);
+    doc.rect(0, 0, pageWidth, 55, 'F');
     
     // Logo e texto do cabeçalho (em branco sobre fundo preto)
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
-    doc.text('EXECUTIVE PREMIUM', 20, 25);
+    doc.text('EXECUTIVE PREMIUM', margin, 25);
     doc.setFontSize(12);
-    doc.text('Transporte Executivo de Alto Padrão', 20, 35);
-    doc.text('Telefone: (11) 94042-9351', 20, 45);
+    doc.text('Transporte Executivo de Alto Padrão', margin, 35);
+    doc.text('Telefone: (11) 94042-9351', margin, 45);
     
     // Data e hora da geração
     const now = new Date();
     const dateStr = now.toLocaleDateString('pt-BR');
-    const timeStr = now.toLocaleTimeString('pt-BR');
+    const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     doc.setFontSize(10);
-    doc.text(`Documento gerado em: ${dateStr} às ${timeStr}`, 120, 45);
+    
+    // Posicionar data no canto direito do cabeçalho
+    const dateText = `Gerado em: ${dateStr} às ${timeStr}`;
+    const dateTextWidth = doc.getTextWidth(dateText);
+    doc.text(dateText, pageWidth - margin - dateTextWidth, 35);
     
     // Voltar para texto preto
     doc.setTextColor(0, 0, 0);
@@ -139,115 +151,145 @@ const PassengerData = () => {
     // Título do documento
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
-    doc.text('CONFIRMAÇÃO DE RESERVA', 20, 75);
+    let yPosition = 75;
+    doc.text('CONFIRMAÇÃO DE RESERVA', margin, yPosition);
     
-    // Número da reserva (simulado)
-    doc.setFontSize(10);
+    // Número da reserva
+    yPosition += 15;
+    doc.setFontSize(11);
     doc.setFont('helvetica', 'normal');
     const reserveNumber = `EP${Date.now().toString().slice(-6)}`;
-    doc.text(`Número da Reserva: ${reserveNumber}`, 20, 85);
+    doc.text(`Número da Reserva: ${reserveNumber}`, margin, yPosition);
     
-    // Dados da viagem
-    doc.setFontSize(12);
-    doc.setTextColor(0, 0, 0);
-    let yPosition = 105;
+    // Função auxiliar para adicionar seção
+    const addSection = (title: string, items: { label: string; value: string }[]) => {
+      yPosition += 20;
+      
+      // Verificar se precisa de nova página
+      if (yPosition > pageHeight - 50) {
+        doc.addPage();
+        yPosition = 30;
+      }
+      
+      // Título da seção
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.text(title, margin, yPosition);
+      
+      // Items da seção
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      
+      items.forEach(item => {
+        if (!item.value || item.value === 'null' || item.value === 'undefined') return;
+        
+        yPosition += 8;
+        
+        // Verificar se precisa de nova página
+        if (yPosition > pageHeight - 50) {
+          doc.addPage();
+          yPosition = 30;
+        }
+        
+        // Quebrar texto longo se necessário
+        const fullText = `${item.label}: ${item.value}`;
+        const textWidth = doc.getTextWidth(fullText);
+        
+        if (textWidth > contentWidth) {
+          // Quebrar texto em múltiplas linhas
+          const lines = doc.splitTextToSize(fullText, contentWidth);
+          lines.forEach((line: string, index: number) => {
+            if (index > 0) yPosition += 6; // Espaçamento menor entre linhas quebradas
+            doc.text(line, margin + 5, yPosition);
+          });
+        } else {
+          doc.text(fullText, margin + 5, yPosition);
+        }
+      });
+    };
     
-    // Seção - Dados da Viagem
-    doc.setFont('helvetica', 'bold');
-    doc.text('DADOS DA VIAGEM:', 20, yPosition);
-    doc.setFont('helvetica', 'normal');
-    yPosition += 10;
-    doc.text(`Data: ${formatDateDisplay(quoteData?.date || "")}`, 25, yPosition);
-    yPosition += 8;
-    doc.text(`Horário: ${formatTimeDisplay(quoteData?.time || "")}`, 25, yPosition);
-    yPosition += 8;
-    doc.text(`Origem: ${quoteData?.pickup}`, 25, yPosition);
-    yPosition += 8;
-    doc.text(`Destino: ${quoteData?.destination}`, 25, yPosition);
-    yPosition += 8;
-    doc.text(`Distância: ${location.state?.calculatedDistance ? Math.round(location.state.calculatedDistance) : 25} KM`, 25, yPosition);
+    // Dados da Viagem
+    addSection('DADOS DA VIAGEM', [
+      { label: 'Data', value: formatDateDisplay(quoteData?.date || "") },
+      { label: 'Horário', value: formatTimeDisplay(quoteData?.time || "") },
+      { label: 'Origem', value: quoteData?.pickup || 'Não informado' },
+      { label: 'Destino', value: quoteData?.destination || 'Não informado' },
+      { label: 'Distância', value: `${location.state?.calculatedDistance ? Math.round(location.state.calculatedDistance) : 25} KM` }
+    ]);
     
-    // Seção - Veículo Selecionado
-    yPosition += 15;
-    doc.setFont('helvetica', 'bold');
-    doc.text('VEÍCULO SELECIONADO:', 20, yPosition);
-    doc.setFont('helvetica', 'normal');
-    yPosition += 10;
-    doc.text(`Categoria: ${selectedVehicle?.name}`, 25, yPosition);
-    yPosition += 8;
-    doc.text(`Tipo: ${selectedVehicle?.type}`, 25, yPosition);
-    yPosition += 8;
-    doc.setFont('helvetica', 'bold');
-    doc.text(`Valor: ${formatPrice(selectedVehicle?.price || 0)}`, 25, yPosition);
-    doc.setFont('helvetica', 'normal');
+    // Veículo Selecionado
+    addSection('VEÍCULO SELECIONADO', [
+      { label: 'Categoria', value: selectedVehicle?.name || 'Não informado' },
+      { label: 'Tipo', value: selectedVehicle?.type || 'Não informado' },
+      { label: 'Valor Total', value: formatPrice(selectedVehicle?.price || 0) }
+    ]);
     
-    // Seção - Dados do Passageiro
-    yPosition += 15;
-    doc.setFont('helvetica', 'bold');
-    doc.text('DADOS DO PASSAGEIRO:', 20, yPosition);
-    doc.setFont('helvetica', 'normal');
-    yPosition += 10;
-    doc.text(`Nome: ${passengerInfo.passengerName}`, 25, yPosition);
-    yPosition += 8;
-    doc.text(`Telefone: ${passengerInfo.phoneNumber}`, 25, yPosition);
-    yPosition += 8;
-    doc.text(`Email: ${passengerInfo.email}`, 25, yPosition);
-    yPosition += 8;
-    doc.text(`Reserva: ${passengerInfo.reserveFor === 'para-mim' ? 'Para mim' : 'Para outra pessoa'}`, 25, yPosition);
+    // Dados do Passageiro
+    addSection('DADOS DO PASSAGEIRO', [
+      { label: 'Nome', value: passengerInfo.passengerName },
+      { label: 'Telefone', value: passengerInfo.phoneNumber },
+      { label: 'Email', value: passengerInfo.email },
+      { label: 'Reserva', value: passengerInfo.reserveFor === 'para-mim' ? 'Para mim' : 'Para outra pessoa' }
+    ]);
     
-    // Seção - Detalhes do Voo (se aplicável)
+    // Detalhes do Voo (se aplicável)
     if (isAirportTransfer() && passengerInfo.flightNumber) {
-      yPosition += 15;
-      doc.setFont('helvetica', 'bold');
-      doc.text('DETALHES DO VOO:', 20, yPosition);
-      doc.setFont('helvetica', 'normal');
-      yPosition += 10;
-      doc.text(`Número do voo: ${passengerInfo.flightNumber}`, 25, yPosition);
+      addSection('DETALHES DO VOO', [
+        { label: 'Número do voo', value: passengerInfo.flightNumber }
+      ]);
     }
     
-    // Seção - Detalhes do Terminal (se aplicável)
+    // Detalhes do Terminal (se aplicável)
     if (isBusStationTransfer() && passengerInfo.additionalInfo) {
-      yPosition += 15;
-      doc.setFont('helvetica', 'bold');
-      doc.text('DETALHES DO TERMINAL:', 20, yPosition);
-      doc.setFont('helvetica', 'normal');
-      yPosition += 10;
-      doc.text(`Informações: ${passengerInfo.additionalInfo}`, 25, yPosition);
+      addSection('DETALHES DO TERMINAL', [
+        { label: 'Informações', value: passengerInfo.additionalInfo }
+      ]);
     }
     
-    // Seção - Detalhes Adicionais
-    yPosition += 15;
-    doc.setFont('helvetica', 'bold');
-    doc.text('DETALHES ADICIONAIS:', 20, yPosition);
-    doc.setFont('helvetica', 'normal');
-    yPosition += 10;
+    // Detalhes Adicionais
+    const additionalDetails = [
+      { label: 'Número de malas', value: passengerInfo.luggageCount.toString() }
+    ];
+    
     if (passengerInfo.plateNameShow) {
-      doc.text(`Nome na placa: ${passengerInfo.plateNameShow}`, 25, yPosition);
-      yPosition += 8;
-    }
-    doc.text(`Número de malas: ${passengerInfo.luggageCount}`, 25, yPosition);
-    
-    // Seção - Observações (se houver)
-    if (passengerInfo.additionalInfo) {
-      yPosition += 15;
-      doc.setFont('helvetica', 'bold');
-      doc.text('OBSERVAÇÕES:', 20, yPosition);
-      doc.setFont('helvetica', 'normal');
-      yPosition += 10;
-      // Quebrar texto longo
-      const splitText = doc.splitTextToSize(passengerInfo.additionalInfo, 150);
-      doc.text(splitText, 25, yPosition);
+      additionalDetails.unshift({ label: 'Nome na placa', value: passengerInfo.plateNameShow });
     }
     
-    // Rodapé com fundo cinza
+    addSection('DETALHES ADICIONAIS', additionalDetails);
+    
+    // Observações (se houver)
+    if (passengerInfo.additionalInfo && !isBusStationTransfer()) {
+      addSection('OBSERVAÇÕES', [
+        { label: 'Comentários', value: passengerInfo.additionalInfo }
+      ]);
+    }
+    
+    // Rodapé
+    yPosition += 30;
+    
+    // Verificar se há espaço para o rodapé
+    if (yPosition > pageHeight - 50) {
+      doc.addPage();
+      yPosition = pageHeight - 40;
+    } else {
+      yPosition = pageHeight - 40;
+    }
+    
+    // Fundo cinza do rodapé
     doc.setFillColor(240, 240, 240);
-    doc.rect(0, 270, 210, 27, 'F');
+    doc.rect(0, yPosition - 10, pageWidth, 40, 'F');
     
+    // Texto do rodapé
     doc.setFontSize(10);
     doc.setTextColor(80, 80, 80);
-    doc.text('Executive Premium - Transporte Executivo de Alto Padrão', 20, 280);
-    doc.text('Reserva gerada automaticamente pelo sistema', 20, 288);
-    doc.text('Para dúvidas, entre em contato: (11) 94042-9351', 20, 296);
+    doc.text('Executive Premium - Transporte Executivo de Alto Padrão', margin, yPosition);
+    doc.text('Reserva gerada automaticamente pelo sistema', margin, yPosition + 8);
+    doc.text('Para dúvidas, entre em contato: (11) 94042-9351', margin, yPosition + 16);
+    
+    // Texto de direita do rodapé
+    const footerRightText = 'www.executivepremium.com.br';
+    const footerRightWidth = doc.getTextWidth(footerRightText);
+    doc.text(footerRightText, pageWidth - margin - footerRightWidth, yPosition + 8);
     
     return doc;
   };
@@ -283,6 +325,13 @@ const PassengerData = () => {
         observations: passengerInfo.additionalInfo
       };
 
+      console.log('📧 Iniciando envio de email...');
+      console.log('📋 Dados da reserva:', reservationData);
+
+      // Indicar que está enviando email
+      setEmailStatus('sending');
+      setEmailMessage('Enviando email para a equipe...');
+
       // Enviar email automaticamente para a equipe via Vercel API
       try {
         const response = await fetch('/api/send-reservation-email', {
@@ -296,23 +345,44 @@ const PassengerData = () => {
           })
         });
 
+        console.log('📧 Response status:', response.status);
+        console.log('📧 Response ok:', response.ok);
+
         if (response.ok) {
-          console.log('✅ Email enviado com sucesso para a equipe!');
+          const result = await response.json();
+          console.log('✅ Email enviado com sucesso!', result);
+          
+          // Feedback positivo para o usuário
+          setEmailStatus('success');
+          setEmailMessage('Email enviado com sucesso para a equipe Executive Premium!');
         } else {
-          console.error('❌ Erro ao enviar email:', await response.text());
+          const errorText = await response.text();
+          console.error('❌ Erro na resposta do servidor:', response.status, errorText);
+          
+          // Feedback de aviso para o usuário
+          setEmailStatus('warning');
+          setEmailMessage('PDF gerado com sucesso. Houve um problema no envio automático do email, mas você pode continuar com o WhatsApp.');
         }
       } catch (emailError) {
-        console.error('❌ Erro ao enviar email:', emailError);
-        console.log('● Verifique se a Vercel API está configurada corretamente');
-        // Continua mesmo se o email falhar
+        console.error('❌ Erro na requisição de email:', emailError);
+        
+        // Verificar tipo de erro
+        if (emailError.name === 'TypeError' && emailError.message.includes('fetch')) {
+          setEmailStatus('error');
+          setEmailMessage('Erro de conexão. Verifique sua internet e tente novamente.');
+        } else {
+          setEmailStatus('warning');
+          setEmailMessage('PDF gerado com sucesso. Continue com o WhatsApp para finalizar a reserva.');
+        }
       }
       
-      // Avançar para tela de confirmação
+      // Avançar para tela de confirmação sempre (mesmo se o email falhar)
       setCurrentStep('confirmation');
       
     } catch (error) {
-      console.error('❌ Erro ao processar reserva:', error);
-      alert('❌ Erro ao processar reserva. Por favor, tente novamente.');
+      console.error('❌ Erro geral ao processar reserva:', error);
+      setEmailStatus('error');
+      setEmailMessage('Erro ao processar reserva. Tente novamente.');
     }
   };
 
@@ -436,6 +506,68 @@ Reserva feita através do site Executive Premium`;
               <h1 className="text-2xl font-bold text-gray-900 mb-6">
                 Reserva concluída com sucesso!
               </h1>
+              
+              {/* Status do envio de email */}
+              {emailStatus !== 'idle' && (
+                <div className={`p-4 rounded-lg mb-6 ${
+                  emailStatus === 'sending' ? 'bg-blue-50 border border-blue-200' :
+                  emailStatus === 'success' ? 'bg-green-50 border border-green-200' :
+                  emailStatus === 'warning' ? 'bg-yellow-50 border border-yellow-200' :
+                  'bg-red-50 border border-red-200'
+                }`}>
+                  <div className="flex items-start">
+                    <div className={`flex-shrink-0 mr-3 mt-0.5 ${
+                      emailStatus === 'sending' ? 'text-blue-600' :
+                      emailStatus === 'success' ? 'text-green-600' :
+                      emailStatus === 'warning' ? 'text-yellow-600' :
+                      'text-red-600'
+                    }`}>
+                      {emailStatus === 'sending' && (
+                        <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      )}
+                      {emailStatus === 'success' && (
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                      )}
+                      {emailStatus === 'warning' && (
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.268 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                      )}
+                      {emailStatus === 'error' && (
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                      )}
+                    </div>
+                    <div>
+                      <h3 className={`text-sm font-medium ${
+                        emailStatus === 'sending' ? 'text-blue-800' :
+                        emailStatus === 'success' ? 'text-green-800' :
+                        emailStatus === 'warning' ? 'text-yellow-800' :
+                        'text-red-800'
+                      }`}>
+                        {emailStatus === 'sending' && 'Enviando notificação...'}
+                        {emailStatus === 'success' && 'Email enviado!'}
+                        {emailStatus === 'warning' && 'Aviso'}
+                        {emailStatus === 'error' && 'Erro no envio'}
+                      </h3>
+                      <p className={`text-sm mt-1 ${
+                        emailStatus === 'sending' ? 'text-blue-700' :
+                        emailStatus === 'success' ? 'text-green-700' :
+                        emailStatus === 'warning' ? 'text-yellow-700' :
+                        'text-red-700'
+                      }`}>
+                        {emailMessage}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
               
               <p className="text-gray-600 mb-8">
                 Sua reserva foi processada com sucesso!
