@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 
-export type Language = 'pt' | 'es' | 'en';
+export type Language = 'pt' | 'es';
 export type Currency = 'BRL' | 'USD';
 
 interface LanguageContextType {
@@ -91,11 +91,11 @@ const translations = {
     'footer.routes': 'ROTAS',
     'footer.cities': 'CIDADES',
     'footer.services': 'SERVIÇOS',
-    'footer.copyright': '2024 © Executive Transporte de Luxo LTDA.',
+    'footer.copyright': '2025 © Executive Transporte Premium',
+    'footer.developedBy': 'Desenvolvido por Dreamsetfilms',
     'footer.privacy': 'PRIVACIDADE',
     'footer.accessibility': 'ACESSIBILIDADE',
     'footer.terms': 'TERMOS',
-    'footer.whatsapp': 'CONVERSE POR WHATSAPP',
     'footer.location': 'SÃO PAULO',
     
     // Locations translations
@@ -252,14 +252,14 @@ const translations = {
     'features.visionBeyond': 'VISIÓN MÁS ALLÁ',
     'features.visionBeyondDesc': 'Disfrute de vistas deslumbrantes con nuestros techos panorámicos. Diseño innovador y tecnología que enriquecen y elevan su experiencia de viaje.',
     'features.guaranteedTrip': 'VIAJE GARANTIZADO',
-    'features.guaranteedTripDesc': 'Garantizamos su viaje sin cancelaciones. Nuestros conductores siempre realizarán todos los viajes, asegurando que nuestro servicio sea siempre confiable.',
+    'features.guaranteedTripDesc': 'Garantizamos sua viagem sem cancelar cancelada. Nuestros conductores siempre realizarán todos los viajes, asegurando que nuestro servicio sea siempre confiable.',
     'features.ultraWifi': 'WI-FI ULTRA RÁPIDO',
     'features.ultraWifiDesc': 'Manténgase conectado sin preocupaciones. Nuestro Wi-Fi de alta velocidad en todos los vehículos garantiza una experiencia inigualable.',
-    'features.sustainableTrip': 'VIAJE SOSTENIBLE',
+    'features.sustainableTrip': 'VIAJE SUSTENIBLE',
     'features.sustainableTripDesc': 'Flota híbrida del lujo sostenible, nuestros autos híbridos unen sofisticación, comodidad y exclusividad, preservando el medio ambiente en cada trayecto.',
     
     // Services translations
-    'services.title': 'AUTOS BLINDADOS DE LUJO CON CHOFERES',
+    'services.title': 'AUTOS BLINDADOS DE LUJO COM CHOFERES',
     'services.subtitle': 'LOS SERVICIOS MÁS ELEGIDOS',
     'services.onDemand': 'SERVICIO A DISPOSICIÓN',
     'services.onDemandDesc': 'Conductores completamente exclusivos para atender sus demandas.',
@@ -272,7 +272,7 @@ const translations = {
     'services.executiveProtection': 'PROTECCIÓN EJECUTIVA',
     'services.executiveProtectionDesc': 'Seguridad para su protección con discreción y sofisticación.',
     'services.exec360': 'EXEC360',
-    'services.exec360Desc': 'De movilidad a ocio. Sea Executive y exclusivo en todo.',
+    'services.exec360Desc': 'De mobilidad a ocio. Sea Executive y exclusivo en todo.',
     
     // Footer translations
     'footer.company': 'EXECUTIVE',
@@ -288,8 +288,8 @@ const translations = {
     'footer.cities': 'CIUDADES',
     'footer.services': 'SERVICIOS',
     'footer.copyright': '2024 © Executive Transporte de Lujo LTDA.',
-    'footer.privacy': 'PRIVACIDAD',
-    'footer.accessibility': 'ACCESIBILIDAD',
+    'footer.privacy': 'PRIVACIDADE',
+    'footer.accessibility': 'ACCESIBILIDADE',
     'footer.terms': 'TÉRMINOS',
     'footer.whatsapp': 'CONVERSAR POR WHATSAPP',
     'footer.location': 'SÃO PAULO',
@@ -402,204 +402,9 @@ const translations = {
     
     // About Us translations
     'about.title': 'Acerca de Nosotros',
-    'about.description1': 'En Executive Transporte Premium, ofrecemos una experiencia de movilidad sofisticada y confiable para personas y empresas exigentes. Operamos en São Paulo con enfoque en puntualidad, comodidad y seguridad, ya sea para compromisos corporativos, eventos, traslados ejecutivos o momentos especiales.',
-    'about.description2': 'Contamos con un equipo de conductores altamente calificados, flota premium y atención personalizada, ideal para quienes buscan profesionalismo en cada trayecto.',
-    'about.description3': 'Ya sea para viajes de negocios, recepción de ejecutivos, traslados a aeropuertos o paseos personalizados, cuente con Executive para proporcionar un viaje a la altura de su necesidad.'
-  },
-  en: {
-    // QuoteForm translations
-    'quote.title': 'QUOTE BY DESTINATION',
-    'quote.pickup': 'Pickup: address, airport, hotel',
-    'quote.destination': 'Destination: address, airport, hotel',
-    'quote.date': 'Date',
-    'quote.time': 'Time',
-    'quote.passengers': 'Number of passengers',
-    'quote.button': 'QUOTE',
-    'quote.book': 'BOOK NOW',
-    'quote.required': 'Required fields',
-    'quote.fillFields': 'Please fill in pickup and destination.',
-    'quote.calculated': 'Quote calculated!',
-    'quote.error': 'Quote error',
-    'quote.tryAgain': 'Please try again in a few moments.',
-    'quote.bookingRequested': 'Booking requested!',
-    'quote.contactSoon': 'We will contact you soon to confirm.',
-    'quote.formTitle': 'BOOK YOUR RIDE NOW!',
-    'quote.byDestination': 'BY DESTINATION',
-    'quote.byHour': 'BY HOUR',
-    'quote.origin': 'Origin',
-    'quote.selectDate': 'Please select date and time',
-    'quote.minAdvance': '⚠️ Attention: Please select a valid time.',
-    'quote.priceError': 'Error calculating prices. Please try again.',
-    
-    // Vehicle Categories
-    'vehicle.economic': 'ECONOMIC',
-    'vehicle.executive': 'EXECUTIVE',
-    'vehicle.luxury': 'LUXURY',
-    'vehicle.suv': 'SUV',
-    'vehicle.economicDesc': 'Basic comfort for short trips',
-    'vehicle.executiveDesc': 'Premium comfort for executives',
-    'vehicle.luxuryDesc': 'Maximum luxury and sophistication',
-    'vehicle.suvDesc': 'Space and comfort for groups',
-    
-    // Features translations
-    'features.firstClass': 'FIRST CLASS',
-    'features.firstClassDesc': 'Live the experience of the highest standard in private transportation. Sophistication, glamour and exclusivity for those who demand impeccable service in every detail.',
-    'features.maxSecurity': 'MAXIMUM SECURITY',
-    'features.maxSecurityDesc': 'Travel with confidence knowing that your security is our number 1 priority. Armored cars and meticulously selected and trained drivers.',
-    'features.visionBeyond': 'VISION BEYOND',
-    'features.visionBeyondDesc': 'Enjoy stunning views with our panoramic roofs. Innovative design and technology that enrich and elevate your travel experience.',
-    'features.guaranteedTrip': 'GUARANTEED TRIP',
-    'features.guaranteedTripDesc': 'We guarantee your trip without cancellations. Our drivers will always conduct all rides, ensuring our service is always reliable.',
-    'features.ultraWifi': 'ULTRA-FAST WI-FI',
-    'features.ultraWifiDesc': 'Stay online with zero worries. Our high-speed Wi-Fi in all vehicles ensures an unmatched experience.',
-    'features.sustainableTrip': 'SUSTAINABLE TRIP',
-    'features.sustainableTripDesc': 'Sustainable luxury hybrid fleet, our hybrid cars unite sophistication, comfort and exclusivity, preserving the environment in every journey.',
-    
-    // Services translations
-    'services.title': 'LUXURY ARMORED CARS WITH CHAUFFEURS',
-    'services.subtitle': 'THE MOST CHOSEN SERVICES',
-    'services.onDemand': 'ON-DEMAND SERVICE',
-    'services.onDemandDesc': 'Completely exclusive drivers to meet your demands.',
-    'services.airportTransfer': 'AIRPORT TRANSFER',
-    'services.airportTransferDesc': 'Your time is precious and your comfort is essential.',
-    'services.pointToPoint': 'POINT TO POINT',
-    'services.pointToPointDesc': 'Your comfort and luxury solution for long-distance travel.',
-    'services.business': 'BUSINESS',
-    'services.businessDesc': 'Productivity in traffic? Work in luxury and comfort while traveling.',
-    'services.executiveProtection': 'EXECUTIVE PROTECTION',
-    'services.executiveProtectionDesc': 'Security for your protection with discretion and sophistication.',
-    'services.exec360': 'EXEC360',
-    'services.exec360Desc': 'From mobility to leisure. Be Executive and exclusive in everything.',
-    
-    // Footer translations
-    'footer.company': 'EXECUTIVE',
-    'footer.helpCenter': 'ACCESS HELP CENTER',
-    'footer.companyFull': 'Executive Premium',
-    'footer.address': 'Rua Baronesa de Bela Vista, 411 - Vila Congonhas, São Paulo - SP, Brasil',
-    'footer.phone': '(11) 91585-3292',
-    'footer.email': 'executivetransportepremium@gmail.com',
-    'footer.instagram': 'Instagram',
-    'footer.aboutUs': 'ABOUT US',
-    'footer.workWithUs': 'WORK WITH US',
-    'footer.routes': 'ROUTES',
-    'footer.cities': 'CITIES',
-    'footer.services': 'SERVICES',
-    'footer.copyright': '2024 © Executive Luxury Transportation LTDA.',
-    'footer.privacy': 'PRIVACY',
-    'footer.accessibility': 'ACCESSIBILITY',
-    'footer.terms': 'TERMS',
-    'footer.whatsapp': 'CHAT ON WHATSAPP',
-    'footer.location': 'SÃO PAULO',
-    
-    // Locations translations
-    'locations.topTitle': 'TOP LOCATIONS',
-    'locations.title': 'MOST REQUESTED LOCATIONS',
-    'locations.allLocations': 'ALL LOCATIONS →',
-    'locations.rosewood': 'ROSEWOOD HOTEL - SÃO PAULO',
-    'locations.tivoli': 'TIVOLI MOFARREJ SÃO PAULO HOTEL',
-    'locations.congonhas': 'AEROPORTO DE SÃO PAULO/CONGONHAS',
-    'locations.guarulhos': 'AEROPORTO DE SÃO PAULO/GUARULHOS',
-    
-    // Testimonial translations
-    'testimonial.quote': 'NEW CHAUFFEUR SERVICE SEEKS TO REDEFINE THE CONCEPT OF LUXURY!',
-    'testimonial.source': 'L\'OFFICIEL BRASIL',
-    
-    // Partners translations
-    'partners.title': 'EXECUTIVE PARTNERS',
-    
-    // Routes translations
-    'routes.topTitle': 'TOP ROUTES',
-    'routes.title': 'CHECK THE ROUTES',
-    'routes.allRoutes': 'ALL ROUTES →',
-    'routes.guarulhos': 'GUARULHOS INTERNATIONAL AIRPORT (GRU)',
-    'routes.congonhas': 'CONGONHAS AIRPORT (CGH)',
-    'routes.rosewood': 'ROSEWOOD HOTEL SÃO PAULO',
-    'routes.marriott': 'JW MARRIOTT SÃO PAULO',
-    'routes.unique': 'HOTEL UNIQUE SÃO PAULO',
-    'routes.fasano': 'HOTEL FASANO JARDINS SÃO PAULO',
-    'routes.tivoliMofarrej': 'TIVOLI MOFARREJ SÃO PAULO',
-    
-    // NotFound translations
-    'notfound.title': '404',
-    'notfound.message': 'Oops! Page not found',
-    'notfound.home': 'Return to Home',
-    
-    // Header translations
-    'header.menu': 'MENU',
-    'header.portuguese': 'PORTUGUÊS',
-    'header.spanish': 'ESPAÑOL',
-    'header.english': 'ENGLISH',
-    'header.homepage': 'Home Page',
-    'header.aboutUs': 'About Us',
-    'header.moreOptions': 'More options coming soon...',
-    'currency.real': 'REAL',
-    'currency.dollar': 'DOLLAR',
-    'hero.title': 'THE TRANSPORTATION SERVICE',
-    'hero.subtitle': 'YOU NEED',
-    'hero.description': 'Experience the highest standard in premium executive transportation',
-    // VehicleSelection page
-    'vehicle.pickup': 'PICKUP',
-    'vehicle.arrival': 'ARRIVAL',
-    'vehicle.estimatedTime': 'Estimated time',
-    'vehicle.priceFactors': 'Price factors considered',
-    'vehicle.from': 'FROM',
-    'vehicle.to': 'TO',
-    'vehicle.priceFrom': 'PRICE FROM',
-    'vehicle.priceNote': '*Prices may vary based on selected category and trip factors',
-    'vehicle.up_to': 'up to',
-    'vehicle.passengers': 'passengers',
-    'vehicle.mediumBags': 'medium-sized bags',
-    'vehicle.largeBags': 'large-sized bags',
-    'vehicle.totalPrice': 'Total price includes taxes, tolls and other charges.',
-    'vehicle.benefitsTitle': 'Included in all classes:',
-    'vehicle.benefit1': 'Free cancellation up to 2 hours before the ride',
-    'vehicle.benefit2': 'Meet and greet',
-    'vehicle.benefit3': 'Exclusive amenities',
-    'vehicle.benefit4': '15 minutes free waiting time',
-    'vehicle.observationsTitle': 'Observations:',
-    'vehicle.observationsText': 'Guest/baggage capacities must be respected for safety reasons. If unsure, select a larger class as drivers may refuse service when exceeded.',
-    'vehicle.terms': 'View terms and conditions',
-    'vehicle.continue': 'CONTINUE',
-    // Breadcrumb navigation
-    'nav.serviceClass': 'Service Class',
-    'nav.passengerData': 'Passenger Data',
-    'nav.checkout': 'Checkout',
-    // PassengerData translations
-    'passenger.dataNotFound': 'Data not found',
-    'passenger.newQuote': 'Please make a new quote.',
-    'passenger.backHome': 'Back to Home',
-    'passenger.tripFor': 'WHO IS THIS TRIP FOR',
-    'passenger.forMe': 'Book for me',
-    'passenger.forOther': 'Book for someone else',
-    'passenger.executiveTransport': 'Executive Premium Transport',
-    'passenger.class': 'CLASS:',
-    'passenger.vehicle': 'VEHICLE:',
-    'passenger.pickup': 'PICKUP',
-    'passenger.arrival': 'ARRIVAL',
-    'passenger.estimatedTime': 'Estimated time',
-    'passenger.from': 'FROM',
-    'passenger.to': 'TO',
-    'passenger.fullName': 'Full name',
-    'passenger.phone': 'Phone',
-    'passenger.email': 'E-mail',
-    'passenger.flightNumber': 'Flight number',
-    'passenger.plateName': 'Name on plate',
-    'passenger.luggageCount': 'Number of bags',
-    'passenger.additionalInfo': 'Additional information',
-    'passenger.personalInfo': 'PERSONAL INFORMATION',
-    'passenger.flightDetails': 'FLIGHT DETAILS',
-    'passenger.terminalDetails': 'TERMINAL DETAILS',
-    'passenger.observations': 'Observations',
-    'passenger.optional': 'Optional',
-    'passenger.finishReservation': 'FINISH BOOKING',
-    // Date formatting
-    'date.of': 'OF',
-    
-    // About Us translations
-    'about.title': 'About Us',
-    'about.description1': 'At Executive Premium Transport, we offer a sophisticated and reliable mobility experience for demanding individuals and companies. We operate in São Paulo with a focus on punctuality, comfort, and safety, whether for corporate commitments, events, executive transfers, or special moments.',
-    'about.description2': 'We have a team of highly qualified drivers, premium fleet, and personalized service, ideal for those seeking professionalism in every journey.',
-    'about.description3': 'Whether for business trips, executive reception, airport transfers, or personalized tours, count on Executive to provide a journey worthy of your needs.'
+    'about.description1': 'En Executive Transporte Premium, ofrecemos una experiencia de movilidade sofisticada e confiável para personas y empresas exigentes. Operamos em São Paulo com enfoque em punctualidade, comodidade e segurança, seja para compromisso corporativos, eventos, executivos traslados ou momentos especiais.',
+    'about.description2': 'Contamos com um time de motoristas altamente qualificados, frota premium e atendimento personalizado, ideal para quem busca profissionalismo em cada trajeto.',
+    'about.description3': 'Ya sea para viagens de negócios, recepção de executivos, traslados a aeroportos ou passeios personalizados, cuente com Executive para proporcionar um viaje a la altura de su necesidade.'
   }
 };
 
@@ -610,7 +415,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [currency, setCurrency] = useState<Currency>('BRL');
 
   const t = (key: string): string => {
-    return translations[language][key as keyof typeof translations[typeof language]] || key;
+    const translation = translations[language];
+    return translation?.[key as keyof typeof translation] || key;
   };
 
   const formatCurrency = (amount: number): string => {

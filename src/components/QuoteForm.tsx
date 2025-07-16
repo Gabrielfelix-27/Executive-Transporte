@@ -18,6 +18,7 @@ export const QuoteForm = () => {
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [isCalculating, setIsCalculating] = useState(false);
   const [useGoogleMaps] = useState(isGoogleMapsConfigured());
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   // Função para obter horário atual
   const getCurrentTime = () => {
@@ -51,20 +52,21 @@ export const QuoteForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage('');
     
     if (!pickup || !destination) {
-      alert(t('quote.fillFields'));
+      setErrorMessage(t('quote.fillFields'));
       return;
     }
 
     if (!selectedDate || !selectedTime) {
-      alert(t('quote.selectDate'));
+      setErrorMessage(t('quote.selectDate'));
       return;
     }
 
     // Validar se o horário não é no passado
     if (!validateBookingTime(selectedDate, selectedTime)) {
-      alert(t('quote.selectDate'));
+      setErrorMessage(t('quote.invalidTime'));
       return;
     }
 
@@ -129,7 +131,7 @@ export const QuoteForm = () => {
       navigate('/vehicle-selection', { state: tripData });
     } catch (error) {
       console.error('Erro ao calcular preços:', error);
-      alert(t('quote.priceError'));
+      setErrorMessage(t('quote.priceError'));
     } finally {
       setIsCalculating(false);
     }
@@ -138,11 +140,13 @@ export const QuoteForm = () => {
   // Função para lidar com mudanças no campo de horário
   const handleTimeChange = (newTime: string) => {
     setSelectedTime(newTime);
+    setErrorMessage(''); // Limpar erro ao alterar horário
   };
 
   // Função para lidar com mudanças no campo de data
   const handleDateChange = (newDate: Date | undefined) => {
     setSelectedDate(newDate);
+    setErrorMessage(''); // Limpar erro ao alterar data
     
     // Se a data for hoje e o horário atual for no passado, sugerir horário atual
     // Mas fazer isso silenciosamente, sem mostrar erro
@@ -182,21 +186,22 @@ export const QuoteForm = () => {
         <h2 className="text-xl font-bold text-gray-900 tracking-wide">
           {t('quote.formTitle')}
         </h2>
-        <div className="flex justify-center mt-3 space-x-2">
+        <div className="flex justify-center mt-3">
           <button 
             type="button"
             className="px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-none"
           >
             {t('quote.byDestination')}
           </button>
-          <button 
-            type="button"
-            className="px-6 py-2 bg-gray-200 text-gray-700 text-sm font-medium rounded-none"
-          >
-            {t('quote.byHour')}
-          </button>
         </div>
       </div>
+      
+      {/* Mensagem de erro */}
+      {errorMessage && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {errorMessage}
+        </div>
+      )}
       
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Campo Origem */}
@@ -212,6 +217,7 @@ export const QuoteForm = () => {
               value={pickup}
               onChange={(newValue, place) => {
                 setPickup(newValue);
+                setErrorMessage(''); // Limpar erro ao alterar origem
                 
                 // Se é uma seleção do Google Maps, salvar coordenadas
                 if (place && place.geometry && place.geometry.location) {
@@ -235,7 +241,10 @@ export const QuoteForm = () => {
               id="pickup-field"
               placeholder={t('quote.pickup')}
               value={pickup}
-              onChange={(e) => setPickup(e.target.value)}
+              onChange={(e) => {
+                setPickup(e.target.value);
+                setErrorMessage(''); // Limpar erro ao alterar origem
+              }}
               className="w-full px-4 py-2 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700 placeholder-gray-400"
             />
           )}
@@ -254,6 +263,7 @@ export const QuoteForm = () => {
               value={destination}
               onChange={(newValue, place) => {
                 setDestination(newValue);
+                setErrorMessage(''); // Limpar erro ao alterar destino
                 
                 // Se é uma seleção do Google Maps, salvar coordenadas
                 if (place && place.geometry && place.geometry.location) {
@@ -277,7 +287,10 @@ export const QuoteForm = () => {
               id="destination-field"
               placeholder={t('quote.destination')}
               value={destination}
-              onChange={(e) => setDestination(e.target.value)}
+              onChange={(e) => {
+                setDestination(e.target.value);
+                setErrorMessage(''); // Limpar erro ao alterar destino
+              }}
               className="w-full px-4 py-2 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700 placeholder-gray-400"
             />
           )}
