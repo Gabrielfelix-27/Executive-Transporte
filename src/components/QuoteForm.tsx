@@ -73,13 +73,13 @@ export const QuoteForm = () => {
     setIsCalculating(true);
 
     try {
-      // Calcular preços para diferentes categorias
+      // Calcular preços para diferentes categorias usando os tipos corretos
       const executivoSedanData = await calculateTripPrice(pickup, destination, 'executivo');
-      const executivoComumData = await calculateTripPrice(pickup, destination, 'executivo');
+      const executivoComumData = await calculateTripPrice(pickup, destination, 'economico');
       const executivoPremiumBlindadoData = await calculateTripPrice(pickup, destination, 'luxo');
       const minivanComumData = await calculateTripPrice(pickup, destination, 'suv');
-      const minivanBlindadaData = await calculateTripPrice(pickup, destination, 'luxo');
-      const van15LugaresData = await calculateTripPrice(pickup, destination, 'suv');
+      const minivanBlindadaData = await calculateTripPrice(pickup, destination, 'minivanBlindada');
+      const van15LugaresData = await calculateTripPrice(pickup, destination, 'van15Lugares');
 
       const tripData = {
         pickup,
@@ -97,47 +97,53 @@ export const QuoteForm = () => {
             basePrice: executivoSedanData.basePrice,
             passengers: 4,
             luggage: 3,
-            description: 'Sedan executivo com conforto premium e elegância'
+            description: 'Sedan executivo com conforto premium e elegância',
+            priceFactors: executivoSedanData.priceFactors
           },
           executivoComum: {
             name: 'Executivo Comum',
-            price: executivoComumData.finalPrice * 0.9, // 10% desconto
+            price: executivoComumData.finalPrice,
             basePrice: executivoComumData.basePrice,
             passengers: 4,
             luggage: 2,
-            description: 'Veículo executivo padrão com bom conforto'
+            description: 'Veículo executivo padrão com bom conforto',
+            priceFactors: executivoComumData.priceFactors
           },
           executivoPremiumBlindado: {
             name: 'Executivo Premium Blindado',
-            price: executivoPremiumBlindadoData.finalPrice * 1.5, // 50% acréscimo pela blindagem
+            price: executivoPremiumBlindadoData.finalPrice,
             basePrice: executivoPremiumBlindadoData.basePrice,
             passengers: 4,
             luggage: 3,
-            description: 'Máxima segurança com blindagem e luxo premium'
+            description: 'Máxima segurança com blindagem e luxo premium',
+            priceFactors: executivoPremiumBlindadoData.priceFactors
           },
           minivanComum: {
             name: 'MiniVan Comum',
-            price: minivanComumData.finalPrice * 1.2, // 20% acréscimo
+            price: minivanComumData.finalPrice,
             basePrice: minivanComumData.basePrice,
             passengers: 7,
             luggage: 4,
-            description: 'Espaço amplo para grupos de até 7 pessoas'
+            description: 'Espaço amplo para grupos de até 7 pessoas',
+            priceFactors: minivanComumData.priceFactors
           },
           minivanBlindada: {
             name: 'MiniVan Blindada',
-            price: minivanBlindadaData.finalPrice * 1.8, // 80% acréscimo pela blindagem
+            price: minivanBlindadaData.finalPrice,
             basePrice: minivanBlindadaData.basePrice,
             passengers: 7,
             luggage: 4,
-            description: 'Segurança máxima para grupos com blindagem completa'
+            description: 'Segurança máxima para grupos com blindagem completa',
+            priceFactors: minivanBlindadaData.priceFactors
           },
           van15Lugares: {
             name: 'Van 15 Lugares',
-            price: van15LugaresData.finalPrice * 1.6, // 60% acréscimo
+            price: van15LugaresData.finalPrice,
             basePrice: van15LugaresData.basePrice,
             passengers: 15,
             luggage: 8,
-            description: 'Transporte para grupos grandes com máximo conforto'
+            description: 'Transporte para grupos grandes com máximo conforto',
+            priceFactors: van15LugaresData.priceFactors
           }
         }
       };

@@ -134,6 +134,7 @@ export default function VehicleSelection() {
     capacity: value.passengers,
     price: value.price,
     features: [value.description],
+    priceFactors: value.priceFactors || [], // Adicionar fatores de preço
     luggage: {
       small: 2,
       medium: value.luggage,
@@ -486,9 +487,24 @@ export default function VehicleSelection() {
                   <div className="text-2xl font-bold text-gray-900 mb-2">
                     {formatPrice(category.price)}
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-gray-500 mb-3">
                     {t('vehicle.totalPrice')}
                   </div>
+                  
+                  {/* Price Factors específicos do veículo */}
+                  {category.priceFactors && category.priceFactors.length > 0 && (
+                    <div className="text-xs text-gray-500 mt-2 p-2 bg-gray-50 rounded">
+                      <div className="font-medium mb-1">💰 Fatores de preço:</div>
+                      <div className="space-y-1">
+                        {category.priceFactors.map((factor: string, index: number) => (
+                          <div key={index} className="flex items-center justify-center">
+                            <div className="w-1 h-1 bg-gray-400 rounded-full mr-2"></div>
+                            <span className="text-center">{factor}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

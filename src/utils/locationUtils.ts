@@ -1,5 +1,6 @@
 import { searchAddresses, getCoordinatesFromAddress as getCoords } from '@/services/geocodingService';
 import { isGoogleMapsConfigured } from '@/config/maps';
+import { findFixedPrice, isDailyRequest, DAILY_RATES, identifyLocation, KNOWN_LOCATIONS } from '@/data/fixedPricing';
 
 // Cache global para coordenadas de endereços selecionados via autocomplete
 const selectedAddressCoordinatesCache = new Map<string, { lat: number; lng: number }>();
@@ -389,7 +390,7 @@ export const calculateLocationSurcharge = (locationType: string): number => {
 export const calculateTripPrice = async (
   origin: string,
   destination: string,
-  vehicleType: 'economico' | 'executivo' | 'luxo' | 'suv' = 'executivo'
+  vehicleType: 'economico' | 'executivo' | 'luxo' | 'suv' | 'minivanBlindada' | 'van15Lugares' = 'executivo'
 ): Promise<{
   distance: number;
   estimatedTime: number;
@@ -399,6 +400,72 @@ export const calculateTripPrice = async (
 }> => {
   try {
     console.log(`💰 Calculando preço da viagem [${vehicleType}]: "${origin}" → "${destination}"`);
+    
+    // Mapear tipos de veículo para as categorias do sistema de tarifas fixas
+    const vehicleTypeMapping: { [key: string]: keyof typeof DAILY_RATES } = {
+      'economico': 'executivoComum',
+      'executivo': 'executivoSedan',
+      'luxo': 'executivoPremiumBlindado',
+      'suv': 'minivanComum',
+      'minivanBlindada': 'minivanBlindada',
+      'van15Lugares': 'van15Lugares'
+    };
+    
+    const fixedPriceVehicleType = vehicleTypeMapping[vehicleType] || 'executivoSedan';
+    
+    // Verificar se é uma solicitação de diária
+    if (isDailyRequest(origin) || isDailyRequest(destination)) {
+      const dailyPrice = DAILY_RATES[fixedPriceVehicleType];
+      console.log(`📅 Solicitação de diária detectada: R$ ${dailyPrice.toFixed(2)}`);
+      
+      return {
+        distance: 100, // 100km inclusos na diária
+        estimatedTime: 600, // 10 horas
+        basePrice: dailyPrice,
+        finalPrice: dailyPrice,
+        priceFactors: ['Diária (10h à disposição / 100km)']
+      };
+    }
+    
+    // Tentar encontrar tarifa fixa primeiro
+    const fixedPrice = findFixedPrice(origin, destination, fixedPriceVehicleType);
+    
+    if (fixedPrice !== null) {
+      console.log(`✅ Usando tarifa fixa: R$ ${fixedPrice.toFixed(2)}`);
+      
+      // Obter dados de distância e tempo para informação
+      let distance: number = 15;
+      let estimatedTime: number = 45;
+      
+      try {
+        const googleMapsData = await getGoogleMapsDistanceAndTime(origin, destination);
+        if (googleMapsData) {
+          distance = googleMapsData.distance;
+          estimatedTime = googleMapsData.duration;
+        } else {
+          distance = await calculateDistanceBetweenAddresses(origin, destination);
+          estimatedTime = estimateTravelTime(distance);
+        }
+      } catch (error) {
+        console.warn('⚠️ Erro ao obter dados de distância/tempo, usando valores padrão');
+      }
+      
+      const originLocation = identifyLocation(origin);
+      const destinationLocation = identifyLocation(destination);
+      const originName = originLocation ? KNOWN_LOCATIONS[originLocation]?.name : origin;
+      const destinationName = destinationLocation ? KNOWN_LOCATIONS[destinationLocation]?.name : destination;
+      
+      return {
+        distance: Math.round(distance * 10) / 10,
+        estimatedTime: Math.round(estimatedTime),
+        basePrice: fixedPrice,
+        finalPrice: fixedPrice,
+        priceFactors: [`Tarifa fixa: ${originName} → ${destinationName}`]
+      };
+    }
+    
+    // Se não há tarifa fixa, usar cálculo dinâmico original
+    console.log(`⚠️ Tarifa fixa não encontrada, usando cálculo dinâmico`);
     
     // Primeiro, tentar obter dados reais do Google Maps
     const googleMapsData = await getGoogleMapsDistanceAndTime(origin, destination);
@@ -445,7 +512,9 @@ export const calculateTripPrice = async (
       economico: 3.0,
       executivo: 3.5,
       luxo: 5.5,
-      suv: 4.2
+      suv: 4.2,
+      minivanBlindada: 6.5,
+      van15Lugares: 5.0
     };
     
     let basePrice = distance * basePricePerKm[vehicleType];
@@ -480,11 +549,17 @@ export const calculateTripPrice = async (
     }
     
     // Preço mínimo
-    const minimumPrice = vehicleType === 'luxo' ? 120 : vehicleType === 'suv' ? 100 : 80;
+    const minimumPrice = vehicleType === 'luxo' ? 120 : 
+                        vehicleType === 'suv' ? 100 : 
+                        vehicleType === 'minivanBlindada' ? 150 :
+                        vehicleType === 'van15Lugares' ? 120 : 80;
     if (finalPrice < minimumPrice) {
       finalPrice = minimumPrice;
       priceFactors.push(`Preço mínimo R$ ${minimumPrice.toFixed(2)}`);
     }
+    
+    // Adicionar indicação de cálculo dinâmico
+    priceFactors.push('Cálculo dinâmico por distância');
     
     const result = {
       distance: Math.round(distance * 10) / 10,
@@ -512,4 +587,4 @@ export const calculateTripPrice = async (
     console.log(`💰 [DEBUG] Resultado fallback:`, fallbackResult);
     return fallbackResult;
   }
-}; 
+};
