@@ -45,7 +45,7 @@ export const Features = () => {
           {features.map((feature, index) => (
             <div key={index} className="text-center p-6">
               <div className="flex justify-center mb-4">
-                <feature.icon className="h-12 w-12 text-yellow-600" />
+                <feature.icon className="h-12 w-12 text-black" />
               </div>
               <h3 className="text-xl font-bold mb-4 text-gray-900">{feature.title}</h3>
               <p className="text-gray-600 leading-relaxed">{feature.description}</p>

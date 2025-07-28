@@ -204,7 +204,7 @@ export const GoogleMapsTest = () => {
               {apiStatus === 'success' ? (
                 <div className="space-y-3">
                   <GoogleMapsPlacePicker
-                    placeholder="Digite um endereço para testar (ex: Aeroporto Guarulhos)"
+                    placeholder={t('placeholder.testAddress')}
                     value={testAddress}
                     onChange={(value, place) => {
                       setTestAddress(value);
@@ -271,4 +271,4 @@ export const GoogleMapsTest = () => {
       </div>
     </div>
   );
-}; 
+};

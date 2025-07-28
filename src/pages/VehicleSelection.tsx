@@ -82,8 +82,8 @@ export default function VehicleSelection() {
   console.log('🚗 TripData.vehicles:', tripData.vehicles);
 
   const quoteData: QuoteData = {
-    pickup: tripData.pickup || "Endereço de origem não informado",
-    destination: tripData.destination || "Endereço de destino não informado", 
+    pickup: tripData.pickup || t('trip.originAddressNotInformed'),
+    destination: tripData.destination || t('trip.destinationAddressNotInformed'), 
     date: tripData.date || new Date().toISOString().split('T')[0],
     time: tripData.time || "14:30",
     passengers: tripData.passengers || 1,
@@ -369,7 +369,7 @@ export default function VehicleSelection() {
                     <span>{formatTimeDisplay(calculateArrivalTime(quoteData.time, quoteData.estimatedTimeMinutes))}</span>
                   )}
                   {quoteData.calculatedDistance && quoteData.calculatedDistance > 0 && (
-                    <span>{calculateArrivalTime(quoteData.time, quoteData.estimatedTimeMinutes) ? ' • ' : ''}Distância: {quoteData.calculatedDistance.toFixed(1)} KM</span>
+                    <span>{calculateArrivalTime(quoteData.time, quoteData.estimatedTimeMinutes) ? ' • ' : ''}{t('trip.distance')}: {quoteData.calculatedDistance.toFixed(1)} KM</span>
                   )}
                 </div>
                 {quoteData.estimatedTime && (
@@ -396,15 +396,15 @@ export default function VehicleSelection() {
               <div>
                 <div className="mb-4">
                   <div className="text-sm font-medium text-gray-600 mb-2">{t('vehicle.from')}</div>
-                  <div className="text-sm font-bold text-gray-900 mb-2 p-3 border border-gray-200 rounded-lg bg-white shadow-sm" title={`Origem: ${quoteData.pickup}`}>
-                    📍 {quoteData.pickup || 'Origem não informada'}
+                  <div className="text-sm font-bold text-gray-900 mb-2 p-3 border border-gray-200 rounded-lg bg-white shadow-sm" title={`${t('trip.origin')}: ${quoteData.pickup}`}>
+                    📍 {quoteData.pickup || t('trip.originNotInformed')}
                   </div>
                 </div>
                 
                 <div className="mb-4">
                   <div className="text-sm font-medium text-gray-600 mb-2">{t('vehicle.to')}</div>
-                  <div className="text-sm font-bold text-gray-900 p-3 border border-gray-200 rounded-lg bg-white shadow-sm" title={`Destino: ${quoteData.destination}`}>
-                    🎯 {quoteData.destination || 'Destino não informado'}
+                  <div className="text-sm font-bold text-gray-900 p-3 border border-gray-200 rounded-lg bg-white shadow-sm" title={`${t('trip.destination')}: ${quoteData.destination}`}>
+                    🎯 {quoteData.destination || t('trip.destinationNotInformed')}
                   </div>
                 </div>
                 
@@ -546,7 +546,7 @@ export default function VehicleSelection() {
               <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center mr-4">
                 <Navigation2 className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-2xl font-light text-gray-800 tracking-wide">Resumo da Viagem</h3>
+              <h3 className="text-2xl font-light text-gray-800 tracking-wide">{t('trip.summary')}</h3>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -556,7 +556,7 @@ export default function VehicleSelection() {
                     <MapPin className="h-4 w-4 text-black" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm font-medium text-gray-500 mb-1">Origem</div>
+                    <div className="text-sm font-medium text-gray-500 mb-1">{t('trip.origin')}</div>
                     <div className="text-gray-900 font-medium">{quoteData.pickup}</div>
                   </div>
                 </div>
@@ -566,7 +566,7 @@ export default function VehicleSelection() {
                     <Navigation2 className="h-4 w-4 text-black" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm font-medium text-gray-500 mb-1">Destino</div>
+                    <div className="text-sm font-medium text-gray-500 mb-1">{t('trip.destination')}</div>
                     <div className="text-gray-900 font-medium">{quoteData.destination}</div>
                   </div>
                 </div>
@@ -578,7 +578,7 @@ export default function VehicleSelection() {
                     <Calendar className="h-4 w-4 text-black" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm font-medium text-gray-500 mb-1">Data e Horário</div>
+                    <div className="text-sm font-medium text-gray-500 mb-1">{t('trip.dateAndTime')}</div>
                     <div className="text-gray-900 font-medium">
                       {formatDateDisplay(quoteData.date)}
                     </div>
@@ -593,7 +593,7 @@ export default function VehicleSelection() {
                     <Timer className="h-4 w-4 text-black" />
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm font-medium text-gray-500 mb-1">Distância</div>
+                    <div className="text-sm font-medium text-gray-500 mb-1">{t('trip.distance')}</div>
                     <div className="text-gray-900 font-medium">
                       {quoteData.calculatedDistance ? `${quoteData.calculatedDistance.toFixed(1)} KM` : '—'}
                     </div>
@@ -604,7 +604,7 @@ export default function VehicleSelection() {
             
             {quoteData.priceFactors && quoteData.priceFactors.length > 0 && (
               <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="text-sm font-medium text-gray-700 mb-3">Fatores de Preço</div>
+                <div className="text-sm font-medium text-gray-700 mb-3">{t('vehicle.priceFactors')}</div>
                 <div className="flex flex-wrap gap-2">
                   {quoteData.priceFactors.map((factor, index) => (
                     <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">

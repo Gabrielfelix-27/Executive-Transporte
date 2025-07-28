@@ -3,6 +3,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { isGoogleMapsConfigured, GOOGLE_MAPS_API_KEY } from '@/config/maps';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface GoogleMapsPlacePickerProps {
   id: string;
@@ -93,11 +94,13 @@ const loadGoogleMapsAPI = (): Promise<void> => {
 
 export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
   id,
-  placeholder = "Digite um endereço...",
+  placeholder,
   value,
   onChange,
   className = ""
 }) => {
+  const { t } = useLanguage();
+  const finalPlaceholder = placeholder || t('form.typeAddress');
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<any>(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -274,7 +277,7 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
       <div>
         <input
           type="text"
-          placeholder={placeholder}
+          placeholder={finalPlaceholder}
           value={value}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
@@ -297,7 +300,7 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
           ref={inputRef}
           type="text"
           id={id}
-          placeholder={placeholder}
+          placeholder={finalPlaceholder}
           className={`w-full px-4 py-2 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700 placeholder-gray-400 ${className}`}
           autoComplete="off"
         />
@@ -314,7 +317,7 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
         ref={inputRef}
         type="text"
         id={id}
-        placeholder={placeholder}
+        placeholder={finalPlaceholder}
         value={value}
         onChange={handleInputChange}
         onFocus={handleInputFocus}
@@ -337,4 +340,4 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
   );
 };
 
-export default GoogleMapsPlacePicker; 
+export default GoogleMapsPlacePicker;
