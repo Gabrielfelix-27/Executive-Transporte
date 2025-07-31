@@ -1,0 +1,79 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="carGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2d2d2d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="windowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a5568;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#2d3748;stop-opacity:0.9" />
+    </linearGradient>
+    <radialGradient id="wheelGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#4a5568;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#2d3748;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a202c;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="400" fill="#f7fafc"/>
+  
+  <!-- Car Body -->
+  <path d="M130 260 L180 210 L220 190 L580 190 L620 210 L670 260 L670 310 L620 330 L180 330 L130 310 Z" 
+        fill="url(#carGradient)" stroke="#000" stroke-width="2"/>
+  
+  <!-- Car Roof -->
+  <path d="M200 210 L230 170 L570 170 L600 210 Z" 
+        fill="url(#carGradient)" stroke="#000" stroke-width="1"/>
+  
+  <!-- Windows -->
+  <path d="M210 205 L240 175 L340 175 L340 205 Z" 
+        fill="url(#windowGradient)" stroke="#2d3748" stroke-width="1"/>
+  <path d="M350 205 L350 175 L450 175 L450 205 Z" 
+        fill="url(#windowGradient)" stroke="#2d3748" stroke-width="1"/>
+  <path d="M460 205 L460 175 L560 175 L590 205 Z" 
+        fill="url(#windowGradient)" stroke="#2d3748" stroke-width="1"/>
+  
+  <!-- Front and Rear Windows -->
+  <path d="M180 260 L210 205 L230 190 L180 230 Z" 
+        fill="url(#windowGradient)" stroke="#2d3748" stroke-width="1"/>
+  <path d="M620 260 L590 205 L570 190 L620 230 Z" 
+        fill="url(#windowGradient)" stroke="#2d3748" stroke-width="1"/>
+  
+  <!-- Wheels -->
+  <circle cx="220" cy="310" r="30" fill="url(#wheelGradient)" stroke="#000" stroke-width="2"/>
+  <circle cx="220" cy="310" r="18" fill="#1a202c" stroke="#4a5568" stroke-width="2"/>
+  <circle cx="580" cy="310" r="30" fill="url(#wheelGradient)" stroke="#000" stroke-width="2"/>
+  <circle cx="580" cy="310" r="18" fill="#1a202c" stroke="#4a5568" stroke-width="2"/>
+  
+  <!-- Headlights -->
+  <ellipse cx="160" cy="240" rx="12" ry="18" fill="#f7fafc" stroke="#e2e8f0" stroke-width="2"/>
+  <ellipse cx="640" cy="240" rx="12" ry="18" fill="#fed7d7" stroke="#fc8181" stroke-width="2"/>
+  
+  <!-- Grille -->
+  <rect x="140" y="230" width="25" height="12" fill="#2d3748" stroke="#4a5568" stroke-width="1"/>
+  <line x1="143" y1="232" x2="143" y2="240" stroke="#718096" stroke-width="1"/>
+  <line x1="147" y1="232" x2="147" y2="240" stroke="#718096" stroke-width="1"/>
+  <line x1="151" y1="232" x2="151" y2="240" stroke="#718096" stroke-width="1"/>
+  <line x1="155" y1="232" x2="155" y2="240" stroke="#718096" stroke-width="1"/>
+  <line x1="159" y1="232" x2="159" y2="240" stroke="#718096" stroke-width="1"/>
+  
+  <!-- Door Handles -->
+  <rect x="270" y="250" width="6" height="3" fill="#4a5568" rx="1"/>
+  <rect x="370" y="250" width="6" height="3" fill="#4a5568" rx="1"/>
+  <rect x="470" y="250" width="6" height="3" fill="#4a5568" rx="1"/>
+  <rect x="530" y="250" width="6" height="3" fill="#4a5568" rx="1"/>
+  
+  <!-- Luxury Details -->
+  <line x1="180" y1="290" x2="620" y2="290" stroke="#4a5568" stroke-width="2"/>
+  <line x1="200" y1="300" x2="600" y2="300" stroke="#718096" stroke-width="1"/>
+  
+  <!-- Text -->
+  <text x="400" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#2d3748">
+    EXECUTIVO COMUM
+  </text>
+  <text x="400" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#718096">
+    Veículo executivo padrão preto
+  </text>
+</svg>

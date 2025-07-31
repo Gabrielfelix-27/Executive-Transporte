@@ -1,5 +1,5 @@
 // Componente de navegação comum para todas as páginas
-// Inclui logo, idioma, moeda e menu de navegação
+// Inclui logo, moeda e menu de navegação
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -22,7 +22,7 @@ export const Navbar = ({
   showBreadcrumb = false,
   currentStep = 0
 }: NavbarProps) => {
-  const { language, setLanguage, t } = useLanguage();
+  const { t } = useLanguage();
   const { currency, setCurrency, exchangeRate, loading } = useCurrency();
   const [scrollY, setScrollY] = useState(0);
 
@@ -50,14 +50,25 @@ export const Navbar = ({
           boxShadow: `0 8px 32px rgba(0,0,0,${Math.min(0.4, 0.1 + scrollY * 0.001)})`
         }}
       >
-        <div className="max-w-6xl mx-auto px-6 py-4">
+        <div className="max-w-6xl mx-auto px-6 py-2 sm:py-4">
           <div className="flex items-center justify-between">
-            {/* Menu à esquerda */}
-            <div className="flex items-center justify-start flex-1">
+            {/* Logo à esquerda - mobile */}
+            <div className="flex sm:hidden items-center">
+              <Link to="/" className="flex items-center justify-center">
+                <img 
+                  src="/Logos/Logo solo.png" 
+                  alt="Executive Logo" 
+                  className="h-8 w-8 mr-4"
+                />
+              </Link>
+            </div>
+
+            {/* Menu à esquerda - desktop */}
+            <div className="hidden sm:flex items-center justify-start w-1/3">
               {/* Menu Principal */}
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent font-redhat">
+                  <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent font-redhat font-bold uppercase">
                     <Menu className="h-4 w-4 mr-2" />
                     {t('header.menu')}
                     <ChevronDown className="h-4 w-4 ml-2" />
@@ -67,18 +78,18 @@ export const Navbar = ({
                   <div className="grid gap-1">
                     <Link 
                       to="/"
-                      className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700"
+                      className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700 font-bold uppercase"
                     >
-                      🏠 {t('header.homepage')}
+                      {t('header.homepage')}
                     </Link>
                     <Link 
                       to="/about-us"
-                      className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700"
+                      className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700 font-bold uppercase"
                     >
-                      ℹ️ {t('header.aboutUs')}
+                      {t('header.aboutUs')}
                     </Link>
                     <div className="h-px bg-gray-200 my-1"></div>
-                    <div className="px-3 py-2 text-xs text-gray-500">
+                    <div className="px-3 py-2 text-xs text-gray-500 font-bold uppercase">
                       {t('header.moreOptions')}
                     </div>
                   </div>
@@ -86,8 +97,8 @@ export const Navbar = ({
               </Popover>
             </div>
             
-            {/* Logo centralizado */}
-            <div className="flex items-center justify-center flex-1">
+            {/* Logo centralizado - desktop */}
+            <div className="hidden sm:flex items-center justify-center w-1/3">
               <Link to="/" className="flex items-center">
                 <img 
                   src="/Logos/Logo Letras.png" 
@@ -97,82 +108,113 @@ export const Navbar = ({
               </Link>
             </div>
             
-            {/* Controles do lado direito */}
-            <div className="flex items-center justify-end space-x-4 text-sm flex-1">
-              {/* Seletor de Idioma */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent">
-                    {language === 'pt' ? 'PORTUGUÊS' : language === 'es' ? 'ESPAÑOL' : 'ENGLISH'}
-                    <ChevronDown className="h-4 w-4 ml-2" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-48 p-2" align="end">
-                  <div className="grid gap-1">
-                    <button 
-                      onClick={() => setLanguage('pt')}
-                      className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
-                        language === 'pt' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
-                      }`}
-                    >
-                      🇧🇷 {t('header.portuguese')}
-                    </button>
-                    <button 
-                      onClick={() => setLanguage('es')}
-                      className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
-                        language === 'es' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
-                      }`}
-                    >
-                      🇪🇸 {t('header.spanish')}
-                    </button>
-                    <button 
-                      onClick={() => setLanguage('en')}
-                      className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
-                        language === 'en' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
-                      }`}
-                    >
-                      🇺🇸 {t('header.english')}
-                    </button>
-                  </div>
-                </PopoverContent>
-              </Popover>
+            {/* Menu à direita - mobile e controles desktop */}
+            <div className="flex items-center justify-end w-1/3 space-x-4 text-sm sm:w-1/3">
+              {/* Menu Principal - Mobile */}
+               <div className="flex sm:hidden">
+                 <Popover>
+                   <PopoverTrigger asChild>
+                     <Button variant="ghost" size="lg" className="text-white hover:text-yellow-400 hover:bg-transparent p-3">
+                       <Menu className="h-8 w-8" />
+                     </Button>
+                   </PopoverTrigger>
+                   <PopoverContent className="w-56 p-2" align="end">
+                     <div className="grid gap-1">
+                       <Link 
+                         to="/"
+                         className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700 font-bold uppercase"
+                       >
+                         {t('header.homepage')}
+                       </Link>
+                       <Link 
+                         to="/about-us"
+                         className="flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700 font-bold uppercase"
+                       >
+                         {t('header.aboutUs')}
+                       </Link>
+                       <div className="h-px bg-gray-200 my-1"></div>
+                       
+                       {/* Seletor de Moeda - apenas no mobile */}
+                       <Popover>
+                         <PopoverTrigger asChild>
+                           <button className="flex items-center justify-between w-full px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700 font-bold uppercase">
+                             MOEDA
+                             <ChevronDown className="h-4 w-4" />
+                           </button>
+                         </PopoverTrigger>
+                         <PopoverContent className="w-48 p-2" align="start">
+                           <div className="grid gap-1">
+                             <button 
+                               onClick={() => setCurrency('BRL')}
+                               className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 w-full ${
+                                 currency === 'BRL' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
+                               }`}
+                             >
+                               🇧🇷 {t('currency.real')}
+                             </button>
+                             <button 
+                               onClick={() => setCurrency('USD')}
+                               className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 w-full ${
+                                 currency === 'USD' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
+                               }`}
+                             >
+                               🇺🇸 {t('currency.dollar')}
+                             </button>
+                             {currency === 'USD' && exchangeRate && (
+                               <div className="px-3 py-2 text-xs text-gray-500 border-t">
+                                 1 USD = R$ {exchangeRate.toFixed(2)}
+                               </div>
+                             )}
+                           </div>
+                         </PopoverContent>
+                       </Popover>
+                       <div className="h-px bg-gray-200 my-1"></div>
+                       
+                       <div className="px-3 py-2 text-xs text-gray-500 font-bold uppercase">
+                         {t('header.moreOptions')}
+                       </div>
+                     </div>
+                   </PopoverContent>
+                 </Popover>
+               </div>
 
-              {/* Seletor de Moeda */}
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent">
-                    {currency === 'BRL' ? 'BRL R$' : 'USD $'}
-                    {loading && <span className="ml-1 text-xs">⏳</span>}
-                    <ChevronDown className="h-4 w-4 ml-2" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-48 p-2" align="end">
-                  <div className="grid gap-1">
-                    <button 
-                      onClick={() => setCurrency('BRL')}
-                      className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
-                        currency === 'BRL' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
-                      }`}
-                    >
-                      🇧🇷 {t('currency.real')}
-                    </button>
-                    <button 
-                      onClick={() => setCurrency('USD')}
-                      className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
-                        currency === 'USD' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
-                      }`}
-                    >
-                      🇺🇸 {t('currency.dollar')}
-                    </button>
-                    {currency === 'USD' && exchangeRate && (
-                      <div className="px-3 py-2 text-xs text-gray-500 border-t">
-                        1 USD = R$ {exchangeRate.toFixed(2)}
-                      </div>
-                    )}
-                  </div>
-                </PopoverContent>
-              </Popover>
-
+              {/* Seletor de Moeda - Desktop only */}
+              <div className="hidden sm:block">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent">
+                      {currency === 'BRL' ? 'BRL R$' : 'USD $'}
+                      {loading && <span className="ml-1 text-xs">⏳</span>}
+                      <ChevronDown className="h-4 w-4 ml-2" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-48 p-2" align="end">
+                    <div className="grid gap-1">
+                      <button 
+                        onClick={() => setCurrency('BRL')}
+                        className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
+                          currency === 'BRL' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
+                        }`}
+                      >
+                        🇧🇷 {t('currency.real')}
+                      </button>
+                      <button 
+                        onClick={() => setCurrency('USD')}
+                        className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
+                          currency === 'USD' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
+                        }`}
+                      >
+                        🇺🇸 {t('currency.dollar')}
+                      </button>
+                      {currency === 'USD' && exchangeRate && (
+                        <div className="px-3 py-2 text-xs text-gray-500 border-t">
+                          1 USD = R$ {exchangeRate.toFixed(2)}
+                        </div>
+                      )}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
           </div>
         </div>
@@ -181,8 +223,9 @@ export const Navbar = ({
       {/* Breadcrumb (se necessário) */}
       {showBreadcrumb && (
         <div className="bg-white border-b">
-          <div className="max-w-6xl mx-auto px-6 py-4">
-            <div className="flex items-center space-x-8">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+            {/* Layout para Desktop */}
+            <div className="hidden sm:flex items-center space-x-8">
               {breadcrumbSteps.map((step, index) => (
                 <div key={step.number} className="flex items-center">
                   <div className="flex items-center">
@@ -205,6 +248,31 @@ export const Navbar = ({
                 </div>
               ))}
             </div>
+
+            {/* Layout para Mobile */}
+            <div className="flex sm:hidden items-center justify-between space-x-2">
+              {breadcrumbSteps.map((step, index) => (
+                <div key={step.number} className="flex items-center flex-1">
+                  <div className="flex items-center w-full">
+                    <div className={`rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-2 ${
+                      step.active && currentStep >= step.number
+                        ? 'bg-black text-white'
+                        : 'border-2 border-gray-300 text-gray-500'
+                    }`}>
+                      {step.number}
+                    </div>
+                    <span className={`text-xs truncate ${step.active && currentStep >= step.number ? 'font-medium' : 'text-gray-500'}`}>
+                      {step.title}
+                    </span>
+                  </div>
+                  
+                  {/* Linha conectora mobile */}
+                  {index < breadcrumbSteps.length - 1 && (
+                    <div className="flex-1 border-t border-dashed border-gray-300 mx-2 min-w-4"></div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -212,4 +280,4 @@ export const Navbar = ({
   );
 };
 
-export default Navbar; 
+export default Navbar;

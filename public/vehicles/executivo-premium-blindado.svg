@@ -1,0 +1,101 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="carGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2d2d2d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="windowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d3748;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#1a202c;stop-opacity:0.95" />
+    </linearGradient>
+    <radialGradient id="wheelGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#4a5568;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#2d3748;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a202c;stop-opacity:1" />
+    </radialGradient>
+    <linearGradient id="bmwGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3182ce;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2c5282;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2a4365;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="400" fill="#f7fafc"/>
+  
+  <!-- Car Body (BMW Style) -->
+  <path d="M120 250 L170 200 L210 175 L590 175 L630 200 L680 250 L680 305 L630 325 L170 325 L120 305 Z" 
+        fill="url(#carGradient)" stroke="#000" stroke-width="3"/>
+  
+  <!-- Car Roof (Lower profile for BMW) -->
+  <path d="M190 200 L220 155 L580 155 L610 200 Z" 
+        fill="url(#carGradient)" stroke="#000" stroke-width="2"/>
+  
+  <!-- Armored Windows (Darker for security) -->
+  <path d="M200 195 L230 160 L330 160 L330 195 Z" 
+        fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  <path d="M340 195 L340 160 L460 160 L460 195 Z" 
+        fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  <path d="M470 195 L470 160 L570 160 L600 195 Z" 
+        fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  
+  <!-- Front and Rear Windows -->
+  <path d="M170 250 L200 195 L220 175 L170 220 Z" 
+        fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  <path d="M630 250 L600 195 L580 175 L630 220 Z" 
+        fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  
+  <!-- Premium Wheels (Larger for BMW) -->
+  <circle cx="210" cy="305" r="40" fill="url(#wheelGradient)" stroke="#000" stroke-width="3"/>
+  <circle cx="210" cy="305" r="25" fill="#1a202c" stroke="#4a5568" stroke-width="2"/>
+  <circle cx="590" cy="305" r="40" fill="url(#wheelGradient)" stroke="#000" stroke-width="3"/>
+  <circle cx="590" cy="305" r="25" fill="#1a202c" stroke="#4a5568" stroke-width="2"/>
+  
+  <!-- BMW Wheel Design -->
+  <path d="M210 280 L210 330 M185 305 L235 305" stroke="#718096" stroke-width="3"/>
+  <path d="M590 280 L590 330 M565 305 L615 305" stroke="#718096" stroke-width="3"/>
+  
+  <!-- LED Headlights (BMW Style) -->
+  <ellipse cx="150" cy="225" rx="18" ry="25" fill="#f7fafc" stroke="#e2e8f0" stroke-width="2"/>
+  <ellipse cx="650" cy="225" rx="18" ry="25" fill="#fed7d7" stroke="#fc8181" stroke-width="2"/>
+  <circle cx="150" cy="220" r="5" fill="#3182ce"/>
+  <circle cx="150" cy="230" r="5" fill="#3182ce"/>
+  
+  <!-- BMW Kidney Grille -->
+  <ellipse cx="130" cy="235" rx="15" ry="20" fill="#2d3748" stroke="#4a5568" stroke-width="2"/>
+  <ellipse cx="130" cy="255" rx="15" ry="20" fill="#2d3748" stroke="#4a5568" stroke-width="2"/>
+  <line x1="125" y1="225" x2="125" y2="265" stroke="#718096" stroke-width="1"/>
+  <line x1="130" y1="225" x2="130" y2="265" stroke="#718096" stroke-width="1"/>
+  <line x1="135" y1="225" x2="135" y2="265" stroke="#718096" stroke-width="1"/>
+  
+  <!-- BMW Logo -->
+  <circle cx="125" cy="245" r="12" fill="url(#bmwGradient)" stroke="#f7fafc" stroke-width="2"/>
+  <path d="M125 233 L125 257 M113 245 L137 245" stroke="#f7fafc" stroke-width="2"/>
+  <circle cx="119" cy="239" r="4" fill="#f7fafc"/>
+  <circle cx="131" cy="251" r="4" fill="#f7fafc"/>
+  
+  <!-- Armored Details -->
+  <rect x="170" y="270" width="460" height="8" fill="#2d3748" rx="4"/>
+  <rect x="180" y="285" width="440" height="4" fill="#4a5568" rx="2"/>
+  
+  <!-- Door Handles (Premium) -->
+  <rect x="280" y="240" width="10" height="5" fill="#718096" rx="2"/>
+  <rect x="380" y="240" width="10" height="5" fill="#718096" rx="2"/>
+  <rect x="480" y="240" width="10" height="5" fill="#718096" rx="2"/>
+  <rect x="540" y="240" width="10" height="5" fill="#718096" rx="2"/>
+  
+  <!-- Armored Badge -->
+  <rect x="350" y="290" width="100" height="20" fill="#2d3748" stroke="#4a5568" stroke-width="1" rx="10"/>
+  <text x="400" y="304" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#f7fafc">
+    BLINDADO
+  </text>
+  
+  <!-- Text -->
+  <text x="400" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#2d3748">
+    EXECUTIVO PREMIUM BLINDADO
+  </text>
+  <text x="400" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#718096">
+    BMW blindado de luxo preto
+  </text>
+</svg>

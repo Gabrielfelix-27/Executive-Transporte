@@ -17,10 +17,10 @@ interface QuoteData {
   date: string;
   time: string;
   passengers: number;
+  vehicles?: any;
   calculatedDistance?: number;
   estimatedTime?: string;
   estimatedTimeMinutes?: number;
-  priceFactors?: string[];
 }
 
 interface VehicleCategory {
@@ -91,8 +91,7 @@ export default function VehicleSelection() {
     estimatedTimeMinutes: tripData.estimatedTime, // Corrigido: vem como 'estimatedTime' em minutos
     estimatedTime: (tripData.estimatedTime !== undefined && tripData.estimatedTime !== null) 
       ? formatEstimatedTime(tripData.estimatedTime) 
-      : undefined,
-    priceFactors: tripData.priceFactors
+      : undefined
   };
 
   // Debug melhorado: verificar se os dados estão chegando corretamente
@@ -109,17 +108,17 @@ export default function VehicleSelection() {
   // Converter objeto vehicles para array no formato esperado
   const getVehicleImage = (categoryKey: string) => {
     const images = {
-      'executivoSedan': 'https://images.unsplash.com/photo-1563720223185-11003d516935?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      'executivoComum': 'https://images.unsplash.com/photo-1549924231-f129b911e442?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      'executivoPremiumBlindado': 'https://images.unsplash.com/photo-1580414819951-3b5bb3d7e1f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      'minivanComum': 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      'minivanBlindada': 'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      'van15Lugares': 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      'executivoSedan': '/Fotos Site/transporte-executivo-de-luxo.jpg',
+      'executivoComum': '/Fotos Site/transporte-executivo-de-luxo.jpg',
+      'executivoPremiumBlindado': '/Fotos Site/transporte-executivo-carro-blindado-ford-fusion.jpg',
+      'minivanComum': '/Fotos Site/Aluguel-de-Van-Executiva-Como-funciona.jpg',
+      'minivanBlindada': '/Fotos Site/Minivan-lux-transfer-tranfer-no-rio-de-janeiro.jpg',
+      'van15Lugares': '/Fotos Site/locacao-de-van-em-sp.jpg',
       // Fallback para categorias antigas
-      'economy': 'https://images.unsplash.com/photo-1549924231-f129b911e442?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      'executivo': 'https://images.unsplash.com/photo-1563720223185-11003d516935?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      'luxo': 'https://images.unsplash.com/photo-1580414819951-3b5bb3d7e1f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      'suv': 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+      'economy': '/Fotos Site/transporte-executivo-de-luxo.jpg',
+      'executivo': '/Fotos Site/transporte-executivo-de-luxo.jpg',
+      'luxo': '/Fotos Site/transporte-executivo-carro-blindado-ford-fusion.jpg',
+      'suv': '/Fotos Site/Aluguel-de-Van-Executiva-Como-funciona.jpg'
     };
     return images[categoryKey as keyof typeof images] || images.executivoSedan;
   };
@@ -134,7 +133,6 @@ export default function VehicleSelection() {
     capacity: value.passengers,
     price: value.price,
     features: [value.description],
-    priceFactors: value.priceFactors || [], // Adicionar fatores de preço
     luggage: {
       small: 2,
       medium: value.luggage,
@@ -377,19 +375,6 @@ export default function VehicleSelection() {
                     ⏱️ {t('vehicle.estimatedTime')}: {quoteData.estimatedTime}
                   </div>
                 )}
-                {quoteData.priceFactors && quoteData.priceFactors.length > 0 && (
-                  <div className="text-xs text-gray-500 mt-2">
-                    <div className="font-medium mb-1">📊 {t('vehicle.priceFactors')}:</div>
-                    <div className="grid gap-1">
-                      {quoteData.priceFactors.map((factor, index) => (
-                        <div key={index} className="flex items-center">
-                          <div className="w-1 h-1 bg-gray-400 rounded-full mr-2"></div>
-                          {factor}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
 
               {/* Route Information */}
@@ -490,21 +475,6 @@ export default function VehicleSelection() {
                   <div className="text-xs text-gray-500 mb-3">
                     {t('vehicle.totalPrice')}
                   </div>
-                  
-                  {/* Price Factors específicos do veículo */}
-                  {category.priceFactors && category.priceFactors.length > 0 && (
-                    <div className="text-xs text-gray-500 mt-2 p-2 bg-gray-50 rounded">
-                      <div className="font-medium mb-1">💰 Fatores de preço:</div>
-                      <div className="space-y-1">
-                        {category.priceFactors.map((factor: string, index: number) => (
-                          <div key={index} className="flex items-center justify-center">
-                            <div className="w-1 h-1 bg-gray-400 rounded-full mr-2"></div>
-                            <span className="text-center">{factor}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
                 </div>
               </CardContent>
             </Card>
@@ -601,19 +571,6 @@ export default function VehicleSelection() {
                 </div>
               </div>
             </div>
-            
-            {quoteData.priceFactors && quoteData.priceFactors.length > 0 && (
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="text-sm font-medium text-gray-700 mb-3">{t('vehicle.priceFactors')}</div>
-                <div className="flex flex-wrap gap-2">
-                  {quoteData.priceFactors.map((factor, index) => (
-                    <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
-                      {factor}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
           </CardContent>
         </Card>
 

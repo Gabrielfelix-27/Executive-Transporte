@@ -44,9 +44,6 @@ export const Routes = () => {
             <p className="text-sm text-gray-400 mb-2">{t('routes.topTitle')}</p>
             <h2 className="text-3xl font-bold">{t('routes.title')}</h2>
           </div>
-          <button className="text-sm text-white hover:text-yellow-400">
-            {t('routes.allRoutes')}
-          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

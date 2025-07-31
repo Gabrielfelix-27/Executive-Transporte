@@ -4,22 +4,15 @@ export const Partners = () => {
   const { t } = useLanguage();
 
   const partners = [
-    { name: "ROSEWOOD", logo: "🏨" },
-    { name: "MENTORE", logo: "🏢" },
-    { name: "TIVOLI", logo: "🏨" },
-    { name: "JW MARRIOTT", logo: "🏨" },
-    { name: "HOTEL UNIQUE", logo: "🏨" },
-    { name: "FASANO", logo: "🏨" },
-    { name: "COPACABANA PALACE", logo: "🏨" },
-    { name: "EMBRAER", logo: "✈️" },
-    { name: "VALE", logo: "🏭" },
-    { name: "ITAÚ", logo: "🏦" },
-    { name: "BRADESCO", logo: "🏦" },
-    { name: "PETROBRAS", logo: "⛽" },
-    { name: "AMBEV", logo: "🍺" },
-    { name: "MAGAZINE LUIZA", logo: "🛍️" },
-    { name: "NATURA", logo: "🌿" },
-    { name: "B3", logo: "📈" }
+    { name: "JITTERBIT", logo: "/Logo Empresas/Jitterbit.webp" },
+    { name: "KIWIFY", logo: "/Logo Empresas/Kiwify.webp" },
+    { name: "LG", logo: "/Logo Empresas/LG.webp" },
+    { name: "MAPEI", logo: "/Logo Empresas/MAPEI.webp" },
+    { name: "NICE", logo: "/Logo Empresas/Nice.webp" },
+    { name: "SPELL", logo: "/Logo Empresas/Spell.webp" },
+    { name: "ADAPCON", logo: "/Logo Empresas/adapcon.webp" },
+    { name: "AMBIPAR", logo: "/Logo Empresas/ambipar.webp" },
+    { name: "EVERNEX", logo: "/Logo Empresas/evernex.webp" }
   ];
 
   // Duplicar os parceiros para criar um loop infinito suave
@@ -28,7 +21,7 @@ export const Partners = () => {
   return (
     <section className="py-16 bg-gray-50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-3xl font-bold mb-12 text-center text-gray-900">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-12 text-center text-gray-900">
           {t('partners.title')}
         </h2>
         
@@ -38,31 +31,32 @@ export const Partners = () => {
             {duplicatedPartners.map((partner, index) => (
               <div 
                 key={index} 
-                className="flex-shrink-0 mx-8 flex flex-col items-center justify-center min-w-[200px] h-24 group"
+                className="flex-shrink-0 mx-4 sm:mx-8 flex items-center justify-center min-w-[150px] sm:min-w-[200px] h-24 group"
               >
-                <div className="text-4xl mb-2 group-hover:scale-110 transition-transform duration-300">
-                  {partner.logo}
-                </div>
-                <div className="text-lg font-medium text-gray-600 group-hover:text-gray-900 transition-colors duration-300 text-center">
-                  {partner.name}
+                <div className="w-28 h-24 group-hover:scale-110 transition-transform duration-300 flex items-center justify-center">
+                  <img 
+                    src={partner.logo} 
+                    alt={`Logo ${partner.name}`}
+                    className="max-w-full max-h-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                    onError={(e) => {
+                      console.error(`Erro ao carregar logo: ${partner.logo}`);
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
                 </div>
               </div>
             ))}
           </div>
-          
-          {/* Gradientes nas bordas para efeito de fade */}
-          <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-gray-50 to-transparent pointer-events-none z-10"></div>
-          <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-gray-50 to-transparent pointer-events-none z-10"></div>
         </div>
         
         <div className="text-center mt-8">
-          <p className="text-gray-600 text-sm">
-            Parceiros que confiam na excelência do nosso serviço
+          <p className="text-gray-600 text-xs sm:text-sm">
+            Empresas que confiam na excelência do nosso serviço
           </p>
         </div>
       </div>
       
-      <style jsx>{`
+      <style>{`
         @keyframes scroll {
           0% {
             transform: translateX(0);
@@ -73,11 +67,21 @@ export const Partners = () => {
         }
         
         .animate-scroll {
-          animation: scroll 30s linear infinite;
+          animation: scroll 20s linear infinite;
+          will-change: transform;
         }
         
         .animate-scroll:hover {
           animation-play-state: paused;
+        }
+        
+        /* Garantir performance consistente em mobile */
+        @media (max-width: 768px) {
+          .animate-scroll {
+            animation: scroll 12s linear infinite;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+          }
         }
       `}</style>
     </section>

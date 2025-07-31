@@ -301,10 +301,10 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
           type="text"
           id={id}
           placeholder={finalPlaceholder}
-          className={`w-full px-4 py-2 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700 placeholder-gray-400 ${className}`}
+          className={`w-full px-1 py-1 border border-gray-300 rounded-none focus:outline-none focus:border-gray-500 text-gray-700 placeholder-gray-400 ${className}`}
           autoComplete="off"
         />
-        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+        <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
         </div>
       </div>

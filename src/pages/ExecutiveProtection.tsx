@@ -26,12 +26,7 @@ const ExecutiveProtection = () => {
               
               {/* Left Content */}
               <div className="text-white order-2 lg:order-1">
-                <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight font-redhat tracking-wide">
-                  PROTEÇÃO EXECUTIVA
-                </h1>
-                <p className="text-xl text-gray-200 mb-8 leading-relaxed font-redhat text-justify">
-                  {t('services.executiveProtectionDesc')}
-                </p>
+                {/* Título e subtítulo removidos */}
               </div>
 
               {/* Right Content - Quote Form */}
@@ -166,4 +161,4 @@ const ExecutiveProtection = () => {
   );
 };
 
-export default ExecutiveProtection; 
+export default ExecutiveProtection;

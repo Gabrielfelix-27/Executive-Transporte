@@ -1,6 +1,7 @@
 
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
+import { QuoteForm } from "@/components/QuoteForm";
 import { Services } from "@/components/Services";
 import { Features } from "@/components/Features";
 import { Routes } from "@/components/Routes";
@@ -13,11 +14,15 @@ const Index = () => {
     <div className="min-h-screen bg-white">
       <Navbar />
       <Hero />
+      {/* QuoteForm para mobile */}
+      <div className="block lg:hidden">
+        <QuoteForm />
+      </div>
       <Services />
       <Features />
+      <Partners />
       <Routes />
       <Testimonial />
-      <Partners />
       <Footer />
     </div>
   );

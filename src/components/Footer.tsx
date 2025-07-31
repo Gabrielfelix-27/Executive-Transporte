@@ -10,10 +10,10 @@ export const Footer = () => {
           
           {/* Company Info */}
           <div className="md:col-span-2">
-            <h3 className="text-2xl font-bold mb-6 tracking-wider font-redhat">{t('footer.company')}</h3>
+            <h3 className="text-2xl font-bold mb-6 tracking-wider font-redhat hover:text-[#ffc68b] transition-colors">{t('footer.company')}</h3>
             <div className="mb-6">
               <p className="text-sm text-gray-400 mb-2 font-redhat">{t('footer.helpCenter')}</p>
-              <div className="text-sm font-redhat">
+              <div className="text-sm font-redhat text-gray-400">
                 <p>{t('footer.companyFull')}</p>
                 <p>{t('footer.address')}</p>
                 <p>{t('footer.phone')}</p>
@@ -24,12 +24,12 @@ export const Footer = () => {
 
           {/* Company Links */}
           <div>
-            <h4 className="font-semibold mb-4">EMPRESA</h4>
+            <h4 className="font-semibold mb-4 font-redhat">EMPRESA</h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="/about-us" className="hover:text-white">{t('footer.aboutUs')}</a></li>
-              <li><a href="#" className="hover:text-white">{t('footer.workWithUs')}</a></li>
-              <li><a href="#" className="hover:text-white">{t('footer.routes')}</a></li>
-              <li><a href="#" className="hover:text-white">{t('footer.cities')}</a></li>
+              <li><a href="/about-us" className="hover:text-[#ffc68b] transition-colors">{t('footer.aboutUs')}</a></li>
+              <li><a href="#" className="hover:text-[#ffc68b] transition-colors">{t('footer.workWithUs')}</a></li>
+              <li><a href="#" className="hover:text-[#ffc68b] transition-colors">{t('footer.routes')}</a></li>
+              <li><a href="#" className="hover:text-[#ffc68b] transition-colors">{t('footer.cities')}</a></li>
             </ul>
           </div>
 
@@ -37,12 +37,12 @@ export const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">{t('footer.services')}</h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="/on-demand-service" className="hover:text-white">{t('services.onDemand')}</a></li>
-              <li><a href="/airport-transfer" className="hover:text-white">{t('services.airportTransfer')}</a></li>
-              <li><a href="/point-to-point" className="hover:text-white">{t('services.pointToPoint')}</a></li>
-              <li><a href="/business" className="hover:text-white">{t('services.business')}</a></li>
-              <li><a href="/executive-protection" className="hover:text-white">{t('services.executiveProtection')}</a></li>
-              <li><a href="/vip-360" className="hover:text-white">{t('services.exec360')}</a></li>
+              <li><a href="/on-demand-service" className="hover:text-[#ffc68b] transition-colors">{t('services.onDemand')}</a></li>
+              <li><a href="/airport-transfer" className="hover:text-[#ffc68b] transition-colors">{t('services.airportTransfer')}</a></li>
+              <li><a href="/point-to-point" className="hover:text-[#ffc68b] transition-colors">{t('services.pointToPoint')}</a></li>
+              <li><a href="/business" className="hover:text-[#ffc68b] transition-colors">{t('services.business')}</a></li>
+              <li><a href="/executive-protection" className="hover:text-[#ffc68b] transition-colors">{t('services.executiveProtection')}</a></li>
+              <li><a href="/vip-360" className="hover:text-[#ffc68b] transition-colors">{t('services.exec360')}</a></li>
             </ul>
           </div>
         </div>
@@ -50,17 +50,12 @@ export const Footer = () => {
         {/* Bottom */}
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-4 text-sm text-gray-400 mb-4 md:mb-0">
-              <span>{t('header.portuguese')}</span>
-              <span>USD $</span>
-              <span>{t('footer.location')}</span>
-            </div>
             
-            <div className="flex items-center space-x-6 text-sm text-gray-400">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-2 sm:space-y-0 text-sm text-gray-400">
               <span>{t('footer.copyright')}</span>
-              <a href="#" className="hover:text-white">{t('footer.privacy')}</a>
-              <a href="#" className="hover:text-white">{t('footer.accessibility')}</a>
-              <a href="#" className="hover:text-white">{t('footer.terms')}</a>
+              <a href="#" className="hover:text-[#ffc68b] transition-colors">{t('footer.privacy')}</a>
+              <a href="#" className="hover:text-[#ffc68b] transition-colors">{t('footer.accessibility')}</a>
+              <a href="#" className="hover:text-[#ffc68b] transition-colors">{t('footer.terms')}</a>
             </div>
           </div>
           

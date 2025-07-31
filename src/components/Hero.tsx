@@ -7,30 +7,36 @@ export const Hero = () => {
   const { currency, setCurrency, exchangeRate, loading } = useCurrency();
 
   return (
-    <div 
-      className="relative min-h-screen pt-20 bg-center bg-no-repeat flex items-center"
-      style={{
-        backgroundImage: "url('/BG2.png')",
-        backgroundSize: "120%",
-        backgroundPosition: "right -5px"
-      }}
-    >
-      <div className="relative z-10 w-full py-8">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            
-            {/* Left Content - Removido */}
-            <div className="text-white order-2 lg:order-1">
-              {/* Texto removido conforme solicitado */}
-            </div>
+    <>
+      {/* Seção do Background */}
+      <div 
+        className="relative min-h-[50vh] sm:min-h-[70vh] pt-0 sm:pt-20 bg-center bg-no-repeat flex items-center"
+        style={{
+          backgroundImage: "url('/Fotos Site/IMG_4534.webp')",
+          backgroundSize: "cover",
+          backgroundPosition: "center 19%"
+        }}
+      >
+        <div className="relative z-10 w-full py-0 sm:py-8">
+          <div className="max-w-7xl mx-auto px-0 sm:px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-12 items-center">
+              
+              {/* Left Content - Removido */}
+              <div className="text-white order-2 lg:order-1">
+                {/* Texto removido conforme solicitado */}
+              </div>
 
-            {/* Right Content - Quote Form */}
-            <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
-              <QuoteForm />
+              {/* Right Content - Quote Form (desktop) / Espaço vazio (mobile) */}
+              <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
+                {/* Formulário visível apenas no desktop */}
+                <div className="hidden lg:block">
+                  <QuoteForm />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

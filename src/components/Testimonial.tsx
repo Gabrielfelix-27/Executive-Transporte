@@ -4,16 +4,17 @@ export const Testimonial = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-12" style={{ backgroundColor: '#141b28' }}>
       <div className="max-w-4xl mx-auto px-6 text-center">
         <div className="mb-8">
-          <div className="text-6xl text-gray-300 mb-4">"</div>
-          <blockquote className="text-2xl md:text-3xl font-light text-gray-900 leading-relaxed">
+          <img 
+            src="/Logos/Logo solo.png" 
+            alt="Executive Logo" 
+            className="w-12 h-12 mx-auto mb-4 opacity-80"
+          />
+          <blockquote className="text-lg sm:text-xl md:text-2xl font-normal leading-relaxed whitespace-pre-line" style={{ color: '#ffc68b', fontFamily: 'Poppins, sans-serif' }}>
             "{t('testimonial.quote')}"
           </blockquote>
-          <cite className="text-sm text-gray-600 mt-6 block">
-            {t('testimonial.source')}
-          </cite>
         </div>
       </div>
     </section>

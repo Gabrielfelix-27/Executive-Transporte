@@ -396,7 +396,6 @@ export const calculateTripPrice = async (
   estimatedTime: number;
   basePrice: number;
   finalPrice: number;
-  priceFactors: string[];
 }> => {
   try {
     console.log(`💰 Calculando preço da viagem [${vehicleType}]: "${origin}" → "${destination}"`);
@@ -422,8 +421,7 @@ export const calculateTripPrice = async (
         distance: 100, // 100km inclusos na diária
         estimatedTime: 600, // 10 horas
         basePrice: dailyPrice,
-        finalPrice: dailyPrice,
-        priceFactors: ['Diária (10h à disposição / 100km)']
+        finalPrice: dailyPrice
       };
     }
     
@@ -459,8 +457,7 @@ export const calculateTripPrice = async (
         distance: Math.round(distance * 10) / 10,
         estimatedTime: Math.round(estimatedTime),
         basePrice: fixedPrice,
-        finalPrice: fixedPrice,
-        priceFactors: [`Tarifa fixa: ${originName} → ${destinationName}`]
+        finalPrice: fixedPrice
       };
     }
     
@@ -519,7 +516,6 @@ export const calculateTripPrice = async (
     
     let basePrice = distance * basePricePerKm[vehicleType];
     let finalPrice = basePrice;
-    const priceFactors: string[] = [];
     
     // Detectar tipos de local e aplicar taxas
     const originType = detectLocationType(origin);
@@ -532,20 +528,11 @@ export const calculateTripPrice = async (
     const maxSurcharge = Math.max(originSurcharge, destSurcharge);
     if (maxSurcharge > 1.0) {
       finalPrice *= maxSurcharge;
-      
-      if (originType === 'airport' || destType === 'airport') {
-        priceFactors.push('Taxa aeroporto (+30%)');
-      } else if (originType === 'bus_station' || destType === 'bus_station') {
-        priceFactors.push('Taxa rodoviária (+15%)');
-      } else if (originType === 'hospital' || destType === 'hospital') {
-        priceFactors.push('Taxa hospital (+10%)');
-      }
     }
     
     // Taxa para viagens longas (>25km)
     if (distance > 25) {
       finalPrice *= 1.2;
-      priceFactors.push('Viagem longa (+20%)');
     }
     
     // Preço mínimo
@@ -555,18 +542,13 @@ export const calculateTripPrice = async (
                         vehicleType === 'van15Lugares' ? 120 : 80;
     if (finalPrice < minimumPrice) {
       finalPrice = minimumPrice;
-      priceFactors.push(`Preço mínimo R$ ${minimumPrice.toFixed(2)}`);
     }
-    
-    // Adicionar indicação de cálculo dinâmico
-    priceFactors.push('Cálculo dinâmico por distância');
     
     const result = {
       distance: Math.round(distance * 10) / 10,
       estimatedTime: Math.round(estimatedTime),
       basePrice: Math.round(basePrice * 100) / 100,
-      finalPrice: Math.round(finalPrice * 100) / 100,
-      priceFactors
+      finalPrice: Math.round(finalPrice * 100) / 100
     };
     
     console.log(`💰 [DEBUG] Resultado final da viagem:`, result);
@@ -580,8 +562,7 @@ export const calculateTripPrice = async (
       distance: 15,
       estimatedTime: 45,
       basePrice: 52.5,
-      finalPrice: 80,
-      priceFactors: ['Cálculo aproximado']
+      finalPrice: 80
     };
     
     console.log(`💰 [DEBUG] Resultado fallback:`, fallbackResult);

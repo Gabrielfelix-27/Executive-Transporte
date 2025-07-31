@@ -89,7 +89,6 @@ export const QuoteForm = () => {
         passengers: 1,
         distance: executivoSedanData.distance,
         estimatedTime: executivoSedanData.estimatedTime,
-        priceFactors: executivoSedanData.priceFactors,
         vehicles: {
           executivoSedan: {
             name: 'Executivo Sedan',
@@ -97,8 +96,7 @@ export const QuoteForm = () => {
             basePrice: executivoSedanData.basePrice,
             passengers: 4,
             luggage: 3,
-            description: 'Sedan executivo com conforto premium e elegância',
-            priceFactors: executivoSedanData.priceFactors
+            description: 'Sedan executivo com conforto premium e elegância'
           },
           executivoComum: {
             name: 'Executivo Comum',
@@ -106,8 +104,7 @@ export const QuoteForm = () => {
             basePrice: executivoComumData.basePrice,
             passengers: 4,
             luggage: 2,
-            description: 'Veículo executivo padrão com bom conforto',
-            priceFactors: executivoComumData.priceFactors
+            description: 'Veículo executivo padrão com bom conforto'
           },
           executivoPremiumBlindado: {
             name: 'Executivo Premium Blindado',
@@ -115,8 +112,7 @@ export const QuoteForm = () => {
             basePrice: executivoPremiumBlindadoData.basePrice,
             passengers: 4,
             luggage: 3,
-            description: 'Máxima segurança com blindagem e luxo premium',
-            priceFactors: executivoPremiumBlindadoData.priceFactors
+            description: 'Máxima segurança com blindagem e luxo premium'
           },
           minivanComum: {
             name: 'MiniVan Comum',
@@ -124,8 +120,7 @@ export const QuoteForm = () => {
             basePrice: minivanComumData.basePrice,
             passengers: 7,
             luggage: 4,
-            description: 'Espaço amplo para grupos de até 7 pessoas',
-            priceFactors: minivanComumData.priceFactors
+            description: 'Espaço amplo para grupos de até 7 pessoas'
           },
           minivanBlindada: {
             name: 'MiniVan Blindada',
@@ -133,8 +128,7 @@ export const QuoteForm = () => {
             basePrice: minivanBlindadaData.basePrice,
             passengers: 7,
             luggage: 4,
-            description: 'Segurança máxima para grupos com blindagem completa',
-            priceFactors: minivanBlindadaData.priceFactors
+            description: 'Segurança máxima para grupos com blindagem completa'
           },
           van15Lugares: {
             name: 'Van 15 Lugares',
@@ -142,8 +136,7 @@ export const QuoteForm = () => {
             basePrice: van15LugaresData.basePrice,
             passengers: 15,
             luggage: 8,
-            description: 'Transporte para grupos grandes com máximo conforto',
-            priceFactors: van15LugaresData.priceFactors
+            description: 'Transporte para grupos grandes com máximo conforto'
           }
         }
       };
@@ -204,16 +197,16 @@ export const QuoteForm = () => {
   };
 
   return (
-    <div className="bg-white rounded-none shadow-lg p-4 w-full max-w-md mx-auto">
+    <div className="bg-white rounded-none shadow-lg p-3 sm:p-5 w-full max-w-sm mx-auto lg:mx-0">
       {/* Cabeçalho */}
-      <div className="text-center mb-4">
-        <h2 className="text-xl font-bold text-gray-900 tracking-wide">
+      <div className="text-center mb-3 sm:mb-">
+        <h2 className="text-lg sm:text-xl font-bold text-gray-900 tracking-wide">
           {t('quote.formTitle')}
         </h2>
-        <div className="flex justify-center mt-3">
+        <div className="flex justify-center mt-2 sm:mt-3">
           <button 
             type="button"
-            className="px-6 py-2 bg-gray-900 text-white text-sm font-medium rounded-none"
+            className="px-4 sm:px-6 py-1.5 sm:py-2 bg-gray-900 text-white text-xs sm:text-sm font-medium rounded-none"
           >
             {t('quote.byDestination')}
           </button>
