@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ChevronDown, Menu } from "lucide-react";
+import { ChevronDown, Menu, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCurrency } from "@/hooks/useCurrency";
@@ -22,7 +22,7 @@ export const Navbar = ({
   showBreadcrumb = false,
   currentStep = 0
 }: NavbarProps) => {
-  const { t } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const { currency, setCurrency, exchangeRate, loading } = useCurrency();
   const [scrollY, setScrollY] = useState(0);
 
@@ -134,6 +134,44 @@ export const Navbar = ({
                        </Link>
                        <div className="h-px bg-gray-200 my-1"></div>
                        
+                       {/* Seletor de Idioma - apenas no mobile */}
+                       <Popover>
+                         <PopoverTrigger asChild>
+                           <button className="flex items-center justify-between w-full px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700 font-bold uppercase">
+                             IDIOMA
+                             <ChevronDown className="h-4 w-4" />
+                           </button>
+                         </PopoverTrigger>
+                         <PopoverContent className="w-48 p-2" align="start">
+                           <div className="grid gap-1">
+                             <button 
+                               onClick={() => setLanguage('pt')}
+                               className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 w-full ${
+                                 language === 'pt' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
+                               }`}
+                             >
+                               🇧🇷 Português
+                             </button>
+                             <button 
+                                onClick={() => setLanguage('en')}
+                                className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 w-full ${
+                                  language === 'en' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
+                                }`}
+                              >
+                                🇺🇸 English
+                              </button>
+                              <button 
+                                onClick={() => setLanguage('es')}
+                                className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 w-full ${
+                                  language === 'es' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
+                                }`}
+                              >
+                                🇪🇸 Español
+                              </button>
+                           </div>
+                         </PopoverContent>
+                       </Popover>
+                       
                        {/* Seletor de Moeda - apenas no mobile */}
                        <Popover>
                          <PopoverTrigger asChild>
@@ -177,6 +215,47 @@ export const Navbar = ({
                    </PopoverContent>
                  </Popover>
                </div>
+
+              {/* Seletor de Idioma - Desktop only */}
+              <div className="hidden sm:block">
+                <Popover>
+                  <PopoverTrigger asChild>
+                     <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent">
+                       <Globe className="h-4 w-4 mr-2" />
+                       {language === 'pt' ? 'PT' : language === 'en' ? 'EN' : 'ES'}
+                       <ChevronDown className="h-4 w-4 ml-2" />
+                     </Button>
+                   </PopoverTrigger>
+                  <PopoverContent className="w-48 p-2" align="end">
+                    <div className="grid gap-1">
+                      <button 
+                        onClick={() => setLanguage('pt')}
+                        className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
+                          language === 'pt' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
+                        }`}
+                      >
+                        🇧🇷 Português
+                      </button>
+                      <button 
+                         onClick={() => setLanguage('en')}
+                         className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
+                           language === 'en' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
+                         }`}
+                       >
+                         🇺🇸 English
+                       </button>
+                       <button 
+                         onClick={() => setLanguage('es')}
+                         className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
+                           language === 'es' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
+                         }`}
+                       >
+                         🇪🇸 Español
+                       </button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
 
               {/* Seletor de Moeda - Desktop only */}
               <div className="hidden sm:block">
