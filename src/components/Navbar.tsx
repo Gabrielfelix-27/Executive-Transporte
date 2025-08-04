@@ -221,7 +221,7 @@ export const Navbar = ({
                 <Popover>
                   <PopoverTrigger asChild>
                      <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent">
-                       {language === 'pt' ? 'Português' : language === 'en' ? 'English' : 'Español'}
+                       {language === 'pt' ? 'PORTUGUÊS' : language === 'en' ? 'ENGLISH' : 'ESPAÑOL'}
                        <ChevronDown className="h-4 w-4 ml-2" />
                      </Button>
                    </PopoverTrigger>
