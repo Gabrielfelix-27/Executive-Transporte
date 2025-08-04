@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ChevronDown, Menu, Globe } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCurrency } from "@/hooks/useCurrency";
@@ -221,8 +221,7 @@ export const Navbar = ({
                 <Popover>
                   <PopoverTrigger asChild>
                      <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent">
-                       <Globe className="h-4 w-4 mr-2" />
-                       {language === 'pt' ? 'PT' : language === 'en' ? 'EN' : 'ES'}
+                       {language === 'pt' ? 'Português' : language === 'en' ? 'English' : 'Español'}
                        <ChevronDown className="h-4 w-4 ml-2" />
                      </Button>
                    </PopoverTrigger>
