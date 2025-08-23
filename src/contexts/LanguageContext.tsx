@@ -50,33 +50,33 @@ const translations = {
     
     // Features translations
     'features.firstClass': 'PRIMEIRA CLASSE',
-    'features.firstClassDesc': 'Experimente o mais alto padrão em transporte privado. Sofisticação, glamour e exclusividade para quem exige um serviço impecável em cada detalhe.',
-    'features.maxSecurity': 'MÁXIMA SEGURANÇA',
-    'features.maxSecurityDesc': 'Viaje com confiança sabendo que sua segurança é nossa prioridade número 1. Carros blindados e motoristas minuciosamente selecionados e treinados.',
+    'features.firstClassDesc': 'Experimente o mais alto padrão em transporte premium. Sofisticação, glamour e exclusividade para clientes VIP.',
+    'features.maxSecurity': 'SEGURANÇA MÁXIMA',
+    'features.maxSecurityDesc': 'Proteção com veículos blindados de última geração. Motoristas especializados em segurança VIP.',
     'features.visionBeyond': 'VISÃO ALÉM',
-    'features.visionBeyondDesc': 'Desfrute de vistas deslumbrantes com nossos tetos panorâmicos. Design inovador e tecnologia que enriquecem e elevam sua experiência de viagem.',
+    'features.visionBeyondDesc': 'Veículos com tetos panorâmicos e tecnologia avançada. Design inovador para uma experiência única.',
     'features.guaranteedTrip': 'VIAGEM GARANTIDA',
-    'features.guaranteedTripDesc': 'Garantimos sua viagem sem cancelamentos. Nossos motoristas sempre realizarão todas as corridas, garantindo que nosso serviço seja sempre confiável.',
+    'features.guaranteedTripDesc': 'Garantimos sua viagem sem cancelamentos. Serviço confiável 24 horas.',
     'features.ultraWifi': 'WI-FI ULTRA-RÁPIDO',
-    'features.ultraWifiDesc': 'Mantenha-se online sem preocupações. Nosso Wi-Fi de alta velocidade em todos os veículos garante uma experiência ininterrupta.',
+    'features.ultraWifiDesc': 'Conectividade premium em todos os veículos. Wi-Fi de alta velocidade para sua produtividade.',
     'features.sustainableTrip': 'VIAGEM SUSTENTÁVEL',
-    'features.sustainableTripDesc': 'Frota híbrida de luxo sustentável, nossos carros híbridos unem sofisticação, conforto e exclusividade, preservando o meio ambiente em cada viagem.',
+    'features.sustainableTripDesc': 'Frota híbrida para uma viagem sustentável. Veículos que preservam o meio ambiente.',
     
     // Services translations
-    'services.title': 'VEÍCULOS BLINDADOS DE LUXO',
-    'services.subtitle': 'OS SERVIÇOS MAIS ESCOLHIDOS',
-    'services.onDemand': 'SERVIÇO SOB DEMANDA',
-    'services.onDemandDesc': 'Motoristas inteiramente exclusivos para atender suas demandas.',
-    'services.airportTransfer': 'TRANSFER AEROPORTO',
-    'services.airportTransferDesc': 'Seu tempo é precioso e seu conforto é fundamental.',
+    'services.title': 'NOSSOS SERVIÇOS',
+    'services.subtitle': 'CONHEÇA NOSSOS SERVIÇOS PREMIUM',
+    'services.onDemand': 'SOB DEMANDA',
+    'services.onDemandDesc': 'Serviço personalizado para suas necessidades específicas.',
+    'services.airportTransfer': 'TRANSFER PARA AEROPORTO',
+    'services.airportTransferDesc': 'Transporte confiável para aeroportos com conforto e pontualidade.',
     'services.pointToPoint': 'PONTO A PONTO',
-    'services.pointToPointDesc': 'Sua solução de conforto e luxo para viagens de longa distância.',
-    'services.business': 'BUSINESS',
-    'services.businessDesc': 'Produtividade no trânsito? Trabalhe com luxo e conforto enquanto viaja.',
+    'services.pointToPointDesc': 'Viagens diretas entre destinos com máximo conforto.',
+    'services.business': 'CORPORATIVO',
+    'services.businessDesc': 'Soluções de transporte para empresas e executivos.',
     'services.executiveProtection': 'PROTEÇÃO EXECUTIVA',
-    'services.executiveProtectionDesc': 'Segurança para sua proteção com discrição e sofisticação.',
-    'services.exec360': 'EXEC360',
-    'services.exec360Desc': 'Da mobilidade ao lazer. Seja Executive e exclusivo em tudo.',
+    'services.executiveProtectionDesc': 'Segurança e proteção para clientes VIP.',
+    'services.exec360': 'VIP 360',
+    'services.exec360Desc': 'Experiência completa de transporte premium.',
     
     // Footer translations
     'footer.company': 'EXECUTIVE',
@@ -108,7 +108,7 @@ const translations = {
     'locations.guarulhos': 'AEROPORTO SÃO PAULO/GUARULHOS',
     
     // Testimonial translations
-    'testimonial.quote': 'TRANSFORMANDO CADA VIAGEM EM\nUMA EXPERIÊNCIA DE PRIMEIRA CLASSE!',
+    'testimonial.quote': 'TRANSFORMANDO CADA VIAGEM\nEM UMA EXPERIÊNCIA DE PRIMEIRA CLASSE!',
     'testimonial.source': 'L\'OFFICIEL BRASIL',
     
     // Partners translations
@@ -143,7 +143,7 @@ const translations = {
     'currency.dollar': 'DÓLAR',
     'hero.title': 'O SERVIÇO DE TRANSPORTE',
     'hero.subtitle': 'QUE VOCÊ PRECISA',
-    'hero.description': 'Experimente o mais alto padrão em transporte executivo premium',
+    'hero.description': 'Experimente o mais alto padrão em transporte premium',
     
     // VehicleSelection page
     'vehicle.pickup': 'EMBARQUE',
@@ -233,9 +233,9 @@ const translations = {
     
     // About Us translations
     'about.title': 'Sobre Nós',
-    'about.description1': 'Na Executive Transporte Premium, oferecemos uma experiência de mobilidade sofisticada e confiável para pessoas e empresas exigentes. Operamos em São Paulo com foco em pontualidade, conforto e segurança, seja para compromissos corporativos, eventos, transfers executivos ou momentos especiais.',
-    'about.description2': 'Contamos com uma equipe de motoristas altamente qualificados, frota premium e atendimento personalizado, ideal para quem busca profissionalismo em cada viagem.',
-    'about.description3': 'Seja para viagens de negócios, recepção executiva, transfers para aeroporto ou tours personalizados, conte com a Executive para proporcionar uma viagem que atenda às suas necessidades.',
+    'about.description1': 'A Executive Premium é uma empresa especializada em transporte de luxo, oferecendo serviços premium para clientes exigentes. Nossa empresa se destaca pela pontualidade, conforto e segurança em todos os serviços.',
+    'about.description2': 'Nossa frota inclui veículos de última geração operados por motoristas altamente qualificados. Oferecemos atendimento personalizado 24 horas para diversas necessidades de transporte.',
+    'about.description3': 'Especializados em transporte premium, oferecemos uma experiência incomparável para nossos clientes. Conte com a Executive Premium para suas necessidades de transporte de luxo.',
     
     // Additional translations for hardcoded texts
     'trip.summary': 'Resumo da Viagem',
@@ -299,33 +299,33 @@ const translations = {
     
     // Features translations
     'features.firstClass': 'FIRST CLASS',
-    'features.firstClassDesc': 'Experience the highest standard in private transportation. Sophistication, glamour and exclusivity for those who demand impeccable service in every detail.',
+    'features.firstClassDesc': 'Experience the highest standard in premium transportation. Sophistication, glamour and exclusivity for VIP clients.',
     'features.maxSecurity': 'MAXIMUM SECURITY',
-    'features.maxSecurityDesc': 'Travel with confidence knowing your safety is our number 1 priority. Armored cars and meticulously selected and trained drivers.',
+    'features.maxSecurityDesc': 'Protection with state-of-the-art armored vehicles. Drivers specialized in VIP security.',
     'features.visionBeyond': 'VISION BEYOND',
-    'features.visionBeyondDesc': 'Enjoy stunning views with our panoramic roofs. Innovative design and technology that enrich and elevate your travel experience.',
+    'features.visionBeyondDesc': 'Vehicles with panoramic roofs and advanced technology. Innovative design for a unique experience.',
     'features.guaranteedTrip': 'GUARANTEED TRIP',
-    'features.guaranteedTripDesc': 'We guarantee your trip without cancellations. Our drivers will always complete all rides, ensuring our service is always reliable.',
+    'features.guaranteedTripDesc': 'We guarantee your trip without cancellations. Reliable 24-hour service.',
     'features.ultraWifi': 'ULTRA-FAST WI-FI',
-    'features.ultraWifiDesc': 'Stay online without worries. Our high-speed Wi-Fi in all vehicles ensures an uninterrupted experience.',
+    'features.ultraWifiDesc': 'Premium connectivity in all vehicles. High-speed Wi-Fi for your productivity.',
     'features.sustainableTrip': 'SUSTAINABLE TRIP',
-    'features.sustainableTripDesc': 'Sustainable luxury hybrid fleet, our hybrid cars combine sophistication, comfort and exclusivity, preserving the environment on every trip.',
+    'features.sustainableTripDesc': 'Hybrid fleet for a sustainable trip. Vehicles that preserve the environment.',
     
     // Services translations
-    'services.title': 'LUXURY ARMORED VEHICLES',
-    'services.subtitle': 'THE MOST CHOSEN SERVICES',
-    'services.onDemand': 'ON-DEMAND SERVICE',
-    'services.onDemandDesc': 'Entirely exclusive drivers to meet your demands.',
+    'services.title': 'OUR SERVICES',
+    'services.subtitle': 'DISCOVER OUR PREMIUM SERVICES',
+    'services.onDemand': 'ON DEMAND',
+    'services.onDemandDesc': 'Personalized service for your specific needs.',
     'services.airportTransfer': 'AIRPORT TRANSFER',
-    'services.airportTransferDesc': 'Your time is precious and your comfort is fundamental.',
+    'services.airportTransferDesc': 'Reliable transportation to airports with comfort and punctuality.',
     'services.pointToPoint': 'POINT TO POINT',
-    'services.pointToPointDesc': 'Your comfort and luxury solution for long-distance travel.',
+    'services.pointToPointDesc': 'Direct trips between destinations with maximum comfort.',
     'services.business': 'BUSINESS',
-    'services.businessDesc': 'Productivity in traffic? Work with luxury and comfort while traveling.',
+    'services.businessDesc': 'Transportation solutions for companies and executives.',
     'services.executiveProtection': 'EXECUTIVE PROTECTION',
-    'services.executiveProtectionDesc': 'Security for your protection with discretion and sophistication.',
-    'services.exec360': 'EXEC360',
-    'services.exec360Desc': 'From mobility to leisure. Be Executive and exclusive in everything.',
+    'services.executiveProtectionDesc': 'Security and protection for VIP clients.',
+    'services.exec360': 'VIP 360',
+    'services.exec360Desc': 'Complete premium transportation experience.',
     
     // Footer translations
     'footer.company': 'EXECUTIVE',
@@ -357,7 +357,7 @@ const translations = {
     'locations.guarulhos': 'SÃO PAULO/GUARULHOS AIRPORT',
     
     // Testimonial translations
-    'testimonial.quote': 'TRANSFORMING EVERY TRIP INTO\nA FIRST CLASS EXPERIENCE!',
+    'testimonial.quote': 'TRANSFORMING EVERY TRIP\nINTO A FIRST CLASS EXPERIENCE!',
     'testimonial.source': 'L\'OFFICIEL BRASIL',
     
     // Partners translations
@@ -392,7 +392,7 @@ const translations = {
     'currency.dollar': 'DOLLAR',
     'hero.title': 'THE TRANSPORT SERVICE',
     'hero.subtitle': 'YOU NEED',
-    'hero.description': 'Experience the highest standard in premium executive transportation',
+    'hero.description': 'Experience the highest standard in premium transportation',
     
     // VehicleSelection page
     'vehicle.pickup': 'PICKUP',
@@ -482,9 +482,9 @@ const translations = {
     
     // About Us translations
     'about.title': 'About Us',
-    'about.description1': 'At Executive Transporte Premium, we offer a sophisticated and reliable mobility experience for demanding people and companies. We operate in São Paulo with a focus on punctuality, comfort and safety, whether for corporate appointments, events, executive transfers or special moments.',
-    'about.description2': 'We have a team of highly qualified drivers, premium fleet and personalized service, ideal for those seeking professionalism in every trip.',
-    'about.description3': 'Whether for business trips, executive reception, airport transfers or personalized tours, count on Executive to provide a trip that meets your needs.',
+    'about.description1': 'Executive Premium is a company specialized in luxury transportation, offering premium services for demanding clients. Our company stands out for punctuality, comfort and security in all services.',
+    'about.description2': 'Our fleet includes state-of-the-art vehicles operated by highly qualified drivers. We offer personalized 24-hour service for various transportation needs.',
+    'about.description3': 'Specialized in premium transportation, we offer an unparalleled experience for our clients. Count on Executive Premium for your luxury transportation needs.',
     
     // Additional translations for hardcoded texts
     'trip.summary': 'Trip Summary',
@@ -548,33 +548,33 @@ const translations = {
     
     // Features translations
     'features.firstClass': 'PRIMERA CLASE',
-    'features.firstClassDesc': 'Experimente el más alto estándar en transporte privado. Sofisticación, glamour y exclusividad para quienes exigen un servicio impecable en cada detalle.',
-    'features.maxSecurity': 'MÁXIMA SEGURIDAD',
-    'features.maxSecurityDesc': 'Viaje con confianza sabiendo que su seguridad es nuestra prioridad número 1. Autos blindados y conductores minuciosamente seleccionados y entrenados.',
+    'features.firstClassDesc': 'Experimente el más alto estándar en transporte premium. Sofisticación, glamour y exclusividad para clientes VIP.',
+    'features.maxSecurity': 'SEGURIDAD MÁXIMA',
+    'features.maxSecurityDesc': 'Protección con vehículos blindados de última generación. Conductores especializados en seguridad VIP.',
     'features.visionBeyond': 'VISIÓN MÁS ALLÁ',
-    'features.visionBeyondDesc': 'Disfrute de vistas impresionantes con nuestros techos panorámicos. Diseño innovador y tecnología que enriquecen y elevan su experiencia de viaje.',
+    'features.visionBeyondDesc': 'Vehículos con techos panorámicos y tecnología avanzada. Diseño innovador para una experiencia única.',
     'features.guaranteedTrip': 'VIAJE GARANTIZADO',
-    'features.guaranteedTripDesc': 'Garantizamos su viaje sin cancelaciones. Nuestros conductores siempre realizarán todos los viajes, asegurando que nuestro servicio sea siempre confiable.',
+    'features.guaranteedTripDesc': 'Garantizamos su viaje sin cancelaciones. Servicio confiable 24 horas.',
     'features.ultraWifi': 'WI-FI ULTRA-RÁPIDO',
-    'features.ultraWifiDesc': 'Manténgase en línea sin preocupaciones. Nuestro Wi-Fi de alta velocidad en todos los vehículos garantiza una experiencia ininterrumpida.',
+    'features.ultraWifiDesc': 'Conectividad premium en todos los vehículos. Wi-Fi de alta velocidad para su productividad.',
     'features.sustainableTrip': 'VIAJE SOSTENIBLE',
-    'features.sustainableTripDesc': 'Flota híbrida de lujo sostenible, nuestros autos híbridos unen sofisticación, comodidad y exclusividad, preservando el medio ambiente en cada viaje.',
+    'features.sustainableTripDesc': 'Flota híbrida para un viaje sostenible. Vehículos que preservan el medio ambiente.',
     
     // Services translations
-    'services.title': 'VEHÍCULOS BLINDADOS DE LUJO',
-    'services.subtitle': 'LOS SERVICIOS MÁS ELEGIDOS',
-    'services.onDemand': 'SERVICIO BAJO DEMANDA',
-    'services.onDemandDesc': 'Conductores enteramente exclusivos para atender sus demandas.',
-    'services.airportTransfer': 'TRANSFER AEROPUERTO',
-    'services.airportTransferDesc': 'Su tiempo es precioso y su comodidad es fundamental.',
+    'services.title': 'NUESTROS SERVICIOS',
+    'services.subtitle': 'DESCUBRA NUESTROS SERVICIOS PREMIUM',
+    'services.onDemand': 'BAJO DEMANDA',
+    'services.onDemandDesc': 'Servicio personalizado para sus necesidades específicas.',
+    'services.airportTransfer': 'TRANSFER PARA AEROPUERTO',
+    'services.airportTransferDesc': 'Transporte confiable para aeropuertos con comodidad y puntualidad.',
     'services.pointToPoint': 'PUNTO A PUNTO',
-    'services.pointToPointDesc': 'Su solución de comodidad y lujo para viajes de larga distancia.',
-    'services.business': 'BUSINESS',
-    'services.businessDesc': '¿Productividad en el tráfico? Trabaje con lujo y comodidad mientras viaja.',
+    'services.pointToPointDesc': 'Viajes directos entre destinos con máxima comodidad.',
+    'services.business': 'CORPORATIVO',
+    'services.businessDesc': 'Soluciones de transporte para empresas y ejecutivos.',
     'services.executiveProtection': 'PROTECCIÓN EJECUTIVA',
-    'services.executiveProtectionDesc': 'Seguridad para su protección con discreción y sofisticación.',
-    'services.exec360': 'EXEC360',
-    'services.exec360Desc': 'De la movilidad al ocio. Sea Executive y exclusivo en todo.',
+    'services.executiveProtectionDesc': 'Seguridad y protección para clientes VIP.',
+    'services.exec360': 'VIP 360',
+    'services.exec360Desc': 'Experiencia completa de transporte premium.',
     
     // Footer translations
     'footer.company': 'EXECUTIVE',
@@ -606,7 +606,7 @@ const translations = {
     'locations.guarulhos': 'AEROPUERTO SÃO PAULO/GUARULHOS',
     
     // Testimonial translations
-    'testimonial.quote': 'TRANSFORMANDO CADA VIAJE EN\n¡UNA EXPERIENCIA DE PRIMERA CLASE!',
+    'testimonial.quote': 'TRANSFORMANDO CADA TRANSFER DE AEROPUERTO EN\n¡TRANSPORTE EJECUTIVO DE PRIMERA CLASE!',
     'testimonial.source': 'L\'OFFICIEL BRASIL',
     
     // Partners translations
@@ -614,15 +614,15 @@ const translations = {
     
     // Routes translations
     'routes.topTitle': 'PRINCIPALES RUTAS',
-    'routes.title': 'CONSULTE LAS RUTAS',
+    'routes.title': 'CONFIRA LAS RUTAS',
     'routes.allRoutes': 'TODAS LAS RUTAS →',
-    'routes.guarulhos': 'AEROPUERTO INTERNACIONAL GUARULHOS (GRU)',
-    'routes.congonhas': 'AEROPUERTO CONGONHAS (CGH)',
-    'routes.rosewood': 'HOTEL ROSEWOOD SÃO PAULO',
-    'routes.marriott': 'JW MARRIOTT SÃO PAULO',
-    'routes.unique': 'HOTEL UNIQUE SÃO PAULO',
-    'routes.fasano': 'HOTEL FASANO JARDINS SÃO PAULO',
-    'routes.tivoliMofarrej': 'TIVOLI MOFARREJ SÃO PAULO',
+    'routes.guarulhos': 'Guarulhos',
+    'routes.congonhas': 'Congonhas',
+    'routes.rosewood': 'Rosewood',
+    'routes.marriott': 'Marriott',
+    'routes.unique': 'Unique',
+    'routes.fasano': 'Fasano',
+    'routes.tivoliMofarrej': 'Tivoli Mofarrej',
     
     // NotFound translations
     'notfound.title': '404',
@@ -641,7 +641,7 @@ const translations = {
     'currency.dollar': 'DÓLAR',
     'hero.title': 'EL SERVICIO DE TRANSPORTE',
     'hero.subtitle': 'QUE NECESITAS',
-    'hero.description': 'Experimente el más alto estándar en transporte ejecutivo premium',
+    'hero.description': 'Transporte premium en São Paulo con vehículos blindados de lujo. Seguridad, comodidad y excelencia en cada viaje.',
     
     // VehicleSelection page
     'vehicle.pickup': 'EMBARQUE',
@@ -731,9 +731,9 @@ const translations = {
     
     // About Us translations
     'about.title': 'Sobre Nosotros',
-    'about.description1': 'En Executive Transporte Premium, ofrecemos una experiencia de movilidad sofisticada y confiable para personas y empresas exigentes. Operamos en São Paulo con enfoque en puntualidad, comodidad y seguridad, ya sea para citas corporativas, eventos, transfers ejecutivos o momentos especiales.',
-    'about.description2': 'Contamos con un equipo de conductores altamente calificados, flota premium y atención personalizada, ideal para quienes buscan profesionalismo en cada viaje.',
-    'about.description3': 'Ya sea para viajes de negocios, recepción ejecutiva, transfers al aeropuerto o tours personalizados, cuente con Executive para proporcionar un viaje que satisfaga sus necesidades.',
+    'about.description1': 'Executive es líder en transporte premium en São Paulo, ofreciendo servicios de alta calidad con vehículos blindados de lujo. Nuestra empresa atiende clientes exigentes con enfoque total en puntualidad, comodidad y seguridad máxima.',
+    'about.description2': 'Nuestra flota premium incluye vehículos blindados de última generación y sedanes de lujo, operados por conductores altamente calificados. Ofrecemos atención personalizada 24 horas.',
+    'about.description3': 'Especializados en transporte de alta seguridad, ofrecemos servicios para aeropuertos, hoteles de lujo y eventos corporativos. Cuente con Executive para una experiencia de transporte incomparable en São Paulo.',
     
     // Additional translations for hardcoded texts
     'trip.summary': 'Resumen del Viaje',

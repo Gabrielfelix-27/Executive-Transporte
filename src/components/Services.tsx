@@ -60,7 +60,8 @@ export const Services = () => {
           <p className="text-lg text-gray-600 font-redhat leading-relaxed">{t('services.subtitle')}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Desktop Grid */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <div key={index} className="group">
               <a href={(service as any).link} className="block">
@@ -81,6 +82,32 @@ export const Services = () => {
               </a>
             </div>
           ))}
+        </div>
+
+        {/* Mobile Carousel */}
+        <div className="md:hidden">
+          <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide snap-x snap-mandatory">
+            {services.map((service, index) => (
+              <div key={index} className="flex-none w-72 group snap-start">
+                <a href={(service as any).link} className="block">
+                  <div 
+                    className="relative overflow-hidden rounded-lg bg-gray-900 h-80 mb-4 cursor-pointer hover:scale-105 transition-all duration-300 hover:shadow-2xl"
+                    style={{
+                      backgroundImage: `url(${(service as any).image})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center'
+                    }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
+                    <div className="absolute bottom-0 right-0 p-6 text-white">
+                      <h3 className="text-xl font-semibold mb-2 text-right font-redhat tracking-wide whitespace-nowrap">{service.title}</h3>
+                      <p className="text-gray-300 text-xs leading-relaxed font-redhat text-right opacity-80">{service.description}</p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
