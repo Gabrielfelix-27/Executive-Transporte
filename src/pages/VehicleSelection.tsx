@@ -216,7 +216,7 @@ export default function VehicleSelection() {
     navigate('/passenger-data', {
       state: {
         quoteData,
-        selectedCategory
+        selectedVehicle: selectedCategory
       }
     });
   };
@@ -270,9 +270,9 @@ export default function VehicleSelection() {
                     <span>{calculateArrivalTime(quoteData.time, quoteData.estimatedTimeMinutes) ? ' • ' : ''}{t('trip.distance')}: {(quoteData.calculatedDistance || quoteData.distance)?.toFixed(1)} KM</span>
                   )}
                 </div>
-                {quoteData.estimatedTime && (
+                {quoteData.estimatedTimeMinutes && (
                   <div className="text-sm text-gray-600 font-medium mt-1">
-                    ⏱️ {t('vehicle.estimatedTime')}: {quoteData.estimatedTime}
+                    ⏱️ {t('vehicle.estimatedTime')}: {formatEstimatedTime(quoteData.estimatedTimeMinutes)}
                   </div>
                 )}
               </div>

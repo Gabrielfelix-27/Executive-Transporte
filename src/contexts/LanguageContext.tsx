@@ -232,6 +232,29 @@ const translations = {
     // Date formatting
     'date.of': 'DE',
     
+    // Days of the week
+    'date.sunday': 'Domingo',
+    'date.monday': 'Segunda-feira',
+    'date.tuesday': 'Terça-feira',
+    'date.wednesday': 'Quarta-feira',
+    'date.thursday': 'Quinta-feira',
+    'date.friday': 'Sexta-feira',
+    'date.saturday': 'Sábado',
+    
+    // Months
+    'date.january': 'Janeiro',
+    'date.february': 'Fevereiro',
+    'date.march': 'Março',
+    'date.april': 'Abril',
+    'date.may': 'Maio',
+    'date.june': 'Junho',
+    'date.july': 'Julho',
+    'date.august': 'Agosto',
+    'date.september': 'Setembro',
+    'date.october': 'Outubro',
+    'date.november': 'Novembro',
+    'date.december': 'Dezembro',
+    
     // About Us translations
     'about.title': 'Sobre Nós',
     'about.description1': 'A Executive Premium é uma empresa especializada em transporte de luxo, oferecendo serviços premium para clientes exigentes. Nossa empresa se destaca pela pontualidade, conforto e segurança em todos os serviços.',
@@ -482,6 +505,29 @@ const translations = {
     // Date formatting
     'date.of': 'OF',
     
+    // Days of the week
+    'date.sunday': 'Sunday',
+    'date.monday': 'Monday',
+    'date.tuesday': 'Tuesday',
+    'date.wednesday': 'Wednesday',
+    'date.thursday': 'Thursday',
+    'date.friday': 'Friday',
+    'date.saturday': 'Saturday',
+    
+    // Months
+    'date.january': 'January',
+    'date.february': 'February',
+    'date.march': 'March',
+    'date.april': 'April',
+    'date.may': 'May',
+    'date.june': 'June',
+    'date.july': 'July',
+    'date.august': 'August',
+    'date.september': 'September',
+    'date.october': 'October',
+    'date.november': 'November',
+    'date.december': 'December',
+    
     // About Us translations
     'about.title': 'About Us',
     'about.description1': 'Executive Premium is a company specialized in luxury transportation, offering premium services for demanding clients. Our company stands out for punctuality, comfort and security in all services.',
@@ -731,6 +777,29 @@ const translations = {
     
     // Date formatting
     'date.of': 'DE',
+    
+    // Days of the week
+    'date.sunday': 'Domingo',
+    'date.monday': 'Lunes',
+    'date.tuesday': 'Martes',
+    'date.wednesday': 'Miércoles',
+    'date.thursday': 'Jueves',
+    'date.friday': 'Viernes',
+    'date.saturday': 'Sábado',
+    
+    // Months
+    'date.january': 'Enero',
+    'date.february': 'Febrero',
+    'date.march': 'Marzo',
+    'date.april': 'Abril',
+    'date.may': 'Mayo',
+    'date.june': 'Junio',
+    'date.july': 'Julio',
+    'date.august': 'Agosto',
+    'date.september': 'Septiembre',
+    'date.october': 'Octubre',
+    'date.november': 'Noviembre',
+    'date.december': 'Diciembre',
     
     // About Us translations
     'about.title': 'Sobre Nosotros',
