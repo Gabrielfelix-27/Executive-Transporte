@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, ErrorBoundary } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,7 +18,7 @@ const PointToPoint = React.lazy(() => import("./pages/PointToPoint"));
 const Business = React.lazy(() => import("./pages/Business"));
 const ExecutiveProtection = React.lazy(() => import("./pages/ExecutiveProtection"));
 const VIP360 = React.lazy(() => import("./pages/VIP360"));
-const GoogleMapsTest = React.lazy(() => import("./pages/GoogleMapsTest").then(module => ({ default: module.GoogleMapsTest })));
+const GoogleMapsTest = React.lazy(() => import("./pages/GoogleMapsTest"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 
 // Componente de loading
@@ -31,23 +31,75 @@ const PageLoader = () => (
   </div>
 );
 
+// Componente de erro
+const ErrorFallback = ({ error }: { error: Error }) => (
+  <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="text-center max-w-md mx-auto p-6">
+      <div className="text-red-500 text-6xl mb-4">⚠️</div>
+      <h1 className="text-2xl font-bold text-gray-800 mb-4">Ops! Algo deu errado</h1>
+      <p className="text-gray-600 mb-6">Ocorreu um erro inesperado. Por favor, recarregue a página.</p>
+      <button 
+        onClick={() => window.location.reload()} 
+        className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+      >
+        Recarregar Página
+      </button>
+      {process.env.NODE_ENV === 'development' && (
+        <details className="mt-4 text-left">
+          <summary className="cursor-pointer text-sm text-gray-500">Detalhes do erro</summary>
+          <pre className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded overflow-auto">
+            {error.message}
+          </pre>
+        </details>
+      )}
+    </div>
+  </div>
+);
+
+class AppErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean; error?: Error }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('App Error Boundary caught an error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <ErrorFallback error={this.state.error!} />;
+    }
+
+    return this.props.children;
+  }
+}
+
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <LanguageProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/vehicle-selection" element={<VehicleSelection />} />
-              <Route path="/passenger-data" element={<PassengerData />} />
-              <Route path="/about-us" element={<AboutUs />} />
-              <Route path="/airport-transfer" element={<AirportTransfer />} />
-              <Route path="/on-demand-service" element={<OnDemandService />} />
+  <AppErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <LanguageProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/vehicle-selection" element={<VehicleSelection />} />
+                <Route path="/passenger-data" element={<PassengerData />} />
+                <Route path="/about-us" element={<AboutUs />} />
+                <Route path="/airport-transfer" element={<AirportTransfer />} />
+                <Route path="/on-demand-service" element={<OnDemandService />} />
               <Route path="/point-to-point" element={<PointToPoint />} />
               <Route path="/business" element={<Business />} />
               <Route path="/executive-protection" element={<ExecutiveProtection />} />
@@ -59,11 +111,12 @@ const App = () => (
           </Suspense>
           
           {/* WhatsApp Button - Aparece em todas as páginas */}
-          <WhatsAppButton />
-        </BrowserRouter>
+          </BrowserRouter>
+        <WhatsAppButton />
       </TooltipProvider>
     </LanguageProvider>
   </QueryClientProvider>
+  </AppErrorBoundary>
 );
 
 export default App;

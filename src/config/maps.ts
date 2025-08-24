@@ -1,12 +1,24 @@
 // Configurações para APIs de mapas e geolocalização
 
-// Google Maps API Key - usar a chave válida
-export const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyAm_EEkVb9g5H7YdYGW6elk5OA0IdudtR8';
+// Google Maps API Key - usar a chave válida com fallback seguro
+export const GOOGLE_MAPS_API_KEY = (() => {
+  try {
+    return import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyAm_EEkVb9g5H7YdYGW6elk5OA0IdudtR8';
+  } catch (error) {
+    console.warn('Erro ao acessar variáveis de ambiente:', error);
+    return 'AIzaSyAm_EEkVb9g5H7YdYGW6elk5OA0IdudtR8';
+  }
+})();
 
 // Verificação se a chave está configurada
 export const isGoogleMapsConfigured = (): boolean => {
-  const isConfigured = Boolean(GOOGLE_MAPS_API_KEY && GOOGLE_MAPS_API_KEY !== 'your_google_maps_api_key_here');
-  return isConfigured;
+  try {
+    const isConfigured = Boolean(GOOGLE_MAPS_API_KEY && GOOGLE_MAPS_API_KEY !== 'your_google_maps_api_key_here');
+    return isConfigured;
+  } catch (error) {
+    console.warn('Erro na verificação do Google Maps:', error);
+    return false;
+  }
 };
 
 // Para usar a API do OpenCage Geocoding (alternativa gratuita):
@@ -96,4 +108,4 @@ export default {
   SEARCH_CONFIG,
   GOOGLE_PLACE_TYPES,
   REGIONAL_BOUNDS
-}; 
+};

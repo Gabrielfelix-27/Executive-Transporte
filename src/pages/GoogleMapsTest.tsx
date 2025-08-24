@@ -272,3 +272,5 @@ export const GoogleMapsTest = () => {
     </div>
   );
 };
+
+export default GoogleMapsTest;
