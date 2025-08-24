@@ -66,7 +66,7 @@ export const Services = () => {
             <div key={index} className="group">
               <a href={(service as any).link} className="block">
                 <div 
-                  className="relative overflow-hidden rounded-lg bg-gray-900 h-80 mb-4 cursor-pointer hover:scale-105 transition-all duration-300 hover:shadow-2xl"
+                  className="relative overflow-hidden rounded-lg bg-gray-900 h-96 mb-4 cursor-pointer hover:scale-105 transition-all duration-300 hover:shadow-2xl"
                   style={{
                     backgroundImage: `url(${(service as any).image})`,
                     backgroundSize: 'cover',
@@ -88,10 +88,10 @@ export const Services = () => {
         <div className="md:hidden">
           <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide snap-x snap-mandatory">
             {services.map((service, index) => (
-              <div key={index} className="flex-none w-72 group snap-start">
+              <div key={index} className="flex-none w-80 group snap-start">
                 <a href={(service as any).link} className="block">
                   <div 
-                    className="relative overflow-hidden rounded-lg bg-gray-900 h-80 mb-4 cursor-pointer hover:scale-105 transition-all duration-300 hover:shadow-2xl"
+                    className="relative overflow-hidden rounded-lg bg-gray-900 h-96 mb-4 cursor-pointer hover:scale-105 transition-all duration-300 hover:shadow-2xl"
                     style={{
                       backgroundImage: `url(${(service as any).image})`,
                       backgroundSize: 'cover',

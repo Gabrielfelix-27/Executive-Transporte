@@ -25,6 +25,10 @@ export const Navbar = ({
   const { t, language, setLanguage } = useLanguage();
   const { currency, setCurrency, exchangeRate, loading } = useCurrency();
   const [scrollY, setScrollY] = useState(0);
+  const [languagePopoverOpen, setLanguagePopoverOpen] = useState(false);
+  const [currencyPopoverOpen, setCurrencyPopoverOpen] = useState(false);
+  const [desktopLanguagePopoverOpen, setDesktopLanguagePopoverOpen] = useState(false);
+  const [desktopCurrencyPopoverOpen, setDesktopCurrencyPopoverOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -135,7 +139,7 @@ export const Navbar = ({
                        <div className="h-px bg-gray-200 my-1"></div>
                        
                        {/* Seletor de Idioma - apenas no mobile */}
-                       <Popover>
+                       <Popover open={languagePopoverOpen} onOpenChange={setLanguagePopoverOpen}>
                          <PopoverTrigger asChild>
                            <button className="flex items-center justify-between w-full px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700 font-bold uppercase">
                              IDIOMA
@@ -145,7 +149,10 @@ export const Navbar = ({
                          <PopoverContent className="w-48 p-2" align="start">
                            <div className="grid gap-1">
                              <button 
-                               onClick={() => setLanguage('pt')}
+                               onClick={() => {
+                                 setLanguage('pt');
+                                 setLanguagePopoverOpen(false);
+                               }}
                                className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 w-full ${
                                  language === 'pt' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
                                }`}
@@ -153,7 +160,10 @@ export const Navbar = ({
                                🇧🇷 Português
                              </button>
                              <button 
-                                onClick={() => setLanguage('en')}
+                                onClick={() => {
+                                  setLanguage('en');
+                                  setLanguagePopoverOpen(false);
+                                }}
                                 className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 w-full ${
                                   language === 'en' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
                                 }`}
@@ -161,7 +171,10 @@ export const Navbar = ({
                                 🇺🇸 English
                               </button>
                               <button 
-                                onClick={() => setLanguage('es')}
+                                onClick={() => {
+                                  setLanguage('es');
+                                  setLanguagePopoverOpen(false);
+                                }}
                                 className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 w-full ${
                                   language === 'es' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
                                 }`}
@@ -173,7 +186,7 @@ export const Navbar = ({
                        </Popover>
                        
                        {/* Seletor de Moeda - apenas no mobile */}
-                       <Popover>
+                       <Popover open={currencyPopoverOpen} onOpenChange={setCurrencyPopoverOpen}>
                          <PopoverTrigger asChild>
                            <button className="flex items-center justify-between w-full px-3 py-2 text-sm rounded-md hover:bg-gray-100 text-gray-700 font-bold uppercase">
                              MOEDA
@@ -183,7 +196,10 @@ export const Navbar = ({
                          <PopoverContent className="w-48 p-2" align="start">
                            <div className="grid gap-1">
                              <button 
-                               onClick={() => setCurrency('BRL')}
+                               onClick={() => {
+                                 setCurrency('BRL');
+                                 setCurrencyPopoverOpen(false);
+                               }}
                                className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 w-full ${
                                  currency === 'BRL' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
                                }`}
@@ -191,7 +207,10 @@ export const Navbar = ({
                                🇧🇷 {t('currency.real')}
                              </button>
                              <button 
-                               onClick={() => setCurrency('USD')}
+                               onClick={() => {
+                                 setCurrency('USD');
+                                 setCurrencyPopoverOpen(false);
+                               }}
                                className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 w-full ${
                                  currency === 'USD' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
                                }`}
@@ -218,7 +237,7 @@ export const Navbar = ({
 
               {/* Seletor de Idioma - Desktop only */}
               <div className="hidden sm:block">
-                <Popover>
+                <Popover open={desktopLanguagePopoverOpen} onOpenChange={setDesktopLanguagePopoverOpen}>
                   <PopoverTrigger asChild>
                      <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent">
                        {language === 'pt' ? 'PORTUGUÊS' : language === 'en' ? 'ENGLISH' : 'ESPAÑOL'}
@@ -228,7 +247,10 @@ export const Navbar = ({
                   <PopoverContent className="w-48 p-2" align="end">
                     <div className="grid gap-1">
                       <button 
-                        onClick={() => setLanguage('pt')}
+                        onClick={() => {
+                          setLanguage('pt');
+                          setDesktopLanguagePopoverOpen(false);
+                        }}
                         className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
                           language === 'pt' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
                         }`}
@@ -236,7 +258,10 @@ export const Navbar = ({
                         🇧🇷 Português
                       </button>
                       <button 
-                         onClick={() => setLanguage('en')}
+                         onClick={() => {
+                           setLanguage('en');
+                           setDesktopLanguagePopoverOpen(false);
+                         }}
                          className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
                            language === 'en' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
                          }`}
@@ -244,7 +269,10 @@ export const Navbar = ({
                          🇺🇸 English
                        </button>
                        <button 
-                         onClick={() => setLanguage('es')}
+                         onClick={() => {
+                           setLanguage('es');
+                           setDesktopLanguagePopoverOpen(false);
+                         }}
                          className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
                            language === 'es' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
                          }`}
@@ -258,7 +286,7 @@ export const Navbar = ({
 
               {/* Seletor de Moeda - Desktop only */}
               <div className="hidden sm:block">
-                <Popover>
+                <Popover open={desktopCurrencyPopoverOpen} onOpenChange={setDesktopCurrencyPopoverOpen}>
                   <PopoverTrigger asChild>
                     <Button variant="ghost" size="sm" className="text-white hover:text-yellow-400 hover:bg-transparent">
                       {currency === 'BRL' ? 'BRL R$' : 'USD $'}
@@ -269,7 +297,10 @@ export const Navbar = ({
                   <PopoverContent className="w-48 p-2" align="end">
                     <div className="grid gap-1">
                       <button 
-                        onClick={() => setCurrency('BRL')}
+                        onClick={() => {
+                          setCurrency('BRL');
+                          setDesktopCurrencyPopoverOpen(false);
+                        }}
                         className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
                           currency === 'BRL' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
                         }`}
@@ -277,7 +308,10 @@ export const Navbar = ({
                         🇧🇷 {t('currency.real')}
                       </button>
                       <button 
-                        onClick={() => setCurrency('USD')}
+                        onClick={() => {
+                          setCurrency('USD');
+                          setDesktopCurrencyPopoverOpen(false);
+                        }}
                         className={`flex items-center px-3 py-2 text-sm rounded-md hover:bg-gray-100 ${
                           currency === 'USD' ? 'bg-yellow-50 text-yellow-600 font-medium' : 'text-gray-700'
                         }`}

@@ -1,6 +1,7 @@
 import { searchAddresses, getCoordinatesFromAddress as getCoords } from '@/services/geocodingService';
 import { isGoogleMapsConfigured } from '@/config/maps';
 import { findFixedPrice, isDailyRequest, DAILY_RATES, identifyLocation, KNOWN_LOCATIONS } from '@/data/fixedPricing';
+import { isValidViracoposRoute, getViracoposPriceByVehicleType } from './cepValidation';
 
 // Cache global para coordenadas de endereços selecionados via autocomplete
 const selectedAddressCoordinatesCache = new Map<string, { lat: number; lng: number }>();
@@ -423,6 +424,36 @@ export const calculateTripPrice = async (
         basePrice: dailyPrice,
         finalPrice: dailyPrice
       };
+    }
+    
+    // Verificar regras específicas de Viracopos com validação de CEP
+    if (isValidViracoposRoute(origin, destination)) {
+      const viracoposPrice = getViracoposPriceByVehicleType(vehicleType);
+      
+      if (viracoposPrice !== null) {
+        console.log(`✅ Rota Viracopos → Grande São Paulo detectada: R$ ${viracoposPrice.toFixed(2)} [${vehicleType}]`);
+        
+        // Obter dados de distância e tempo para informação
+        let distance: number = 95; // Distância aproximada Viracopos → SP
+        let estimatedTime: number = 90; // Tempo aproximado
+        
+        try {
+          const googleMapsData = await getGoogleMapsDistanceAndTime(origin, destination);
+          if (googleMapsData) {
+            distance = googleMapsData.distance;
+            estimatedTime = googleMapsData.duration;
+          }
+        } catch (error) {
+          console.warn('⚠️ Erro ao obter dados de distância/tempo para Viracopos, usando valores padrão');
+        }
+        
+        return {
+          distance: Math.round(distance * 10) / 10,
+          estimatedTime: Math.round(estimatedTime),
+          basePrice: viracoposPrice,
+          finalPrice: viracoposPrice
+        };
+      }
     }
     
     // Tentar encontrar tarifa fixa primeiro

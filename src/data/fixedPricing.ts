@@ -40,6 +40,7 @@ export const KNOWN_LOCATIONS: { [key: string]: LocationInfo } = {
     name: 'Aeroporto de Viracopos',
     address: 'Rod. Santos Dumont, km 66 - Campinas - SP, 13052-901',
     coordinates: { lat: -23.0074, lng: -47.1344 },
+    cepRanges: ['13052-900', '13052-970'],
     keywords: ['viracopos', 'vcp', 'aeroporto viracopos', 'campinas', 'santos dumont']
   },
 
@@ -131,6 +132,15 @@ export const KNOWN_LOCATIONS: { [key: string]: LocationInfo } = {
     coordinates: { lat: -23.9618, lng: -46.3322 },
     cepRanges: ['11015-900', '11015-911'],
     keywords: ['porto santos', 'santos', 'rodrigues alves', 'macuco', 'cais marinha']
+  },
+
+  // Grande São Paulo - Região específica para regras de Viracopos
+  grandeSaoPaulo: {
+    name: 'Grande São Paulo',
+    address: 'Região Metropolitana de São Paulo - SP',
+    coordinates: { lat: -23.5505, lng: -46.6333 },
+    cepRanges: ['06000-000 a 09999-999'],
+    keywords: ['grande são paulo', 'região metropolitana', 'são paulo', 'sp']
   }
 };
 
@@ -223,6 +233,20 @@ export const FIXED_ROUTES: FixedRoute[] = [
       minivanComum: 1100.00,
       minivanBlindada: 1800.00,
       van15Lugares: 1390.00  // Adicionado para consistência
+    }
+  },
+
+  // Viracopos para Grande São Paulo (regra específica com validação de CEP)
+  {
+    from: 'viracopos',
+    to: ['grandeSaoPaulo'],
+    prices: {
+      executivoSedan: 1450.00,        // Executivo Premium Blindado
+      executivoComum: 890.00,          // Executivo Comum
+      executivoPremiumBlindado: 1450.00, // Executivo Premium Blindado
+      minivanComum: 1100.00,           // MiniVan Comum
+      minivanBlindada: 1800.00,        // MiniVan Blindada
+      van15Lugares: 1390.00
     }
   }
 ];

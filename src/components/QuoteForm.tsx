@@ -20,9 +20,11 @@ export const QuoteForm = () => {
   const [useGoogleMaps] = useState(isGoogleMapsConfigured());
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  // Função para obter horário atual
+  // Função para obter horário atual com 2 horas de antecedência
   const getCurrentTime = () => {
     const now = new Date();
+    // Adicionar 2 horas de antecedência mínima
+    now.setHours(now.getHours() + 2);
     return now.toTimeString().slice(0, 5); // HH:MM
   };
 
@@ -40,15 +42,7 @@ export const QuoteForm = () => {
     setSelectedTime(currentTime);
   }, []);
 
-  // Validar se o horário é válido (não no passado)
-  const validateBookingTime = (date: Date, time: string) => {
-    const now = new Date();
-    const selectedDateTime = new Date(date);
-    const [hours, minutes] = time.split(':').map(Number);
-    selectedDateTime.setHours(hours, minutes, 0, 0);
-    
-    return selectedDateTime >= now;
-  };
+  // Função removida: validateBookingTime - O TimePicker já aplica automaticamente 2 horas de antecedência
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,11 +58,7 @@ export const QuoteForm = () => {
       return;
     }
 
-    // Validar se o horário não é no passado
-    if (!validateBookingTime(selectedDate, selectedTime)) {
-      setErrorMessage(t('quote.invalidTime'));
-      return;
-    }
+    // Nota: O sistema já aplica automaticamente 2 horas de antecedência no TimePicker
 
     setIsCalculating(true);
 
@@ -173,7 +163,7 @@ export const QuoteForm = () => {
       if (newDate.toDateString() === today.toDateString()) {
         const currentMinTime = getCurrentTime();
         
-        // Se o horário selecionado for antes do horário mínimo, atualizar silenciosamente
+        // Se o horário selecionado for antes do horário mínimo (atual + 2h), atualizar silenciosamente
         if (selectedTime < currentMinTime) {
           setSelectedTime(currentMinTime);
         }
@@ -187,7 +177,7 @@ export const QuoteForm = () => {
     
     const today = new Date();
     
-    // Se a data selecionada for hoje, o horário mínimo é o horário atual
+    // Se a data selecionada for hoje, o horário mínimo é o horário atual + 2 horas
     if (selectedDate.toDateString() === today.toDateString()) {
       return getCurrentTime();
     }
