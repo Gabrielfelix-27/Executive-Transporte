@@ -247,7 +247,7 @@ export default function VehicleSelection() {
       <Navbar showBreadcrumb={true} currentStep={1} />
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 pt-8">
         {/* Trip Details Card */}
         <Card className="mb-6 sm:mb-8">
           <CardContent className="p-4 sm:p-6">

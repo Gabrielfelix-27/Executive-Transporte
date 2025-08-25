@@ -494,7 +494,7 @@ Reserva feita através do site Executive Premium`;
     return (
       <div className="min-h-screen bg-gray-50">
         <Navbar showBreadcrumb={true} currentStep={2} />
-        <div className="max-w-2xl mx-auto px-6 py-8">
+        <div className="max-w-2xl mx-auto px-6 py-8 pt-8">
           <Card>
             <CardContent className="p-8 text-center">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -653,7 +653,7 @@ Reserva feita através do site Executive Premium`;
     return (
       <div className="min-h-screen bg-gray-50">
         <Navbar showBreadcrumb={true} currentStep={2} />
-        <div className="max-w-2xl mx-auto px-6 py-8">
+        <div className="max-w-2xl mx-auto px-6 py-8 pt-8">
           <Card>
             <CardContent className="p-8 text-center">
               <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -690,7 +690,7 @@ Reserva feita através do site Executive Premium`;
       <Navbar showBreadcrumb={true} currentStep={2} />
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-6 py-8">
+      <div className="max-w-4xl mx-auto px-6 py-8 pt-8">
         {/* Trip Summary Card */}
         <Card className="mb-8">
           <CardContent className="p-6">

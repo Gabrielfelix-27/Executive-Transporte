@@ -332,9 +332,9 @@ export const Navbar = ({
         </div>
       </header>
 
-      {/* Breadcrumb (se necessário) */}
+      {/* Breadcrumb (se necessário) - Separado do header */}
       {showBreadcrumb && (
-        <div className="bg-white border-b">
+        <div className="bg-white border-b border-gray-200 mt-20 pb-4">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
             {/* Layout para Desktop */}
             <div className="hidden sm:flex items-center space-x-8">
@@ -361,26 +361,21 @@ export const Navbar = ({
               ))}
             </div>
 
-            {/* Layout para Mobile */}
-            <div className="flex sm:hidden items-center justify-between space-x-2">
+            {/* Layout para Mobile - Apenas números */}
+            <div className="flex sm:hidden items-center justify-center space-x-8">
               {breadcrumbSteps.map((step, index) => (
-                <div key={step.number} className="flex items-center flex-1">
-                  <div className="flex items-center w-full">
-                    <div className={`rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold mr-2 ${
-                      step.active && currentStep >= step.number
-                        ? 'bg-black text-white'
-                        : 'border-2 border-gray-300 text-gray-500'
-                    }`}>
-                      {step.number}
-                    </div>
-                    <span className={`text-xs truncate ${step.active && currentStep >= step.number ? 'font-medium' : 'text-gray-500'}`}>
-                      {step.title}
-                    </span>
+                <div key={step.number} className="flex items-center">
+                  <div className={`rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold ${
+                    step.active && currentStep >= step.number
+                      ? 'bg-black text-white'
+                      : 'border-2 border-gray-300 text-gray-500'
+                  }`}>
+                    {step.number}
                   </div>
                   
                   {/* Linha conectora mobile */}
                   {index < breadcrumbSteps.length - 1 && (
-                    <div className="flex-1 border-t border-dashed border-gray-300 mx-2 min-w-4"></div>
+                    <div className="border-t border-dashed border-gray-300 w-12 mx-4"></div>
                   )}
                 </div>
               ))}
