@@ -134,6 +134,9 @@ export const QuoteForm = () => {
       // Debug: Log dos dados sendo enviados
       console.log('📤 QuoteForm enviando dados:', tripData);
       
+      // Rolar para o topo da página antes de navegar
+      window.scrollTo(0, 0);
+      
       // Navegar para página de seleção de veículo
       navigate('/vehicle-selection', { state: tripData });
     } catch (error) {

@@ -376,6 +376,9 @@ const PassengerData = () => {
         }
       }
       
+      // Rolar para o topo da página antes de avançar
+      window.scrollTo(0, 0);
+      
       // Avançar para tela de confirmação sempre (mesmo se o email falhar)
       setCurrentStep('confirmation');
       
@@ -452,10 +455,14 @@ Reserva feita através do site Executive Premium`;
 
   // Função para concluir atendimento
   const handleCompleteService = () => {
+    // Rolar para o topo da página
+    window.scrollTo(0, 0);
+    
     setCurrentStep('thanks');
     
     // Redirecionar para página inicial após 3 segundos
     setTimeout(() => {
+      window.scrollTo(0, 0);
       navigate('/');
     }, 3000);
   };
@@ -481,7 +488,10 @@ Reserva feita através do site Executive Premium`;
           <p className="text-gray-600 mb-6">
             {t('passenger.newQuote')}
           </p>
-          <Button onClick={() => navigate('/')} className="w-full">
+          <Button onClick={() => {
+            window.scrollTo(0, 0);
+            navigate('/');
+          }} className="w-full">
             {t('passenger.backHome')}
           </Button>
         </div>

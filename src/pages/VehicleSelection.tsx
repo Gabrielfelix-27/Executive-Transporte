@@ -213,6 +213,9 @@ export default function VehicleSelection() {
       return;
     }
 
+    // Rolar para o topo da página antes de navegar
+    window.scrollTo(0, 0);
+
     navigate('/passenger-data', {
       state: {
         quoteData,
