@@ -9,13 +9,8 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => ({
   plugins: [
     react({
-      // Otimizações do React
-      babel: {
-        plugins: [
-          // Remove PropTypes em produção
-          mode === 'production' && ['babel-plugin-transform-remove-console', { exclude: ['error', 'warn'] }]
-        ].filter(Boolean)
-      }
+      // Otimizações do React - removendo babel-plugin-transform-remove-console
+      // A remoção de console.log será feita pelo Terser na minificação
     }),
     splitVendorChunkPlugin(),
     mode === 'development' && componentTagger(),
