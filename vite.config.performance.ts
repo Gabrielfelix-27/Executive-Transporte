@@ -8,13 +8,8 @@ import { splitVendorChunkPlugin } from 'vite';
 export default defineConfig({
   plugins: [
     react({
-      // Otimizações do React
-      babel: {
-        plugins: [
-          // Remove PropTypes em produção
-          ['babel-plugin-transform-remove-console', { exclude: ['error', 'warn'] }]
-        ]
-      }
+      // Otimizações do React - removendo babel-plugin-transform-remove-console
+      // A remoção de console.log será feita pelo Terser na minificação
     }),
     splitVendorChunkPlugin(),
     // Analisador de bundle (apenas em build)
