@@ -12,32 +12,38 @@ const VIP360 = () => {
       
       {/* Hero Section with Background and Quote Form */}
       <div 
-        className="relative min-h-screen pt-20 bg-center bg-no-repeat flex items-center"
+        className="relative min-h-[50vh] sm:min-h-[70vh] pt-0 sm:pt-20 bg-center bg-no-repeat flex items-center"
         style={{
-          backgroundImage: "url('/BG2.png')",
-          backgroundSize: "120%",
-          backgroundPosition: "right -5px"
+          backgroundImage: "url('/Fotos Site/IMG_3233.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          transform: "scaleX(-1)"
         }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        <div className="relative z-10 w-full py-8">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div className="relative z-10 w-full py-0 sm:py-8" style={{ transform: "scaleX(-1)" }}>
+          <div className="max-w-7xl mx-auto px-0 sm:px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-12 items-center">
               
               {/* Left Content */}
               <div className="text-white order-2 lg:order-1">
                 {/* Título e subtítulo removidos */}
               </div>
 
-              {/* Right Content - Quote Form */}
+              {/* Right Content - Quote Form (desktop) / Espaço vazio (mobile) */}
               <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
-                <QuoteForm />
+                {/* Formulário visível apenas no desktop */}
+                <div className="hidden lg:block">
+                  <QuoteForm />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
+      {/* QuoteForm para mobile */}
+      <div className="block lg:hidden">
+        <QuoteForm />
+      </div>
       {/* Content Section */}
       <div className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-6">
@@ -46,21 +52,25 @@ const VIP360 = () => {
           <div className="mb-16">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
-                <img 
-                  src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
-                  alt="VIP 360 Experience" 
+                <img
+                  src="/Fotos Site/IMG_2921.jpg"
+                  alt="Executive 360 Experience"
                   className="w-full rounded-lg shadow-lg"
+                  loading="lazy"
+                  decoding="async"
+                  width="600"
+                  height="400"
                 />
               </div>
               <div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                  APRESENTAMOS VIP360
+                  APRESENTAMOS EXECUTIVE 360
                 </h2>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Sua experiência elevada ao mais alto nível de personalização. Para aqueles que valorizam o detalhe, o conforto absoluto e a exclusividade em cada trajeto, apresentamos o VIP360, o novo serviço de membership da Executive Premium.
+                  Sua experiência elevada ao mais alto nível de personalização. Para aqueles que valorizam o detalhe, o conforto absoluto e a exclusividade em cada trajeto, apresentamos o Executive 360, um serviço criado para transformar cada viagem em algo único e feito sob medida.
                 </p>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Ao se tornar membro, você passa a ter acesso completo a tudo o que a Executive Premium oferece — e mais.
+                  No Executive 360, tudo é pensado para refletir o seu estilo de vida. Nada é padronizado, cada detalhe é ajustado conforme suas preferências. Desde o clima interno do veículo, até a forma como o atendimento acontece, tudo é desenhado para que sua experiência seja exclusiva, memorável e alinhada ao que você realmente valoriza.
                 </p>
               </div>
             </div>
@@ -69,7 +79,7 @@ const VIP360 = () => {
           {/* VIP360 Features */}
           <div className="mb-16">
             <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">
-              Benefícios Exclusivos VIP360
+              Benefícios do Executive 360
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               
@@ -78,7 +88,7 @@ const VIP360 = () => {
                   • Tapetes personalizados
                 </h4>
                 <p className="text-gray-700">
-                  com seu nome ou logotipo, tornando cada viagem uma extensão do seu estilo.
+                  Com seu nome ou logotipo, tornando cada viagem uma extensão da sua identidade.
                 </p>
               </div>
 
@@ -96,7 +106,7 @@ const VIP360 = () => {
                   • Acesso prioritário à frota
                 </h4>
                 <p className="text-gray-700">
-                  mesmo em horários de alta demanda.
+                  Disponibilidade garantida, mesmo em horários de alta demanda.
                 </p>
               </div>
 
@@ -105,7 +115,7 @@ const VIP360 = () => {
                   • Atendimento exclusivo
                 </h4>
                 <p className="text-gray-700">
-                  com consultores dedicados para reservas e personalizações.
+                  Com consultores preparados para ajustar cada detalhe da sua viagem conforme sua necessidade.
                 </p>
               </div>
 
@@ -114,16 +124,16 @@ const VIP360 = () => {
                   • Ambiente de trabalho premium
                 </h4>
                 <p className="text-gray-700">
-                  Wi-Fi de alta velocidade, cortinas de privacidade laufirma e silêncio absoluto proporcionado por motores híbridos de última geração.
+                  Wi-Fi de alta velocidade, cortinas de privacidade e silêncio absoluto proporcionado por motores híbridos de última geração.
                 </p>
               </div>
 
               <div className="bg-gray-50 p-6 rounded-lg">
                 <h4 className="text-xl font-semibold text-gray-900 mb-4">
-                  • Tudo isso dentro dos nossos veículos blindados da linha BMW
+                  • Veículos blindados
                 </h4>
                 <p className="text-gray-700">
-                  símbolo de elegância, segurança e inovação.
+                  Segurança, discrição e tranquilidade em todos os trajetos.
                 </p>
               </div>
             </div>
@@ -133,21 +143,21 @@ const VIP360 = () => {
           <div className="mb-16">
             <div className="bg-black text-white p-12 rounded-lg">
               <h3 className="text-3xl font-bold mb-6 text-center">
-                EXECUTIVE PREMIUM VIP360 NÃO É APENAS UM SERVIÇO, É UM NOVO PATAMAR DE MOBILIDADE.
-              </h3>
-              <p className="text-lg leading-relaxed text-center">
-                Exclusivo, discreto, feito para quem exige mais do que transporte. Feito para quem vive com excelência.
-              </p>
+              O EXECUTIVE 360 NÃO É APENAS TRANSPORTE: É UM NOVO PATAMAR DE MOBILIDADE
+            </h3>
+            <p className="text-lg leading-relaxed text-center">
+              Exclusivo, seguro, discreto e totalmente personalizado para quem exige mais do que deslocamento para quem vive com excelência.
+            </p>
             </div>
           </div>
 
           {/* Call to Action */}
           <div className="text-center">
             <h3 className="text-2xl font-bold text-gray-900 mb-6">
-              Pronto para experimentar o VIP360?
+              Pronto para experimentar o Executive 360?
             </h3>
             <p className="text-lg text-gray-700 mb-8">
-              Torne-se membro e descubra uma nova dimensão em mobilidade premium.
+              Descubra uma nova dimensão em mobilidade premium.
             </p>
             <button 
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

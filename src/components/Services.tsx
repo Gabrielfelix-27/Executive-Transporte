@@ -70,11 +70,12 @@ export const Services = () => {
                   style={{
                     backgroundImage: `url(${(service as any).image})`,
                     backgroundSize: 'cover',
-                    backgroundPosition: 'center'
+                    backgroundPosition: 'center',
+                    transform: 'scaleX(-1)'
                   }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
-                  <div className="absolute bottom-0 right-0 p-6 text-white">
+                  <div className="absolute bottom-0 right-0 p-6 text-white" style={{ transform: 'scaleX(-1)' }}>
                     <h3 className="text-xl font-semibold mb-2 text-right font-redhat tracking-wide whitespace-nowrap">{service.title}</h3>
                     <p className="text-gray-300 text-xs leading-relaxed font-redhat text-right opacity-80">{service.description}</p>
                   </div>
@@ -95,11 +96,12 @@ export const Services = () => {
                     style={{
                       backgroundImage: `url(${(service as any).image})`,
                       backgroundSize: 'cover',
-                      backgroundPosition: 'center'
+                      backgroundPosition: 'center',
+                      transform: 'scaleX(-1)'
                     }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
-                    <div className="absolute bottom-0 right-0 p-6 text-white">
+                    <div className="absolute bottom-0 right-0 p-6 text-white" style={{ transform: 'scaleX(-1)' }}>
                       <h3 className="text-xl font-semibold mb-2 text-right font-redhat tracking-wide whitespace-nowrap">{service.title}</h3>
                       <p className="text-gray-300 text-xs leading-relaxed font-redhat text-right opacity-80">{service.description}</p>
                     </div>

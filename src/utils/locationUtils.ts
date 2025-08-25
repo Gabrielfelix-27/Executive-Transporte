@@ -1,6 +1,7 @@
 import { searchAddresses, getCoordinatesFromAddress as getCoords } from '@/services/geocodingService';
 import { isGoogleMapsConfigured } from '@/config/maps';
 import { findFixedPrice, isDailyRequest, DAILY_RATES, identifyLocation, KNOWN_LOCATIONS } from '@/data/fixedPricing';
+import { findPriceByCep, identifyRegionByCep, normalizeCep } from '@/data/cepPricing';
 import { isValidViracoposRoute, getViracoposPriceByVehicleType } from './cepValidation';
 
 // Cache global para coordenadas de endereços selecionados via autocomplete
@@ -426,6 +427,47 @@ export const calculateTripPrice = async (
       };
     }
     
+    // Verificar se os endereços contêm CEPs e tentar usar sistema de precificação por CEP
+    const originCepMatch = origin.match(/\d{5}-?\d{3}/);
+    const destinationCepMatch = destination.match(/\d{5}-?\d{3}/);
+    
+    if (originCepMatch && destinationCepMatch) {
+      const originCep = originCepMatch[0];
+      const destinationCep = destinationCepMatch[0];
+      
+      console.log(`🏷️ CEPs detectados: ${originCep} → ${destinationCep}`);
+      
+      const cepPrice = findPriceByCep(originCep, destinationCep, fixedPriceVehicleType);
+      
+      if (cepPrice !== null) {
+        console.log(`✅ Usando precificação por CEP: R$ ${cepPrice.toFixed(2)}`);
+        
+        // Obter dados de distância e tempo para informação
+        let distance: number = 15;
+        let estimatedTime: number = 45;
+        
+        try {
+          const googleMapsData = await getGoogleMapsDistanceAndTime(origin, destination);
+          if (googleMapsData) {
+            distance = googleMapsData.distance;
+            estimatedTime = googleMapsData.duration;
+          } else {
+            distance = await calculateDistanceBetweenAddresses(origin, destination);
+            estimatedTime = estimateTravelTime(distance);
+          }
+        } catch (error) {
+          console.warn('⚠️ Erro ao obter dados de distância/tempo para CEP, usando valores padrão');
+        }
+        
+        return {
+          distance: Math.round(distance * 10) / 10,
+          estimatedTime: Math.round(estimatedTime),
+          basePrice: cepPrice,
+          finalPrice: cepPrice
+        };
+      }
+    }
+    
     // Verificar regras específicas de Viracopos com validação de CEP
     if (isValidViracoposRoute(origin, destination)) {
       const viracoposPrice = getViracoposPriceByVehicleType(vehicleType);
@@ -599,4 +641,48 @@ export const calculateTripPrice = async (
     console.log(`💰 [DEBUG] Resultado fallback:`, fallbackResult);
     return fallbackResult;
   }
+};
+
+// Função utilitária para extrair CEP de um endereço
+export const extractCepFromAddress = (address: string): string | null => {
+  const cepMatch = address.match(/\d{5}-?\d{3}/);
+  return cepMatch ? cepMatch[0] : null;
+};
+
+// Função para verificar se um endereço contém CEP
+export const hasValidCep = (address: string): boolean => {
+  return extractCepFromAddress(address) !== null;
+};
+
+// Função para calcular preço usando sistema de CEPs se disponível
+export const calculatePriceWithCepSystem = async (
+  origin: string,
+  destination: string,
+  vehicleType: 'economico' | 'executivo' | 'luxo' | 'suv' | 'minivanBlindada' | 'van15Lugares' = 'executivo'
+): Promise<{ price: number; usedCepSystem: boolean } | null> => {
+  const originCep = extractCepFromAddress(origin);
+  const destinationCep = extractCepFromAddress(destination);
+  
+  if (!originCep || !destinationCep) {
+    return null;
+  }
+  
+  // Mapear tipos de veículo para as categorias do sistema de CEPs
+  const vehicleTypeMapping: { [key: string]: keyof typeof DAILY_RATES } = {
+    'economico': 'executivoComum',
+    'executivo': 'executivoSedan',
+    'luxo': 'executivoPremiumBlindado',
+    'suv': 'minivanComum',
+    'minivanBlindada': 'minivanBlindada',
+    'van15Lugares': 'van15Lugares'
+  };
+  
+  const cepVehicleType = vehicleTypeMapping[vehicleType] || 'executivoSedan';
+  const price = findPriceByCep(originCep, destinationCep, cepVehicleType);
+  
+  if (price !== null) {
+    return { price, usedCepSystem: true };
+  }
+  
+  return null;
 };

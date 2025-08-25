@@ -14,10 +14,11 @@ export const Hero = () => {
         style={{
           backgroundImage: "url('/Fotos Site/IMG_4534.webp')",
           backgroundSize: "cover",
-          backgroundPosition: "center 19%"
+          backgroundPosition: "left 19%",
+          transform: "scaleX(-1)"
         }}
       >
-        <div className="relative z-10 w-full py-0 sm:py-8">
+        <div className="relative z-10 w-full py-0 sm:py-8" style={{ transform: "scaleX(-1)" }}>
           <div className="max-w-7xl mx-auto px-0 sm:px-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-12 items-center">
               

@@ -38,6 +38,7 @@ export const VehicleCategories = ({ categories, onSelect }: VehicleCategoriesPro
                 src={category.image} 
                 alt={category.name}
                 className="w-full h-full object-cover"
+                style={{ transform: 'scaleX(-1)' }}
               />
               <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
                 {category.name}

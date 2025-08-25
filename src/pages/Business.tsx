@@ -12,32 +12,38 @@ const Business = () => {
       
       {/* Hero Section with Background and Quote Form */}
       <div 
-        className="relative min-h-screen pt-20 bg-center bg-no-repeat flex items-center"
+        className="relative min-h-[50vh] sm:min-h-[70vh] pt-0 sm:pt-20 bg-center bg-no-repeat flex items-center"
         style={{
-          backgroundImage: "url('/BG2.png')",
-          backgroundSize: "120%",
-          backgroundPosition: "right -5px"
+          backgroundImage: "url('/Fotos Site/IMG_2646.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "left 19%",
+          transform: "scaleX(-1)"
         }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        <div className="relative z-10 w-full py-8">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+        <div className="relative z-10 w-full py-0 sm:py-8" style={{ transform: "scaleX(-1)" }}>
+          <div className="max-w-7xl mx-auto px-0 sm:px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-12 items-center">
               
               {/* Left Content */}
               <div className="text-white order-2 lg:order-1">
                 {/* Título e subtítulo removidos */}
               </div>
 
-              {/* Right Content - Quote Form */}
+              {/* Right Content - Quote Form (desktop) / Espaço vazio (mobile) */}
               <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
-                <QuoteForm />
+                {/* Formulário visível apenas no desktop */}
+                <div className="hidden lg:block">
+                  <QuoteForm />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
+      {/* QuoteForm para mobile */}
+      <div className="block lg:hidden">
+        <QuoteForm />
+      </div>
       {/* Content Section */}
       <div className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-6">
@@ -47,23 +53,27 @@ const Business = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <img 
-                  src="https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80" 
+                  src="/Fotos Site/IMG_2646.jpg" 
                   alt="Transfer Executivo" 
                   className="w-full rounded-lg shadow-lg"
+                  loading="lazy"
+                  decoding="async"
+                  width="600"
+                  height="400"
                 />
               </div>
               <div>
                 <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                  TRANSFER EXECUTIVO EXECUTIVE PREMIUM — CHEGUE COM CLASSE
+                  TRANSFER EXECUTIVO | SUA CHEGADA COM ELEGÂNCIA
                 </h2>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Se você acaba de desembarcar, cansado após um voo longo, não há forma mais tranquila e elegante de seguir viagem do que com um transfer Executive Premium direto do aeroporto ao seu destino.
+                  Após um voo cansativo, nada é mais confortável e sofisticado do que ter à disposição um serviço de transfer executivo que o leve do aeroporto ao destino com tranquilidade e estilo.
                 </p>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Atuamos exclusivamente em São Paulo, oferecendo uma alternativa premium para quem deseja evitar o estresse do transporte público ou a imprevisibilidade dos táxis locais. Nossos motoristas acompanham seu voo em tempo real e se ajustam automaticamente a qualquer atraso, garantindo uma recepção pontual e personalizada.
+                  Atuando exclusivamente em São Paulo, oferecemos uma alternativa de alto padrão para quem deseja evitar o desgaste do transporte público ou a imprevisibilidade de táxis e aplicativos. Nossos motoristas monitoram seu voo em tempo real, ajustando automaticamente o horário de chegada em caso de atrasos, para garantir uma recepção pontual e personalizada.
                 </p>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Todos os condutores Executive Premium são cuidadosamente selecionados, altamente treinados e possuem conhecimento profundo da cidade. Estão sempre prontos para oferecer orientações e sugestões sob medida para a sua estadia.
+                  Cada condutor é selecionado com rigor, passa por treinamentos constantes e possui amplo conhecimento da cidade, estando sempre preparado para indicar rotas, pontos de interesse e recomendações exclusivas que tornam sua estadia ainda mais agradável.
                 </p>
               </div>
             </div>
@@ -71,31 +81,30 @@ const Business = () => {
 
           {/* Mobile Office Section */}
           <div className="mb-16">
+            <div className="mb-8">
+              <img 
+                src="/Fotos Site/IMG_2846.jpg" 
+                alt="Escritório em Movimento" 
+                className="w-full rounded-lg shadow-lg"
+                loading="lazy"
+                decoding="async"
+                width="600"
+                height="400"
+              />
+            </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-8">
-              SEU ESCRITÓRIO EM MOVIMENTO
+              SEU ESCRITÓRIO SOBRE RODAS
             </h3>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Transforme cada trajeto em um momento produtivo com a Executive Premium. Nossos veículos foram cuidadosamente escolhidos para oferecer o ambiente ideal para que você possa trabalhar, se concentrar ou simplesmente relaxar com total privacidade e silêncio.
-                </p>
-                <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Graças aos motores híbridos, os carros da Executive Premium oferecem uma condução extremamente silenciosa — perfeita para chamadas de vídeo, leitura de relatórios ou revisão de apresentações durante o caminho. O Wi-Fi a bordo garantem que você esteja sempre conectado, sem depender de redes públicas instáveis.
-                </p>
-                <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Para garantir a máxima discrição, todos os nossos veículos contam com vidros de privacidade blindados, criando um ambiente reservado, elegante e livre de distrações externas.
-                </p>
-                <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Seja indo para uma reunião importante ou retornando de um compromisso, com a Executive Premium, cada trajeto é uma extensão do seu escritório — com conforto, sofisticação e foco.
-                </p>
-              </div>
-              <div>
-                <img 
-                  src="https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80" 
-                  alt="Escritório em Movimento" 
-                  className="w-full rounded-lg shadow-lg"
-                />
-              </div>
+            <div>
+              <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                Transforme cada deslocamento em um momento produtivo. Nossos veículos foram projetados para proporcionar o ambiente ideal para reuniões virtuais, leituras importantes ou simplesmente para relaxar em silêncio total.
+              </p>
+              <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                Com motores híbridos que asseguram uma condução suave e silenciosa, o ambiente interno se torna perfeito para chamadas de vídeo, revisão de documentos ou até mesmo momentos de descanso. O Wi-Fi de alta velocidade mantém você conectado durante todo o trajeto, sem depender de redes externas pouco confiáveis.
+              </p>
+              <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                Para maior privacidade, nossos veículos contam com blindagem e vidros escurecidos, garantindo discrição absoluta e criando uma atmosfera de conforto e sofisticação em cada viagem.
+              </p>
             </div>
           </div>
 
@@ -104,20 +113,24 @@ const Business = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <img 
-                  src="https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                  src="/Fotos Site/IMG_4494.jpg" 
                   alt="Reserva com Facilidade" 
                   className="w-full rounded-lg shadow-lg"
+                  loading="lazy"
+                  decoding="async"
+                  width="600"
+                  height="400"
                 />
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                  RESERVE COM FACILIDADE
+                  RESERVA RÁPIDA E TRANSPARENTE
                 </h3>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Reservar seu transfer com a Executive Premium é simples e direto. Através do nosso site ou aplicativo, você escolhe o ponto de partida, destino e a categoria do veículo que melhor se adequa à sua ocasião.
+                  Agendar seu transfer executivo é simples e intuitivo. Pelo site ou aplicativo, basta escolher origem, destino e categoria de veículo que mais se adapta à ocasião.
                 </p>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Transparência é um dos nossos pilares: o valor exibido na reserva é exatamente o que você pagará — sem taxas ocultas ou surpresas. Uma forma clara e elegante de começar sua experiência em São Paulo.
+                  Prezamos pela transparência em todas as etapas: o valor exibido na tela de reserva é o valor final sem taxas adicionais ou cobranças inesperadas. Uma experiência clara, segura e elegante desde o primeiro contato.
                 </p>
               </div>
             </div>
@@ -129,7 +142,7 @@ const Business = () => {
               Pronto para elevar suas viagens de negócios?
             </h3>
             <p className="text-lg text-gray-700 mb-8">
-              Experimente o transporte executivo da Executive Premium e transforme cada trajeto em uma oportunidade de produtividade.
+              Executive Premium: mais do que transporte, um padrão de mobilidade criado para elevar suas viagens de negócios.
             </p>
             <button 
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
