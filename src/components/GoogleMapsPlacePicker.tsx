@@ -168,6 +168,38 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
     }
   };
 
+  // Função para extrair CEP dos componentes de endereço
+  const extractCepFromAddressComponents = (addressComponents: any[]): string | null => {
+    if (!addressComponents) return null;
+    
+    for (const component of addressComponents) {
+      if (component.types.includes('postal_code')) {
+        return component.long_name;
+      }
+    }
+    return null;
+  };
+
+  // Função para formatar endereço com CEP sempre visível
+  const formatAddressWithCep = (place: any): string => {
+    let baseAddress = place.formatted_address || place.name || '';
+    
+    // Verificar se já tem CEP no endereço
+    const existingCepMatch = baseAddress.match(/\d{5}-?\d{3}/);
+    if (existingCepMatch) {
+      return baseAddress; // Já tem CEP, retornar como está
+    }
+    
+    // Tentar extrair CEP dos componentes
+    const cep = extractCepFromAddressComponents(place.address_components);
+    if (cep) {
+      // Adicionar CEP ao final do endereço se não estiver presente
+      return `${baseAddress}, ${cep}`;
+    }
+    
+    return baseAddress;
+  };
+
   const initializeNewAutocomplete = () => {
     if (!inputRef.current) return;
 
@@ -179,7 +211,7 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
       const google = (window as any).google;
       const autocompleteElement = new google.maps.places.PlaceAutocompleteElement({
         componentRestrictions: { country: 'BR' },
-        fields: ['formatted_address', 'name', 'geometry', 'place_id'],
+        fields: ['formatted_address', 'name', 'geometry', 'place_id', 'address_components'],
         types: ['establishment', 'geocode']
       });
 
@@ -194,9 +226,9 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
         const place = event.place;
         
         if (place && (place.formatted_address || place.name)) {
-          const selectedAddress = place.formatted_address || place.name || '';
-          console.log(`🎯 ${id} - Endereço selecionado (Nova API):`, selectedAddress);
-          onChange(selectedAddress, place);
+          const formattedAddress = formatAddressWithCep(place);
+          console.log(`🎯 ${id} - Endereço selecionado (Nova API):`, formattedAddress);
+          onChange(formattedAddress, place);
         }
       });
 
@@ -220,7 +252,7 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
       const autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
         types: ['establishment', 'geocode'],
         componentRestrictions: { country: 'BR' },
-        fields: ['formatted_address', 'name', 'geometry', 'place_id']
+        fields: ['formatted_address', 'name', 'geometry', 'place_id', 'address_components']
       });
 
       autocompleteRef.current = autocomplete;
@@ -230,14 +262,14 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
         const place = autocomplete.getPlace();
         
         if (place && (place.formatted_address || place.name)) {
-          const selectedAddress = place.formatted_address || place.name || '';
-          console.log(`🎯 ${id} - Endereço selecionado:`, selectedAddress);
+          const formattedAddress = formatAddressWithCep(place);
+          console.log(`🎯 ${id} - Endereço selecionado:`, formattedAddress);
           
           // Atualizar o valor do input e chamar onChange
           if (inputRef.current) {
-            inputRef.current.value = selectedAddress;
+            inputRef.current.value = formattedAddress;
           }
-          onChange(selectedAddress, place);
+          onChange(formattedAddress, place);
         }
       });
 

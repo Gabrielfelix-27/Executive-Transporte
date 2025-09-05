@@ -73,7 +73,7 @@ const ExecutiveProtection = () => {
                   Nossos parceiros unem discrição, eficiência e tecnologia de ponta para entregar um serviço de vigilância contínuo e totalmente personalizado, seja em deslocamentos estratégicos, eventos reservados ou na proteção de residências de alto padrão.
                 </p>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  Todas as empresas parceiras seguem rigorosamente as normas estabelecidas pelos órgãos reguladores, contam com profissionais altamente capacitados e certificados e utilizam equipamentos de última geração. O resultado é um serviço que une confiança, sofisticação e tranquilidade.
+                  Nós seguimos rigorosamente as normas estabelecidas pelos órgãos reguladores, contam com profissionais altamente capacitados e certificados e utilizam equipamentos de última geração. O resultado é um serviço que une confiança, sofisticação e tranquilidade.
                 </p>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
                   Você terá acesso a uma experiência de segurança que vai muito além da simples proteção. Trata-se de um conceito inteligente, elegante e totalmente alinhado às suas expectativas. Porque, em nosso universo, luxo também significa sentir-se seguro com discrição, estilo e total serenidade.

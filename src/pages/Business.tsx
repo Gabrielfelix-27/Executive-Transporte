@@ -100,7 +100,7 @@ const Business = () => {
                 Transforme cada deslocamento em um momento produtivo. Nossos veículos foram projetados para proporcionar o ambiente ideal para reuniões virtuais, leituras importantes ou simplesmente para relaxar em silêncio total.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                Com motores híbridos que asseguram uma condução suave e silenciosa, o ambiente interno se torna perfeito para chamadas de vídeo, revisão de documentos ou até mesmo momentos de descanso. O Wi-Fi de alta velocidade mantém você conectado durante todo o trajeto, sem depender de redes externas pouco confiáveis.
+                Com uma frota nova e preparada asseguram uma condução suave e silenciosa, o ambiente interno se torna perfeito para chamadas de vídeo, revisão de documentos ou até mesmo momentos de descanso. O Wi-Fi de alta velocidade mantém você conectado durante todo o trajeto, sem depender de redes externas pouco confiáveis.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed mb-6">
                 Para maior privacidade, nossos veículos contam com blindagem e vidros escurecidos, garantindo discrição absoluta e criando uma atmosfera de conforto e sofisticação em cada viagem.

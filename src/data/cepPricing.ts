@@ -56,15 +56,52 @@ export const CEP_REGIONS: { [key: string]: CepRegion } = {
   },
   congonhas: {
     name: 'Congonhas (Aeroporto)',
-    cep: '04626-911'
+    cep: '04626-911',
+    cepRange: { start: '04626-000', end: '04627-999' }
   },
   guarulhos: {
     name: 'Guarulhos/GRU (Aeroporto)',
-    cep: '07190-100'
+    cep: '07190-100',
+    cepRange: { start: '07190-000', end: '07200-999' }
   },
   viracopos: {
     name: 'Viracopos/Campinas (Aeroporto)',
     cep: '13052-900'
+  },
+  zonaOesteSP: {
+    name: 'Zona Oeste de São Paulo',
+    cep: '05000-000',
+    cepRange: { start: '05000-000', end: '05999-999' }
+  },
+  zonaSulSP: {
+    name: 'Zona Sul de São Paulo',
+    cep: '04000-000',
+    cepRange: { start: '04000-000', end: '04999-999' }
+  },
+  zonaLesteSP: {
+    name: 'Zona Leste de São Paulo',
+    cep: '03000-000',
+    cepRange: { start: '03000-000', end: '03999-999' }
+  },
+  diadema: {
+    name: 'Diadema',
+    cep: '09900-000',
+    cepRange: { start: '09900-000', end: '09999-999' }
+  },
+  saoBernardo: {
+    name: 'São Bernardo do Campo',
+    cep: '09600-000',
+    cepRange: { start: '09600-000', end: '09899-999' }
+  },
+  santoAndre: {
+    name: 'Santo André',
+    cep: '09000-000',
+    cepRange: { start: '09000-000', end: '09299-999' }
+  },
+  maua: {
+    name: 'Mauá',
+    cep: '09300-000',
+    cepRange: { start: '09300-000', end: '09399-999' }
   },
   grandeSaoPaulo: {
     name: 'Grande São Paulo',
@@ -80,7 +117,7 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
     from: 'congonhas',
     to: 'paulista',
     prices: {
-      executivoSedan: 330.00,
+      executivoSedan: 240.00,
       executivoComum: 330.00,
       executivoPremiumBlindado: 650.00,
       minivanComum: 650.00,
@@ -92,7 +129,7 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
     from: 'congonhas',
     to: 'itaim',
     prices: {
-      executivoSedan: 330.00,
+      executivoSedan: 240.00,
       executivoComum: 330.00,
       executivoPremiumBlindado: 650.00,
       minivanComum: 650.00,
@@ -104,7 +141,7 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
     from: 'congonhas',
     to: 'vilaOlimpia',
     prices: {
-      executivoSedan: 330.00,
+      executivoSedan: 240.00,
       executivoComum: 330.00,
       executivoPremiumBlindado: 650.00,
       minivanComum: 650.00,
@@ -116,7 +153,7 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
     from: 'congonhas',
     to: 'pinheiros',
     prices: {
-      executivoSedan: 330.00,
+      executivoSedan: 240.00,
       executivoComum: 330.00,
       executivoPremiumBlindado: 650.00,
       minivanComum: 650.00,
@@ -128,7 +165,7 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
     from: 'congonhas',
     to: 'lapa',
     prices: {
-      executivoSedan: 330.00,
+      executivoSedan: 240.00,
       executivoComum: 330.00,
       executivoPremiumBlindado: 650.00,
       minivanComum: 650.00,
@@ -140,7 +177,92 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
     from: 'congonhas',
     to: 'butanta',
     prices: {
-      executivoSedan: 330.00,
+      executivoSedan: 240.00,
+      executivoComum: 330.00,
+      executivoPremiumBlindado: 650.00,
+      minivanComum: 650.00,
+      minivanBlindada: 1150.00,
+      van15Lugares: 790.00
+    }
+  },
+  // Novas rotas Congonhas para regiões específicas
+  {
+    from: 'congonhas',
+    to: 'zonaOesteSP',
+    prices: {
+      executivoSedan: 240.00,
+      executivoComum: 330.00,
+      executivoPremiumBlindado: 650.00,
+      minivanComum: 650.00,
+      minivanBlindada: 1150.00,
+      van15Lugares: 790.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: 'zonaSulSP',
+    prices: {
+      executivoSedan: 240.00,
+      executivoComum: 330.00,
+      executivoPremiumBlindado: 650.00,
+      minivanComum: 650.00,
+      minivanBlindada: 1150.00,
+      van15Lugares: 790.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: 'zonaLesteSP',
+    prices: {
+      executivoSedan: 240.00,
+      executivoComum: 330.00,
+      executivoPremiumBlindado: 650.00,
+      minivanComum: 650.00,
+      minivanBlindada: 1150.00,
+      van15Lugares: 790.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: 'diadema',
+    prices: {
+      executivoSedan: 240.00,
+      executivoComum: 330.00,
+      executivoPremiumBlindado: 650.00,
+      minivanComum: 650.00,
+      minivanBlindada: 1150.00,
+      van15Lugares: 790.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: 'saoBernardo',
+    prices: {
+      executivoSedan: 240.00,
+      executivoComum: 330.00,
+      executivoPremiumBlindado: 650.00,
+      minivanComum: 650.00,
+      minivanBlindada: 1150.00,
+      van15Lugares: 790.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: 'santoAndre',
+    prices: {
+      executivoSedan: 240.00,
+      executivoComum: 330.00,
+      executivoPremiumBlindado: 650.00,
+      minivanComum: 650.00,
+      minivanBlindada: 1150.00,
+      van15Lugares: 790.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: 'maua',
+    prices: {
+      executivoSedan: 240.00,
       executivoComum: 330.00,
       executivoPremiumBlindado: 650.00,
       minivanComum: 650.00,
@@ -153,7 +275,7 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
     from: 'guarulhos',
     to: 'paulista',
     prices: {
-      executivoSedan: 380.00,
+      executivoSedan: 310.00,
       executivoComum: 380.00,
       executivoPremiumBlindado: 850.00,
       minivanComum: 720.00,
@@ -165,7 +287,7 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
     from: 'guarulhos',
     to: 'itaim',
     prices: {
-      executivoSedan: 380.00,
+      executivoSedan: 310.00,
       executivoComum: 380.00,
       executivoPremiumBlindado: 850.00,
       minivanComum: 720.00,
@@ -177,7 +299,7 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
     from: 'guarulhos',
     to: 'vilaOlimpia',
     prices: {
-      executivoSedan: 380.00,
+      executivoSedan: 310.00,
       executivoComum: 380.00,
       executivoPremiumBlindado: 850.00,
       minivanComum: 720.00,
@@ -189,7 +311,7 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
     from: 'guarulhos',
     to: 'pinheiros',
     prices: {
-      executivoSedan: 380.00,
+      executivoSedan: 310.00,
       executivoComum: 380.00,
       executivoPremiumBlindado: 850.00,
       minivanComum: 720.00,
@@ -201,7 +323,7 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
     from: 'guarulhos',
     to: 'lapa',
     prices: {
-      executivoSedan: 380.00,
+      executivoSedan: 310.00,
       executivoComum: 380.00,
       executivoPremiumBlindado: 850.00,
       minivanComum: 720.00,
@@ -213,7 +335,92 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
     from: 'guarulhos',
     to: 'butanta',
     prices: {
-      executivoSedan: 380.00,
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  // Novas rotas GRU para regiões específicas
+  {
+    from: 'guarulhos',
+    to: 'zonaOesteSP',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: 'zonaSulSP',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: 'zonaLesteSP',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: 'diadema',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: 'saoBernardo',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: 'santoAndre',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: 'maua',
+    prices: {
+      executivoSedan: 310.00,
       executivoComum: 380.00,
       executivoPremiumBlindado: 850.00,
       minivanComum: 720.00,
@@ -303,10 +510,66 @@ export const isInGrandeSaoPauloRange = (cep: string): boolean => {
 // Função para identificar região baseada no CEP
 export const identifyRegionByCep = (cep: string): string | null => {
   const normalizedCep = normalizeCep(cep);
+  const cepNumber = parseInt(normalizedCep);
   
   console.log(`🔍 Identificando região para CEP: ${cep} → normalizado: ${normalizedCep}`);
   
-  // Verificar se está na faixa da Grande São Paulo primeiro
+  // Verificar faixas específicas para tarifas fixas do GRU
+  // Aeroporto de Guarulhos (origem)
+  if (cepNumber >= 7190000 && cepNumber <= 7200999) {
+    console.log(`✅ CEP ${cep} identificado como Guarulhos/GRU`);
+    return 'guarulhos';
+  }
+  
+  // Aeroporto de Congonhas (origem)
+  if (cepNumber >= 4626000 && cepNumber <= 4627999) {
+    console.log(`✅ CEP ${cep} identificado como Congonhas`);
+    return 'congonhas';
+  }
+  
+  // Zona Oeste de São Paulo (Perdizes, Pinheiros, Morumbi, Butantã, Lapa)
+  if (cepNumber >= 5000000 && cepNumber <= 5999999) {
+    console.log(`✅ CEP ${cep} identificado como Zona Oeste SP`);
+    return 'zonaOesteSP';
+  }
+  
+  // Zona Sul de São Paulo (Interlagos, Santo Amaro, Capela, Socorro, Grajaú, Parelheiros)
+  if (cepNumber >= 4000000 && cepNumber <= 4999999) {
+    console.log(`✅ CEP ${cep} identificado como Zona Sul SP`);
+    return 'zonaSulSP';
+  }
+  
+  // Zona Leste de São Paulo (Tatuapé, Carrão, Aricanduva, Vila Formosa, Penha, Itaquera)
+  if (cepNumber >= 3000000 && cepNumber <= 3999999) {
+    console.log(`✅ CEP ${cep} identificado como Zona Leste SP`);
+    return 'zonaLesteSP';
+  }
+  
+  // ABC Paulista - Diadema
+  if (cepNumber >= 9900000 && cepNumber <= 9999999) {
+    console.log(`✅ CEP ${cep} identificado como Diadema`);
+    return 'diadema';
+  }
+  
+  // ABC Paulista - São Bernardo do Campo
+  if (cepNumber >= 9600000 && cepNumber <= 9899999) {
+    console.log(`✅ CEP ${cep} identificado como São Bernardo do Campo`);
+    return 'saoBernardo';
+  }
+  
+  // ABC Paulista - Santo André
+  if (cepNumber >= 9000000 && cepNumber <= 9299999) {
+    console.log(`✅ CEP ${cep} identificado como Santo André`);
+    return 'santoAndre';
+  }
+  
+  // ABC Paulista - Mauá
+  if (cepNumber >= 9300000 && cepNumber <= 9399999) {
+    console.log(`✅ CEP ${cep} identificado como Mauá`);
+    return 'maua';
+  }
+  
+  // Verificar se está na faixa da Grande São Paulo (outras regiões)
   if (isInGrandeSaoPauloRange(cep)) {
     console.log(`✅ CEP ${cep} identificado como Grande São Paulo`);
     return 'grandeSaoPaulo';

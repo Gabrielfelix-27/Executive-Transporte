@@ -65,7 +65,7 @@ const OnDemandService = () => {
                   MOTORISTA EXECUTIVO DISPONÍVEL 24 HORAS
                 </h2>
                 <p className="text-lg text-gray-700 leading-relaxed mb-6 font-redhat text-justify">
-                  Esqueça a incerteza de depender de táxis ou do transporte público. A Executive Premium oferece mobilidade de luxo sob medida para o seu dia a dia. Aqui, conforto e segurança andam juntos em cada detalhe da sua experiência.
+                  Esqueça a incerteza de depender de táxis. A Executive Premium oferece mobilidade de luxo sob medida para o seu dia a dia. Aqui, conforto e segurança andam juntos em cada detalhe da sua experiência.
                 </p>
                 
                 <div className="space-y-4">
