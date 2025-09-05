@@ -14,7 +14,7 @@ const VIP360 = () => {
       <div 
         className="relative min-h-[50vh] sm:min-h-[70vh] pt-0 sm:pt-20 bg-center bg-no-repeat flex items-center"
         style={{
-          backgroundImage: "url('/Fotos Site/IMG_3233.jpg')",
+          backgroundImage: "url('/Fotos Site/IMG_3233.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           transform: "scaleX(-1)"
@@ -53,7 +53,7 @@ const VIP360 = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <img
-                  src="/Fotos Site/IMG_2921.jpg"
+                  src="/Fotos Site/IMG_2921.webp"
                   alt="Executive 360 Experience"
                   className="w-full rounded-lg shadow-lg"
                   loading="lazy"

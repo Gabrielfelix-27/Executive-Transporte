@@ -14,7 +14,7 @@ const OnDemandService = () => {
       <div 
         className="relative min-h-[50vh] sm:min-h-[70vh] pt-0 sm:pt-20 bg-center bg-no-repeat flex items-center"
         style={{
-          backgroundImage: "url('/Fotos Site/IMG_2921.jpg')",
+          backgroundImage: "url('/Fotos Site/IMG_2921.webp')",
           backgroundSize: "cover",
           backgroundPosition: "left 19%",
           transform: "scaleX(-1)"
@@ -53,7 +53,7 @@ const OnDemandService = () => {
             <div className="grid grid-cols-1 gap-12 items-center">
               <div>
                 <img 
-                  src="/Fotos Site/IMG_4784.jpg" 
+                  src="/Fotos Site/IMG_4784.webp" 
                   alt="Serviço à Disposição" 
                   className="w-full rounded-lg shadow-lg mb-8"
                   loading="lazy"
@@ -102,7 +102,7 @@ const OnDemandService = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <img 
-                  src="/Fotos Site/IMG_4886.jpg" 
+                  src="/Fotos Site/IMG_4886.webp" 
                   alt="Experiência Exclusiva" 
                   className="w-full rounded-lg shadow-lg"
                   loading="lazy"
@@ -149,7 +149,7 @@ const OnDemandService = () => {
             <div className="grid grid-cols-1 gap-12 items-center">
               <div>
                 <img 
-                  src="/Fotos Site/IMG_3080.jpg" 
+                  src="/Fotos Site/IMG_3080.webp" 
                   alt="Serviço 24/7" 
                   className="w-full rounded-lg shadow-lg mb-8"
                   loading="lazy"

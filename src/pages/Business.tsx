@@ -14,7 +14,7 @@ const Business = () => {
       <div 
         className="relative min-h-[50vh] sm:min-h-[70vh] pt-0 sm:pt-20 bg-center bg-no-repeat flex items-center"
         style={{
-          backgroundImage: "url('/Fotos Site/IMG_2646.jpg')",
+          backgroundImage: "url('/Fotos Site/IMG_2646.webp')",
           backgroundSize: "cover",
           backgroundPosition: "left 19%",
           transform: "scaleX(-1)"
@@ -53,7 +53,7 @@ const Business = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <img 
-                  src="/Fotos Site/IMG_2646.jpg" 
+                  src="/Fotos Site/IMG_2646.webp" 
                   alt="Transfer Executivo" 
                   className="w-full rounded-lg shadow-lg"
                   loading="lazy"
@@ -83,7 +83,7 @@ const Business = () => {
           <div className="mb-16">
             <div className="mb-8">
               <img 
-                src="/Fotos Site/IMG_2846.jpg" 
+                src="/Fotos Site/IMG_2846.webp" 
                 alt="Escritório em Movimento" 
                 className="w-full rounded-lg shadow-lg"
                 loading="lazy"
@@ -113,7 +113,7 @@ const Business = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <img 
-                  src="/Fotos Site/IMG_4494.jpg" 
+                  src="/Fotos Site/IMG_4494.webp" 
                   alt="Reserva com Facilidade" 
                   className="w-full rounded-lg shadow-lg"
                   loading="lazy"

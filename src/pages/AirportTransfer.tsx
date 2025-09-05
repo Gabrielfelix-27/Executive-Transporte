@@ -14,7 +14,7 @@ const AirportTransfer = () => {
       <div 
         className="relative min-h-[50vh] sm:min-h-[70vh] pt-0 sm:pt-20 bg-center bg-no-repeat flex items-center"
         style={{
-          backgroundImage: "url('/Fotos Site/IMG_4522.jpg')",
+          backgroundImage: "url('/Fotos Site/IMG_4522.webp')",
           backgroundSize: "cover",
           backgroundPosition: "left 19%",
           transform: "scaleX(-1)"
@@ -52,7 +52,7 @@ const AirportTransfer = () => {
           <div className="mb-16">
             <div className="mb-8">
               <img 
-                src="/Fotos Site/IMG_4773.jpg" 
+                src="/Fotos Site/IMG_4773.webp" 
                 alt="Transfer Aeroporto" 
                 className="w-full rounded-lg shadow-lg"
                 loading="lazy"
@@ -81,7 +81,7 @@ const AirportTransfer = () => {
           <div className="mb-16">
             <div className="mb-8">
               <img 
-                src="/Fotos Site/IMG_3062.jpg" 
+                src="/Fotos Site/IMG_3062.webp" 
                 alt="Chegada no Aeroporto" 
                 className="w-full rounded-lg shadow-lg"
                 loading="lazy"
@@ -110,7 +110,7 @@ const AirportTransfer = () => {
           <div className="mb-16">
             <div className="mb-8">
               <img 
-                src="/Fotos Site/IMG_3201.jpg" 
+                src="/Fotos Site/IMG_3201.webp" 
                 alt="Reserva com Praticidade" 
                 className="w-full rounded-lg shadow-lg"
                 loading="lazy"

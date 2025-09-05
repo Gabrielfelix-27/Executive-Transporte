@@ -82,12 +82,12 @@ export default function VehicleSelection() {
               vehicle.name.includes('MiniVan') ? 'SUV' : 'Sedan',
         name: vehicle.name,
         description: vehicle.description,
-        image: vehicle.name.includes('Sedan') ? '/Fotos Site/transporte-executivo-de-luxo.jpg' :
-               vehicle.name.includes('Executivo Comum') ? '/Fotos Site/IMG_4466.webp' :
-               vehicle.name.includes('Blindado') ? '/Fotos Site/transporte-executivo-carro-blindado-ford-fusion.jpg' :
-               vehicle.name.includes('MiniVan Blindada') ? '/Fotos Site/Minivan-lux-transfer-tranfer-no-rio-de-janeiro.jpg' :
-               vehicle.name.includes('MiniVan') ? '/Fotos Site/locacao-de-van-em-sp.jpg' :
-               vehicle.name.includes('Van') ? '/Fotos Site/Aluguel-de-Van-Executiva-Como-funciona.jpg' : '/Fotos Site/IMG_4466.webp',
+        image: vehicle.name.includes('Sedan') ? '/vehicles/Executivo Sedan.webp' :
+        vehicle.name.includes('Executivo Comum') ? '/vehicles/EXECUTIVO COMUM.webp' :
+        vehicle.name.includes('Blindado') ? '/vehicles/EXECUTIVO PREMIUM BLINDADO.webp' :
+        vehicle.name.includes('MiniVan Blindada') ? '/vehicles/MINIVAN BLINDADA.webp' :
+        vehicle.name.includes('MiniVan') ? '/vehicles/MINIVAN COMUM.webp' :
+        vehicle.name.includes('Van') ? '/vehicles/VAN 15 LUGARES.webp' : '/vehicles/EXECUTIVO COMUM.webp',
         capacity: vehicle.passengers,
         price: vehicle.price,
         features: ['Ar condicionado', 'Wi-Fi', 'Água'],
@@ -104,7 +104,7 @@ export default function VehicleSelection() {
           type: 'Sedan',
           name: 'Economy',
           description: 'Confortável e econômico',
-          image: '/Fotos Site/IMG_4466.webp',
+          image: '/vehicles/EXECUTIVO COMUM.webp',
           capacity: 3,
           price: 184,
           features: ['Ar condicionado', 'Wi-Fi', 'Água'],
@@ -115,7 +115,7 @@ export default function VehicleSelection() {
           type: 'SUV',
           name: 'Executive',
           description: 'Luxo e conforto premium',
-          image: '/Fotos Site/transporte-executivo-de-luxo.jpg',
+          image: '/vehicles/Executivo Sedan.webp',
           capacity: 6,
           price: 284,
           features: ['Ar condicionado', 'Wi-Fi', 'Água', 'Jornais'],
@@ -126,7 +126,7 @@ export default function VehicleSelection() {
           type: 'Van',
           name: 'Luxury',
           description: 'Máximo conforto e espaço',
-          image: '/Fotos Site/Aluguel-de-Van-Executiva-Como-funciona.jpg',
+          image: '/vehicles/VAN 15 LUGARES.webp',
           capacity: 14,
           price: 384,
           features: ['Ar condicionado', 'Wi-Fi', 'Água', 'TV', 'Som premium'],
@@ -342,7 +342,12 @@ export default function VehicleSelection() {
                     <img 
                       src={category.image} 
                       alt={category.name}
-                      className="w-full h-32 object-contain"
+                      className={`w-full h-40 object-cover ${
+                        category.image.includes('EXECUTIVO COMUM') ? 'object-center' : ''
+                      }`}
+                      style={{
+                        objectPosition: category.image.includes('EXECUTIVO COMUM') ? 'center 70%' : 'center'
+                      }}
                     />
                   </div>
 
@@ -404,7 +409,12 @@ export default function VehicleSelection() {
                         <img 
                           src={category.image} 
                           alt={category.name}
-                          className="w-full h-32 object-contain"
+                          className={`w-full h-40 object-cover ${
+                            category.image.includes('EXECUTIVO COMUM') ? 'object-center' : ''
+                          }`}
+                          style={{
+                            objectPosition: category.image.includes('EXECUTIVO COMUM') ? 'center 30%' : 'center'
+                          }}
                         />
                       </div>
 

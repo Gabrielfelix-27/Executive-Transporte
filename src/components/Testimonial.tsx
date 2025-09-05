@@ -8,7 +8,7 @@ export const Testimonial = () => {
       <div className="max-w-4xl mx-auto px-6 text-center">
         <div className="mb-8">
           <img 
-            src="/Logos/Logo solo.png" 
+            src="/Logos/Logo solo.webp" 
             alt="Executive Logo" 
             className="w-12 h-12 mx-auto mb-4 opacity-80"
           />

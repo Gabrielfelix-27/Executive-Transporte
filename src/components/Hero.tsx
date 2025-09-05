@@ -12,9 +12,9 @@ export const Hero = () => {
       <div 
         className="relative min-h-[50vh] sm:min-h-[70vh] pt-0 sm:pt-20 bg-center bg-no-repeat flex items-center"
         style={{
-          backgroundImage: "url('/Fotos Site/IMG_4534.webp')",
+          backgroundImage: "url('/Fotos Site/IMG_3233.webp')",
           backgroundSize: "cover",
-          backgroundPosition: "left 19%",
+          backgroundPosition: "center center",
           transform: "scaleX(-1)"
         }}
       >

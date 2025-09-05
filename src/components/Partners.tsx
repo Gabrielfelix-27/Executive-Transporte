@@ -32,7 +32,8 @@ export const Partners: React.FC<PartnersProps> = ({
     { name: "SPELL", logo: "/Logo Empresas/Spell.webp", isHighlight: false },
     { name: "ADAPCON", logo: "/Logo Empresas/adapcon.webp", isHighlight: false },
     { name: "AMBIPAR", logo: "/Logo Empresas/ambipar.webp", isHighlight: false },
-    { name: "EVERNEX", logo: "/Logo Empresas/evernex.webp", isHighlight: false }
+    { name: "EVERNEX", logo: "/Logo Empresas/evernex.webp", isHighlight: false },
+    { name: "IMPORTEK", logo: "/Logo Empresas/Importek.webp", isHighlight: false }
   ];
 
   // Calcular larguras dos itens

@@ -60,7 +60,7 @@ export const Navbar = ({
             <div className="flex sm:hidden items-center">
               <Link to="/" className="flex items-center justify-center">
                 <img 
-                  src="/Logos/Logo solo.png" 
+                  src="/Logos/Logo solo.webp" 
                   alt="Executive Logo" 
                   className="h-8 w-8 mr-4"
                 />
@@ -105,7 +105,7 @@ export const Navbar = ({
             <div className="hidden sm:flex items-center justify-center w-1/3">
               <Link to="/" className="flex items-center">
                 <img 
-                  src="/Logos/Logo Letras.png" 
+                  src="/Logos/Logo Letras.webp" 
                   alt="Executive Premium Logo" 
                   className="h-8 w-auto"
                 />

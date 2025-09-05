@@ -25,7 +25,7 @@ export const Services = () => {
       title: t('services.pointToPoint'),
       description: t('services.pointToPointDesc'),
       link: '/point-to-point',
-      image: '/Fotos%20Site/IMG_4471.webp'
+      image: '/Fotos%20Site/IMG_4769.webp'
     },
     {
       icon: Award,
@@ -46,7 +46,7 @@ export const Services = () => {
       title: t('services.exec360'),
       description: t('services.exec360Desc'),
       link: '/vip-360',
-      image: '/Fotos%20Site/IMG_4598.webp'
+      image: '/Fotos%20Site/IMG_111.webp'
     }
   ];
 
