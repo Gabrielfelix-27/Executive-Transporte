@@ -620,7 +620,7 @@ Reserva feita através do site Executive Premium`;
                       : 'bg-green-600 hover:bg-green-700 text-white'
                   }`}
                 >
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center text-center break-words overflow-hidden flex-wrap px-2">
                     {actionTaken === 'whatsapp' || actionTaken === 'both' ? (
                       <>
                         <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

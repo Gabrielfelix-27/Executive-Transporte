@@ -206,7 +206,7 @@ const translations = {
     'passenger.pdfDownloaded': 'PDF baixado com sucesso!',
     'passenger.downloadQuotePdf': 'Baixar cotação em PDF',
     'passenger.whatsappOpened': 'WhatsApp aberto com sucesso!',
-    'passenger.contactAgent': 'Contatar agente para agilizar o serviço',
+    'passenger.contactAgent': 'Adiantar Atendimento',
     'passenger.completeService': 'Completar serviço',
     'passenger.thankYou': 'Obrigado!',
     'passenger.quoteConcluded': 'Sua cotação foi concluída com sucesso.',
