@@ -90,8 +90,8 @@ const AirportTransfer = () => {
                 height="400"
               />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 font-redhat tracking-wide">
-              CHEGAR OU SAIR DO AEROPORTO COM PADRÃO EXECUTIVO
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 font-redhat tracking-wide md:text-left text-right overflow-hidden pr-2">
+              CHEGAR OU SAIR DO AERO<wbr />PORTO COM PADRÃO EXECUTIVO
             </h3>
             <div className="grid grid-cols-1 gap-8">
               <div>
@@ -119,7 +119,7 @@ const AirportTransfer = () => {
                 height="400"
               />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-8 font-redhat tracking-wide">
+            <h3 className="text-2xl font-bold text-gray-900 mb-8 font-redhat tracking-wide md:text-left text-right overflow-hidden pr-2">
                 RESERVA SIMPLES E TRANSPARENTE
               </h3>
               <div className="grid grid-cols-1 gap-8">
@@ -140,12 +140,12 @@ const AirportTransfer = () => {
           </div>
 
           {/* Call to Action */}
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 font-redhat tracking-wide">
+          <div className="md:text-center text-right pr-2">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 font-redhat tracking-wide overflow-hidden">
                 Pronto para viver o próximo nível em transfer executivo?
               </h3>
-              <p className="text-lg text-gray-700 mb-8 font-redhat leading-relaxed">
-                Reserve agora seu transfer para aeroportos e descubra o que significa viajar com luxo e tranquilidade.
+              <p className="text-lg text-gray-700 mb-8 font-redhat leading-relaxed overflow-hidden">
+                Reserve agora seu transfer para aero<wbr />portos e descubra o que significa viajar com luxo e tranquilidade.
               </p>
             <button 
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

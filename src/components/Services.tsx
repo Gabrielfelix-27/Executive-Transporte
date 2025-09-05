@@ -18,7 +18,8 @@ export const Services = () => {
       title: t('services.airportTransfer'),
       description: t('services.airportTransferDesc'),
       link: '/airport-transfer',
-      image: '/Fotos%20Site/IMG_4739.webp'
+      image: '/Fotos%20Site/IMG_4739.webp',
+      customPadding: 'pr-32'
     },
     {
       icon: Eye,
@@ -76,8 +77,8 @@ export const Services = () => {
                 >
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
                   <div className="absolute bottom-0 right-0 p-6 text-white" style={{ transform: 'scaleX(-1)' }}>
-                    <h3 className="text-xl font-semibold mb-2 text-right font-redhat tracking-wide whitespace-nowrap">{service.title}</h3>
-                    <p className="text-gray-300 text-xs leading-relaxed font-redhat text-right opacity-80">{service.description}</p>
+                    <h3 className={`text-xl font-semibold mb-2 text-left font-redhat tracking-wide whitespace-nowrap ${(service as any).customPadding || 'pr-6'}`} dangerouslySetInnerHTML={{ __html: service.title }}></h3>
+                    <p className={`text-gray-300 text-sm leading-relaxed font-redhat text-left opacity-80 ${(service as any).customPadding || 'pr-6'} min-h-[40px]`} dangerouslySetInnerHTML={{ __html: service.description }}></p>
                   </div>
                 </div>
               </a>
@@ -102,8 +103,8 @@ export const Services = () => {
                   >
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent"></div>
                     <div className="absolute bottom-0 right-0 p-6 text-white" style={{ transform: 'scaleX(-1)' }}>
-                      <h3 className="text-xl font-semibold mb-2 text-right font-redhat tracking-wide whitespace-nowrap">{service.title}</h3>
-                      <p className="text-gray-300 text-xs leading-relaxed font-redhat text-right opacity-80">{service.description}</p>
+                      <h3 className={`text-xl font-semibold mb-2 text-left font-redhat tracking-wide whitespace-nowrap ${(service as any).customPadding || 'pr-6'}`} dangerouslySetInnerHTML={{ __html: service.title }}></h3>
+                      <p className={`text-gray-300 text-sm leading-relaxed font-redhat text-left opacity-80 ${(service as any).customPadding || 'pr-6'} min-h-[40px]`} dangerouslySetInnerHTML={{ __html: service.description }}></p>
                     </div>
                   </div>
                 </a>
