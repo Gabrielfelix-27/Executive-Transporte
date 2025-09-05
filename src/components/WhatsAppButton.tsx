@@ -1,7 +1,7 @@
 import { MessageCircle } from "lucide-react";
 
 export const WhatsAppButton = () => {
-  const whatsappNumber = "5511940429351";
+  const whatsappNumber = "5511915853292";
   
   const handleWhatsAppClick = () => {
     const message = "Olá! Gostaria de solicitar um orçamento para transporte executivo.";
@@ -36,4 +36,4 @@ export const WhatsAppButton = () => {
       </div>
     </button>
   );
-}; 
+};

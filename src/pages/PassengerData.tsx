@@ -132,7 +132,7 @@ const PassengerData = () => {
     doc.text('EXECUTIVE PREMIUM', margin, 25);
     doc.setFontSize(12);
     doc.text('Transporte Executivo de Alto Padrão', margin, 35);
-    doc.text('Telefone: (11) 94042-9351', margin, 45);
+    doc.text('Telefone: (11) 91585-3292', margin, 45);
     
     // Data e hora da geração
     const now = new Date();
@@ -284,7 +284,7 @@ const PassengerData = () => {
     doc.setTextColor(80, 80, 80);
     doc.text('Executive Premium - Transporte Executivo de Alto Padrão', margin, yPosition);
     doc.text('Reserva gerada automaticamente pelo sistema', margin, yPosition + 8);
-    doc.text('Para dúvidas, entre em contato: (11) 94042-9351', margin, yPosition + 16);
+    doc.text('Para dúvidas, entre em contato: (11) 91585-3292', margin, yPosition + 16);
     
     // Texto de direita do rodapé
     const footerRightText = 'www.executivepremium.com.br';
@@ -442,7 +442,7 @@ ${passengerInfo.additionalInfo}` : ''}
 Reserva feita através do site Executive Premium`;
 
     // Número do WhatsApp da Executive Premium
-    const whatsappNumber = "5511940429351";
+    const whatsappNumber = "5511915853292";
     
     // Criar URL do WhatsApp
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;

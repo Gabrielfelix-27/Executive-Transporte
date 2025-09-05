@@ -74,7 +74,7 @@ export default async function handler(req, res) {
     console.log('🔄 Configurando opções do email...');
     const mailOptions = {
       from: process.env.GMAIL_USER,
-      to: 'gabriel.gbllima10@gmail.com',
+      to: 'gabriel.lima@dreamsetfilms.com.br',
       subject: `● Nova Reserva - ${reservationData.passengerName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -173,4 +173,4 @@ export default async function handler(req, res) {
       code: error.code || 'UNKNOWN'
     });
   }
-} 
+}
