@@ -428,7 +428,19 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
       van15Lugares: 990.00
     }
   },
-  // Viracopos para Grande São Paulo
+  // Viracopos para Grande São Paulo},
+  {
+    from: 'guarulhos',
+    to: 'congonhas',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
   {
     from: 'viracopos',
     to: 'grandeSaoPaulo',
@@ -521,16 +533,18 @@ export const identifyRegionByCep = (cep: string): string | null => {
     return 'guarulhos';
   }
   
-  // Aeroporto de Congonhas (origem)
-  if (cepNumber >= 4626000 && cepNumber <= 4627999) {
-    console.log(`✅ CEP ${cep} identificado como Congonhas`);
-    return 'congonhas';
-  }
+
   
   // Zona Oeste de São Paulo (Perdizes, Pinheiros, Morumbi, Butantã, Lapa)
   if (cepNumber >= 5000000 && cepNumber <= 5999999) {
     console.log(`✅ CEP ${cep} identificado como Zona Oeste SP`);
     return 'zonaOesteSP';
+  }
+  
+  // Aeroporto de Congonhas (verificar antes da Zona Sul)
+  if (cepNumber >= 4626000 && cepNumber <= 4627999) {
+    console.log(`✅ CEP ${cep} identificado como Congonhas`);
+    return 'congonhas';
   }
   
   // Zona Sul de São Paulo (Interlagos, Santo Amaro, Capela, Socorro, Grajaú, Parelheiros)
