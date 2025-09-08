@@ -3,6 +3,7 @@ import { isGoogleMapsConfigured } from '@/config/maps';
 import { findFixedPrice, isDailyRequest, DAILY_RATES, identifyLocation, KNOWN_LOCATIONS } from '@/data/fixedPricing';
 import { findPriceByCep, identifyRegionByCep, normalizeCep } from '@/data/cepPricing';
 import { isValidViracoposRoute, getViracoposPriceByVehicleType } from './cepValidation';
+import { saoPauloAddresses } from '@/data/saoPauloAddresses';
 
 // Cache global para coordenadas de endereços selecionados via autocomplete
 const selectedAddressCoordinatesCache = new Map<string, { lat: number; lng: number }>();
@@ -427,15 +428,12 @@ export const calculateTripPrice = async (
       };
     }
     
-    // Verificar se os endereços contêm CEPs e tentar usar sistema de precificação por CEP
-    const originCepMatch = origin.match(/\d{5}-?\d{3}/);
-    const destinationCepMatch = destination.match(/\d{5}-?\d{3}/);
+    // Verificar se os endereços contêm CEPs (com fallback nos dados locais) e tentar usar sistema de precificação por CEP
+    const originCep = extractCepWithFallback(origin);
+    const destinationCep = extractCepWithFallback(destination);
     
-    if (originCepMatch && destinationCepMatch) {
-      const originCep = originCepMatch[0];
-      const destinationCep = destinationCepMatch[0];
-      
-      console.log(`🏷️ CEPs detectados: ${originCep} → ${destinationCep}`);
+    if (originCep && destinationCep) {
+       console.log(`🏷️ CEPs detectados (com fallback): ${originCep} → ${destinationCep}`);
       
       const cepPrice = findPriceByCep(originCep, destinationCep, fixedPriceVehicleType);
       
@@ -644,9 +642,51 @@ export const calculateTripPrice = async (
 };
 
 // Função utilitária para extrair CEP de um endereço
+// Função para buscar CEP nos dados locais como fallback
+export const findCepInLocalData = (addressText: string): string | null => {
+  const normalizedQuery = addressText.toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+    .trim();
+
+  // Buscar nos dados locais
+  const foundAddress = saoPauloAddresses.find(addr => {
+    const addressMatch = addr.main_text.toLowerCase().includes(normalizedQuery) ||
+                        addr.secondary_text.toLowerCase().includes(normalizedQuery) ||
+                        addr.keywords.some(keyword => normalizedQuery.includes(keyword.toLowerCase()));
+    return addressMatch;
+  });
+
+  if (foundAddress) {
+    // Extrair CEP do full_address
+    const cepMatch = foundAddress.full_address.match(/\d{5}-?\d{3}/);
+    return cepMatch ? cepMatch[0] : null;
+  }
+
+  return null;
+};
+
 export const extractCepFromAddress = (address: string): string | null => {
   const cepMatch = address.match(/\d{5}-?\d{3}/);
   return cepMatch ? cepMatch[0] : null;
+};
+
+// Função melhorada para extrair CEP com fallback nos dados locais
+export const extractCepWithFallback = (address: string): string | null => {
+  // Primeiro, tentar extrair CEP diretamente do endereço
+  const directCep = extractCepFromAddress(address);
+  if (directCep) {
+    return directCep;
+  }
+
+  // Se não encontrou CEP, buscar nos dados locais
+  const localCep = findCepInLocalData(address);
+  if (localCep) {
+    console.log(`🔄 CEP encontrado nos dados locais: ${localCep} para "${address}"`);
+    return localCep;
+  }
+
+  return null;
 };
 
 // Função para verificar se um endereço contém CEP
@@ -660,8 +700,8 @@ export const calculatePriceWithCepSystem = async (
   destination: string,
   vehicleType: 'economico' | 'executivo' | 'luxo' | 'suv' | 'minivanBlindada' | 'van15Lugares' = 'executivo'
 ): Promise<{ price: number; usedCepSystem: boolean } | null> => {
-  const originCep = extractCepFromAddress(origin);
-  const destinationCep = extractCepFromAddress(destination);
+  const originCep = extractCepWithFallback(origin);
+  const destinationCep = extractCepWithFallback(destination);
   
   if (!originCep || !destinationCep) {
     return null;

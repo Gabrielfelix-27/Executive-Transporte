@@ -62,11 +62,26 @@ export const CEP_REGIONS: { [key: string]: CepRegion } = {
   guarulhos: {
     name: 'Guarulhos/GRU (Aeroporto)',
     cep: '07190-100',
-    cepRange: { start: '07190-000', end: '07200-999' }
+    cepRange: { start: '07000-000', end: '07999-999' }
+  },
+  guarulhosRegiao: {
+    name: 'Guarulhos (Região)',
+    cep: '07000-001',
+    cepRange: { start: '07000-001', end: '07399-999' }
   },
   viracopos: {
     name: 'Viracopos/Campinas (Aeroporto)',
     cep: '13052-900'
+  },
+  saoPauloCapital: {
+    name: 'São Paulo Capital',
+    cep: '01000-000',
+    cepRange: { start: '01000-000', end: '05999-999' }
+  },
+  saoPauloCapitalContinuacao: {
+    name: 'São Paulo Capital (Continuação)',
+    cep: '08000-000',
+    cepRange: { start: '08000-000', end: '08499-999' }
   },
   zonaOesteSP: {
     name: 'Zona Oeste de São Paulo',
@@ -102,6 +117,21 @@ export const CEP_REGIONS: { [key: string]: CepRegion } = {
     name: 'Mauá',
     cep: '09300-000',
     cepRange: { start: '09300-000', end: '09399-999' }
+  },
+  ribeiraPires: {
+    name: 'Ribeirão Pires',
+    cep: '09400-000',
+    cepRange: { start: '09400-000', end: '09449-999' }
+  },
+  rioGrandeSerra: {
+    name: 'Rio Grande da Serra',
+    cep: '09450-000',
+    cepRange: { start: '09450-000', end: '09499-999' }
+  },
+  saoCaetano: {
+    name: 'São Caetano do Sul',
+    cep: '09500-000',
+    cepRange: { start: '09500-000', end: '09599-999' }
   },
   grandeSaoPaulo: {
     name: 'Grande São Paulo',
@@ -270,6 +300,90 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
       van15Lugares: 790.00
     }
   },
+  {
+    from: 'congonhas',
+    to: 'ribeiraPires',
+    prices: {
+      executivoSedan: 240.00,
+      executivoComum: 330.00,
+      executivoPremiumBlindado: 650.00,
+      minivanComum: 650.00,
+      minivanBlindada: 1150.00,
+      van15Lugares: 790.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: 'rioGrandeSerra',
+    prices: {
+      executivoSedan: 240.00,
+      executivoComum: 330.00,
+      executivoPremiumBlindado: 650.00,
+      minivanComum: 650.00,
+      minivanBlindada: 1150.00,
+      van15Lugares: 790.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: 'saoCaetano',
+    prices: {
+      executivoSedan: 240.00,
+      executivoComum: 330.00,
+      executivoPremiumBlindado: 650.00,
+      minivanComum: 650.00,
+      minivanBlindada: 1150.00,
+      van15Lugares: 790.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: 'saoPauloCapital',
+    prices: {
+      executivoSedan: 240.00,
+      executivoComum: 330.00,
+      executivoPremiumBlindado: 650.00,
+      minivanComum: 650.00,
+      minivanBlindada: 1150.00,
+      van15Lugares: 790.00
+    }
+  },
+  {
+      from: 'congonhas',
+      to: 'saoPauloCapitalContinuacao',
+      prices: {
+        executivoSedan: 240.00,
+        executivoComum: 330.00,
+        executivoPremiumBlindado: 650.00,
+        minivanComum: 650.00,
+        minivanBlindada: 1150.00,
+        van15Lugares: 790.00
+      }
+    },
+    {
+      from: 'guarulhos',
+      to: 'saoPauloCapital',
+      prices: {
+        executivoSedan: 310.00,
+        executivoComum: 380.00,
+        executivoPremiumBlindado: 850.00,
+        minivanComum: 720.00,
+        minivanBlindada: 1350.00,
+        van15Lugares: 990.00
+      }
+    },
+    {
+      from: 'guarulhos',
+      to: 'saoPauloCapitalContinuacao',
+      prices: {
+        executivoSedan: 310.00,
+        executivoComum: 380.00,
+        executivoPremiumBlindado: 850.00,
+        minivanComum: 720.00,
+        minivanBlindada: 1350.00,
+        van15Lugares: 990.00
+      }
+    },
   // Guarulhos para regiões de São Paulo
   {
     from: 'guarulhos',
@@ -428,6 +542,42 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
       van15Lugares: 990.00
     }
   },
+  {
+    from: 'guarulhos',
+    to: 'ribeiraPires',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: 'rioGrandeSerra',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: 'saoCaetano',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
   // Viracopos para Grande São Paulo},
   {
     from: 'guarulhos',
@@ -503,6 +653,296 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
       minivanComum: 1290.00,
       minivanBlindada: 2100.00,
       van15Lugares: 1590.00
+    }
+  },
+
+  // Rotas reversas para Guarulhos Região
+  {
+    from: 'saoPauloCapital',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'saoPauloCapitalContinuacao',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'diadema',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'saoBernardo',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'santoAndre',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'maua',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'ribeiraPires',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'rioGrandeSerra',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'saoCaetano',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'saoPauloCapital',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'santoAndre',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'maua',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'ribeirãoPires',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'rioGrandeDaSerra',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'saoCaetanoDoSul',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'saoBernardoDoCampo',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'diadema',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'viracopos',
+    to: 'saoPauloCapital',
+    prices: {
+      executivoSedan: 690.00,
+      executivoComum: 890.00,
+      executivoPremiumBlindado: 1450.00,
+      minivanComum: 1100.00,
+      minivanBlindada: 1800.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'viracopos',
+    to: 'guarulhosRegiao',
+    prices: {
+      executivoSedan: 690.00,
+      executivoComum: 890.00,
+      executivoPremiumBlindado: 1450.00,
+      minivanComum: 1100.00,
+      minivanBlindada: 1800.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: 'alphaville',
+    prices: {
+      executivoSedan: 390.00,
+      executivoComum: 490.00,
+      executivoPremiumBlindado: 990.00,
+      minivanComum: 790.00,
+      minivanBlindada: 1450.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: 'alphaville',
+    prices: {
+      executivoSedan: 440.00,
+      executivoComum: 540.00,
+      executivoPremiumBlindado: 1450.00,
+      minivanComum: 890.00,
+      minivanBlindada: 1600.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: 'portoSantos',
+    prices: {
+      executivoSedan: 690.00,
+      executivoComum: 890.00,
+      executivoPremiumBlindado: 1450.00,
+      minivanComum: 1090.00,
+      minivanBlindada: 2100.00,
+      van15Lugares: 1290.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: 'portoSantos',
+    prices: {
+      executivoSedan: 690.00,
+      executivoComum: 890.00,
+      executivoPremiumBlindado: 1450.00,
+      minivanComum: 1290.00,
+      minivanBlindada: 2100.00,
+      van15Lugares: 1290.00
     }
   }
 ];

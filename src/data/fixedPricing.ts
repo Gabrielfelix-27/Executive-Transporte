@@ -34,7 +34,14 @@ export const KNOWN_LOCATIONS: { [key: string]: LocationInfo } = {
     name: 'Aeroporto de Guarulhos',
     address: 'Rod. Hélio Smidt, s/n - Cumbica, Guarulhos - SP, 07190-100',
     coordinates: { lat: -23.4356, lng: -46.4731 },
-    keywords: ['guarulhos', 'gru', 'aeroporto guarulhos', 'helio smidt', 'cumbica']
+    keywords: ['gru', 'aeroporto guarulhos', 'helio smidt', 'cumbica', 'aeroporto de guarulhos']
+  },
+  guarulhosRegiao: {
+    name: 'Guarulhos (Região)',
+    address: 'Guarulhos - SP',
+    coordinates: { lat: -23.4356, lng: -46.4731 },
+    cepRanges: ['07000-001 a 07399-999'],
+    keywords: ['guarulhos', 'guarulhos região', 'guarulhos cidade', 'centro guarulhos', 'guarulhos sp']
   },
   viracopos: {
     name: 'Aeroporto de Viracopos',
@@ -135,12 +142,57 @@ export const KNOWN_LOCATIONS: { [key: string]: LocationInfo } = {
   },
 
   // Grande São Paulo - Região específica para regras de Viracopos
+  // Zona Oeste de São Paulo
+  zonaOeste: {
+    name: 'Zona Oeste de São Paulo',
+    address: 'Zona Oeste - São Paulo - SP',
+    coordinates: { lat: -23.5281, lng: -46.7281 },
+    cepRanges: ['05000-000 a 05999-999'],
+    keywords: ['zona oeste', 'perdizes', 'pompeia', 'barra funda', 'agua branca', 'vila leopoldina', 'jaguare', 'rio pequeno', 'raposo tavares', 'butanta', 'morumbi', 'vila sonia', 'jardim paulista oeste']
+  },
+
+  // Zona Sul de São Paulo
+  zonaSul: {
+    name: 'Zona Sul de São Paulo',
+    address: 'Zona Sul - São Paulo - SP',
+    coordinates: { lat: -23.6267, lng: -46.6554 },
+    cepRanges: ['04000-000 a 04999-999'],
+    keywords: ['zona sul', 'vila mariana', 'saude', 'cursino', 'ipiranga', 'sacoma', 'jabaquara', 'cidade ademar', 'pedreira', 'cidade dutra', 'socorro', 'cidade tiradentes', 'grajaú', 'parelheiros']
+  },
+
+  // Zona Leste de São Paulo
+  zonaLeste: {
+    name: 'Zona Leste de São Paulo',
+    address: 'Zona Leste - São Paulo - SP',
+    coordinates: { lat: -23.5505, lng: -46.4741 },
+    cepRanges: ['03000-000 a 03999-999'],
+    keywords: ['zona leste', 'mooca', 'tatuape', 'penha', 'vila formosa', 'vila matilde', 'vila prudente', 'sapopemba', 'vila carrão', 'aricanduva', 'cidade tiradentes', 'itaquera', 'guaianases', 'lajeado', 'itaim paulista']
+  },
+
+  // São Paulo Capital
+  saoPauloCapital: {
+    name: 'São Paulo Capital',
+    address: 'São Paulo - SP',
+    coordinates: { lat: -23.5505, lng: -46.6333 },
+    cepRanges: ['01000-000 a 05999-999', '08000-000 a 08499-999'],
+    keywords: ['são paulo', 'sao paulo', 'capital', 'centro', 'centro histórico', 'república', 'sé', 'liberdade', 'bela vista', 'consolação', 'higienópolis', 'santa cecília', 'campos elíseos', 'bom retiro', 'luz', 'brás', 'pari', 'canindé', 'vila guilherme', 'santana', 'tucuruvi', 'jaçanã', 'tremembé', 'mandaqui', 'casa verde', 'limão', 'cachoeirinha', 'brasilândia', 'freguesia do ó', 'pirituba', 'jaraguá', 'perus', 'anhanguera']
+  },
+
+  // ABC Paulista
+  abcPaulista: {
+    name: 'ABC Paulista',
+    address: 'Região do ABC - SP',
+    coordinates: { lat: -23.6629, lng: -46.5331 },
+    cepRanges: ['09000-000 a 09999-999'],
+    keywords: ['abc paulista', 'santo andre', 'santo andré', 'são bernardo', 'sao bernardo', 'diadema', 'maua', 'mauá', 'ribeirão pires', 'ribeirao pires', 'rio grande da serra', 'são caetano', 'sao caetano', 'são caetano do sul', 'sao caetano do sul']
+  },
+
   grandeSaoPaulo: {
     name: 'Grande São Paulo',
     address: 'Região Metropolitana de São Paulo - SP',
     coordinates: { lat: -23.5505, lng: -46.6333 },
     cepRanges: ['06000-000 a 09999-999'],
-    keywords: ['grande são paulo', 'região metropolitana', 'são paulo', 'sp']
+    keywords: ['grande são paulo', 'região metropolitana']
   }
 };
 
@@ -165,10 +217,10 @@ export const FIXED_ROUTES: FixedRoute[] = [
     prices: {
       executivoSedan: 390.00,
       executivoComum: 490.00,
-      executivoPremiumBlindado: 890.00,
+      executivoPremiumBlindado: 990.00,
       minivanComum: 790.00,
       minivanBlindada: 1450.00,
-      van15Lugares: 990.00  // Adicionado para consistência
+      van15Lugares: 990.00
     }
   },
   {
@@ -180,7 +232,81 @@ export const FIXED_ROUTES: FixedRoute[] = [
       executivoPremiumBlindado: 1450.00,
       minivanComum: 1090.00,
       minivanBlindada: 2100.00,
-      van15Lugares: 1290.00  // Adicionado para consistência
+      van15Lugares: 1290.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: ['abcPaulista'],
+    prices: {
+      executivoSedan: 240.00,
+      executivoComum: 330.00,
+      executivoPremiumBlindado: 650.00,
+      minivanComum: 650.00,
+      minivanBlindada: 1150.00,
+      van15Lugares: 790.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: ['saoPauloCapital'],
+    prices: {
+      executivoSedan: 240.00,
+      executivoComum: 330.00,
+      executivoPremiumBlindado: 650.00,
+      minivanComum: 650.00,
+      minivanBlindada: 1150.00,
+      van15Lugares: 790.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: ['saoPauloCapital'],
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+
+  // Rotas reversas - De Congonhas para Guarulhos
+  {
+    from: 'congonhas',
+    to: ['guarulhosRegiao'],
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'saoPauloCapital',
+    to: ['guarulhosRegiao'],
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'abcPaulista',
+    to: ['guarulhosRegiao'],
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
     }
   },
 
@@ -199,14 +325,62 @@ export const FIXED_ROUTES: FixedRoute[] = [
   },
   {
     from: 'guarulhos',
+    to: ['zonaOeste'],
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: ['zonaSul'],
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: ['zonaLeste'],
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: ['abcPaulista'],
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhos',
     to: ['alphaville'],
     prices: {
       executivoSedan: 440.00,
       executivoComum: 540.00,
-      executivoPremiumBlindado: 990.00,
+      executivoPremiumBlindado: 1450.00,
       minivanComum: 890.00,
       minivanBlindada: 1600.00,
-      van15Lugares: 1190.00  // Adicionado para consistência
+      van15Lugares: 990.00
     }
   },
   {
@@ -218,21 +392,21 @@ export const FIXED_ROUTES: FixedRoute[] = [
       executivoPremiumBlindado: 1450.00,
       minivanComum: 1290.00,
       minivanBlindada: 2100.00,
-      van15Lugares: 1590.00  // Adicionado para consistência
+      van15Lugares: 1290.00
     }
   },
 
   // Rotas do Aeroporto de Viracopos
   {
     from: 'viracopos',
-    to: ['paulista', 'itaim', 'vilaOlimpia', 'pinheiros', 'lapa', 'butanta', 'alphaville', 'portoSantos'],
+    to: ['paulista', 'itaim', 'vilaOlimpia', 'pinheiros', 'lapa', 'butanta'],
     prices: {
       executivoSedan: 690.00,
       executivoComum: 890.00,
       executivoPremiumBlindado: 1450.00,
       minivanComum: 1100.00,
       minivanBlindada: 1800.00,
-      van15Lugares: 1390.00  // Adicionado para consistência
+      van15Lugares: 990.00
     }
   },
 
@@ -241,12 +415,89 @@ export const FIXED_ROUTES: FixedRoute[] = [
     from: 'viracopos',
     to: ['grandeSaoPaulo'],
     prices: {
-      executivoSedan: 1450.00,        // Executivo Premium Blindado
-      executivoComum: 890.00,          // Executivo Comum
-      executivoPremiumBlindado: 1450.00, // Executivo Premium Blindado
-      minivanComum: 1100.00,           // MiniVan Comum
-      minivanBlindada: 1800.00,        // MiniVan Blindada
-      van15Lugares: 1390.00
+      executivoSedan: 690.00,
+      executivoComum: 890.00,
+      executivoPremiumBlindado: 1450.00,
+      minivanComum: 1100.00,
+      minivanBlindada: 1800.00,
+      van15Lugares: 990.00
+    }
+  },
+
+  // Rotas reversas para Guarulhos Região
+  {
+    from: 'saoPauloCapital',
+    to: ['guarulhosRegiao'],
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'abcPaulista',
+    to: ['guarulhosRegiao'],
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+
+  // Rotas de Guarulhos (Aeroporto) para regiões específicas de São Paulo
+  {
+    from: 'guarulhos',
+    to: ['moema', 'vilaMariana', 'brooklin', 'jardins', 'itaim', 'vilaOlimpia', 'pinheiros', 'butanta', 'lapa'],
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  // Rotas de Guarulhos (Região) para regiões específicas de São Paulo
+  {
+    from: 'guarulhosRegiao',
+    to: ['moema', 'vilaMariana', 'brooklin', 'jardins', 'itaim', 'vilaOlimpia', 'pinheiros', 'butanta', 'lapa'],
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: ['zonaOeste', 'zonaSul'],
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
+    }
+  },
+  {
+    from: 'guarulhosRegiao',
+    to: ['zonaOeste', 'zonaSul', 'zonaLeste', 'saoPauloCapital', 'abcPaulista'],
+    prices: {
+      executivoSedan: 310.00,
+      executivoComum: 380.00,
+      executivoPremiumBlindado: 850.00,
+      minivanComum: 720.00,
+      minivanBlindada: 1350.00,
+      van15Lugares: 990.00
     }
   }
 ];

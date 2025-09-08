@@ -4,6 +4,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { isGoogleMapsConfigured, GOOGLE_MAPS_API_KEY } from '@/config/maps';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { saoPauloAddresses } from '@/data/saoPauloAddresses';
 
 interface GoogleMapsPlacePickerProps {
   id: string;
@@ -180,6 +181,30 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
     return null;
   };
 
+  // Função para buscar CEP nos dados locais
+  const findCepInLocalData = (addressText: string): string | null => {
+    const normalizedQuery = addressText.toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+      .trim();
+
+    // Buscar nos dados locais
+    const foundAddress = saoPauloAddresses.find(addr => {
+      const addressMatch = addr.main_text.toLowerCase().includes(normalizedQuery) ||
+                          addr.secondary_text.toLowerCase().includes(normalizedQuery) ||
+                          addr.keywords.some(keyword => normalizedQuery.includes(keyword.toLowerCase()));
+      return addressMatch;
+    });
+
+    if (foundAddress) {
+      // Extrair CEP do full_address
+      const cepMatch = foundAddress.full_address.match(/\d{5}-?\d{3}/);
+      return cepMatch ? cepMatch[0] : null;
+    }
+
+    return null;
+  };
+
   // Função para formatar endereço com CEP sempre visível
   const formatAddressWithCep = (place: any): string => {
     let baseAddress = place.formatted_address || place.name || '';
@@ -190,13 +215,21 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
       return baseAddress; // Já tem CEP, retornar como está
     }
     
-    // Tentar extrair CEP dos componentes
+    // Tentar extrair CEP dos componentes do Google Maps
     const cep = extractCepFromAddressComponents(place.address_components);
     if (cep) {
       // Adicionar CEP ao final do endereço se não estiver presente
       return `${baseAddress}, ${cep}`;
     }
     
+    // FALLBACK: Buscar CEP nos dados locais se Google Maps não retornou
+    const localCep = findCepInLocalData(baseAddress);
+    if (localCep) {
+      console.log(`🔄 ${id} - CEP encontrado nos dados locais: ${localCep} para "${baseAddress}"`);
+      return `${baseAddress}, ${localCep}`;
+    }
+    
+    console.warn(`⚠️ ${id} - Nenhum CEP encontrado para "${baseAddress}"`);
     return baseAddress;
   };
 
