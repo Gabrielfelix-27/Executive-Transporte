@@ -346,7 +346,8 @@ export default function VehicleSelection() {
                         category.image.includes('EXECUTIVO COMUM') ? 'object-center' : ''
                       }`}
                       style={{
-                        objectPosition: category.image.includes('EXECUTIVO COMUM') ? 'center 70%' : 'center'
+                        objectPosition: category.image.includes('EXECUTIVO COMUM') ? 'center 70%' : 
+                                      category.image.includes('Executivo Sedan') ? 'center 65%' : 'center'
                       }}
                     />
                   </div>
@@ -413,7 +414,8 @@ export default function VehicleSelection() {
                             category.image.includes('EXECUTIVO COMUM') ? 'object-center' : ''
                           }`}
                           style={{
-                            objectPosition: category.image.includes('EXECUTIVO COMUM') ? 'center 30%' : 'center'
+                            objectPosition: category.image.includes('EXECUTIVO COMUM') ? 'center 30%' : 
+                                          category.image.includes('Executivo Sedan') ? 'center 20%' : 'center'
                           }}
                         />
                       </div>
