@@ -666,10 +666,12 @@ Reserva feita através do site Executive Premium`;
         <div className="max-w-2xl mx-auto px-6 py-8 pt-8">
           <Card>
             <CardContent className="p-8 text-center">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                </svg>
+              <div className="w-20 h-20 bg-black rounded-full flex items-center justify-center mx-auto mb-6">
+                <img 
+                  src="/Logos/Logo solo.webp" 
+                  alt="Executive Transporte Premium" 
+                  className="w-12 h-12 object-contain filter brightness-0 invert"
+                />
               </div>
               
               <h1 className="text-3xl font-bold text-gray-900 mb-4">

@@ -158,7 +158,7 @@ const translations = {
     'vehicle.passengers': 'passageiros',
     'vehicle.mediumBags': 'bagagens médias',
     'vehicle.largeBags': 'bagagens grandes',
-    'vehicle.totalPrice': 'O preço total inclui impostos, pedágios e outras taxas.',
+    'vehicle.totalPrice': 'Preço Total',
     'vehicle.benefitsTitle': 'Benefícios inclusos:',
     'vehicle.benefit1': 'Wi-Fi gratuito',
     'vehicle.benefit2': 'Motorista profissional',
@@ -168,6 +168,9 @@ const translations = {
     'vehicle.observationsText': 'As capacidades de hóspedes/bagagem devem ser respeitadas por motivos de segurança. Se não tiver certeza, selecione uma classe maior, pois os motoristas podem recusar o serviço quando excedido.',
     'vehicle.terms': 'Ver termos e condições',
     'vehicle.continue': 'CONTINUAR',
+    'vehicle.driverType': 'Tipo de motorista',
+    'vehicle.monolingual': 'Monolíngue',
+    'vehicle.bilingual': 'Bilíngue',
     
     // Breadcrumb navigation
     'nav.serviceClass': 'Classe de serviço',
@@ -431,7 +434,7 @@ const translations = {
     'vehicle.passengers': 'passengers',
     'vehicle.mediumBags': 'medium bags',
     'vehicle.largeBags': 'large bags',
-    'vehicle.totalPrice': 'Total price includes taxes, tolls and other fees.',
+    'vehicle.totalPrice': 'Total Price',
     'vehicle.benefitsTitle': 'Included benefits:',
     'vehicle.benefit1': 'Free Wi-Fi',
     'vehicle.benefit2': 'Professional driver',
@@ -441,6 +444,9 @@ const translations = {
     'vehicle.observationsText': 'Guest/baggage capacities must be respected for safety reasons. If unsure, select a larger class as drivers may refuse service when exceeded.',
     'vehicle.terms': 'View terms and conditions',
     'vehicle.continue': 'CONTINUE',
+    'vehicle.driverType': 'Driver type',
+    'vehicle.monolingual': 'Monolingual',
+    'vehicle.bilingual': 'Bilingual',
     
     // Breadcrumb navigation
     'nav.serviceClass': 'Service Class',
@@ -704,7 +710,7 @@ const translations = {
     'vehicle.passengers': 'pasajeros',
     'vehicle.mediumBags': 'equipajes medianos',
     'vehicle.largeBags': 'equipajes grandes',
-    'vehicle.totalPrice': 'El precio total incluye impuestos, peajes y otras tasas.',
+    'vehicle.totalPrice': 'Precio Total',
     'vehicle.benefitsTitle': 'Beneficios incluidos:',
     'vehicle.benefit1': 'Wi-Fi gratuito',
     'vehicle.benefit2': 'Conductor profesional',
@@ -714,6 +720,9 @@ const translations = {
     'vehicle.observationsText': 'Las capacidades de huéspedes/equipaje deben respetarse por razones de seguridad. Si no está seguro, seleccione una clase mayor, ya que los conductores pueden rechazar el servicio cuando se exceda.',
     'vehicle.terms': 'Ver términos y condiciones',
     'vehicle.continue': 'CONTINUAR',
+    'vehicle.driverType': 'Tipo de conductor',
+    'vehicle.monolingual': 'Monolingüe',
+    'vehicle.bilingual': 'Bilingüe',
     
     // Navigation
     'nav.serviceClass': 'Clase de servicio',

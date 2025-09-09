@@ -46,6 +46,7 @@ export default function VehicleSelection() {
   const { formatPrice } = useCurrency();
   const [selectedCategory, setSelectedCategory] = useState<VehicleCategory | null>(null);
   const [categories, setCategories] = useState<VehicleCategory[]>([]);
+  const [driverTypes, setDriverTypes] = useState<{[key: string]: 'monolingual' | 'bilingual'}>({});
 
   // Recuperar dados da cotação do estado da navegação
   const quoteData: QuoteData = location.state || {
@@ -213,13 +214,19 @@ export default function VehicleSelection() {
       return;
     }
 
+    const selectedDriverType = driverTypes[selectedCategory.id] || 'monolingual';
+
     // Rolar para o topo da página antes de navegar
     window.scrollTo(0, 0);
 
     navigate('/passenger-data', {
       state: {
         quoteData,
-        selectedVehicle: selectedCategory
+        selectedVehicle: {
+          ...selectedCategory,
+          price: selectedDriverType === 'bilingual' ? selectedCategory.price * 1.3 : selectedCategory.price
+        },
+        selectedDriverType
       }
     });
   };
@@ -381,12 +388,49 @@ export default function VehicleSelection() {
                   {/* Price */}
                   <div className="text-center">
                     <div className="text-2xl font-bold text-gray-900 mb-2">
-                      {formatPrice(category.price)}
+                      {formatPrice((driverTypes[category.id] === 'bilingual') ? category.price * 1.3 : category.price)}
                     </div>
                     <div className="text-xs text-gray-500 mb-3">
                       {t('vehicle.totalPrice')}
                     </div>
                   </div>
+
+                  {/* Driver Type Selection - Only show when card is selected */}
+                      {selectedCategory?.id === category.id && (
+                        <div className="space-y-2">
+                          <div className="text-xs text-gray-600 text-center mb-2">
+                            {t('vehicle.driverType')}
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDriverTypes(prev => ({ ...prev, [category.id]: 'monolingual' }));
+                              }}
+                              className={`flex-1 py-2 px-3 text-xs font-medium rounded transition-colors ${
+                                (driverTypes[category.id] || 'monolingual') === 'monolingual'
+                                  ? 'bg-black text-white'
+                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              }`}
+                            >
+                              {t('vehicle.monolingual')}
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDriverTypes(prev => ({ ...prev, [category.id]: 'bilingual' }));
+                              }}
+                              className={`flex-1 py-2 px-3 text-xs font-medium rounded transition-colors ${
+                                driverTypes[category.id] === 'bilingual'
+                                  ? 'bg-black text-white'
+                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              }`}
+                            >
+                              {t('vehicle.bilingual')}
+                            </button>
+                          </div>
+                        </div>
+                      )}
                 </CardContent>
               </Card>
             ))}
@@ -449,12 +493,49 @@ export default function VehicleSelection() {
                       {/* Price */}
                       <div className="text-center">
                         <div className="text-2xl font-bold text-gray-900 mb-2">
-                          {formatPrice(category.price)}
+                          {formatPrice((driverTypes[category.id] === 'bilingual') ? category.price * 1.3 : category.price)}
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-500 mb-3">
                           {t('vehicle.totalPrice')}
                         </div>
                       </div>
+
+                      {/* Driver Type Selection - Only show when card is selected */}
+                      {selectedCategory?.id === category.id && (
+                        <div className="space-y-2">
+                          <div className="text-xs text-gray-600 text-center mb-2">
+                            {t('vehicle.driverType')}
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDriverTypes(prev => ({ ...prev, [category.id]: 'monolingual' }));
+                              }}
+                              className={`flex-1 py-2 px-3 text-xs font-medium rounded transition-colors ${
+                                (driverTypes[category.id] || 'monolingual') === 'monolingual'
+                                  ? 'bg-black text-white'
+                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              }`}
+                            >
+                              {t('vehicle.monolingual')}
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDriverTypes(prev => ({ ...prev, [category.id]: 'bilingual' }));
+                              }}
+                              className={`flex-1 py-2 px-3 text-xs font-medium rounded transition-colors ${
+                                driverTypes[category.id] === 'bilingual'
+                                  ? 'bg-black text-white'
+                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              }`}
+                            >
+                              {t('vehicle.bilingual')}
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}

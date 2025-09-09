@@ -603,7 +603,7 @@ export const calculateTripPrice = async (
     
     // Taxa para viagens longas (>25km)
     if (distance > 25) {
-      finalPrice *= 1.2;
+      finalPrice *= 1.3;
     }
     
     // Preço mínimo
