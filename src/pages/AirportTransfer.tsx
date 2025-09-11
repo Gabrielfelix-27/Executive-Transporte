@@ -50,17 +50,7 @@ const AirportTransfer = () => {
           
           {/* Main Section */}
           <div className="mb-16">
-            <div className="mb-8">
-              <img 
-                src="/Fotos Site/IMG_4773.webp" 
-                alt="Transfer Aeroporto" 
-                className="w-full rounded-lg shadow-lg"
-                loading="lazy"
-                decoding="async"
-                width="600"
-                height="400"
-              />
-            </div>
+
             <h2 className="text-3xl font-bold text-gray-900 mb-8 font-redhat tracking-wide">
               TRANSFER DE LUXO PARA AEROPORTOS EM SÃO PAULO
             </h2>

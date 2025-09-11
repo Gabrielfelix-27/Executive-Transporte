@@ -50,18 +50,7 @@ const PointToPoint = () => {
           
           {/* Main Section */}
           <div className="mb-16">
-            {/* Image above title */}
-            <div className="mb-8">
-              <img 
-                src="/Fotos Site/IMG_4522.webp" 
-                alt="Point to Point" 
-                className="w-full rounded-lg shadow-lg"
-                loading="lazy"
-                decoding="async"
-                width="600"
-                height="400"
-              />
-            </div>
+
             
             <h2 className="text-3xl font-bold text-gray-900 mb-8">
               SERVIÇO EXECUTIVO NA CIDADE
@@ -112,7 +101,7 @@ const PointToPoint = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <img 
-              src="/Fotos Site/IMG_3233.webp" 
+              src="/Fotos Site/IMG_2790.webp" 
               alt="Experiências Premium" 
               className="w-full rounded-lg shadow-lg"
               loading="lazy"
