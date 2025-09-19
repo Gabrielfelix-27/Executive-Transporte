@@ -72,8 +72,13 @@ export interface PaymentStatusResponse {
   raw?: string;
 }
 
-// URLs da API - usando proxy local para evitar CORS
-const INFINITEPAY_API_BASE = '/api/infinitepay';
+// URLs da API - detecção automática de ambiente
+const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+
+const INFINITEPAY_API_BASE = isProduction 
+  ? 'https://admin.executivepremium.com.br/infinitepay'
+  : '/api/infinitepay';
+
 const CREATE_PAYMENT_URL = `${INFINITEPAY_API_BASE}/api.php`;
 const CHECK_PAYMENT_URL = `${INFINITEPAY_API_BASE}/api_check.php`;
 
@@ -129,8 +134,14 @@ export const createPaymentLink = async (paymentData: PaymentRequest): Promise<Pa
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...(isProduction && {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type'
+        })
       },
       body: JSON.stringify(sanitizedPaymentData),
+      mode: isProduction ? 'cors' : 'same-origin'
     });
 
     if (!response.ok) {
@@ -191,8 +202,14 @@ export const checkPaymentStatus = async (orderNsu: string): Promise<PaymentStatu
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(isProduction && {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type'
+          })
         },
         body: JSON.stringify(statusRequest),
+        mode: isProduction ? 'cors' : 'same-origin'
       });
 
       // Se receber erro 502, tenta novamente após um delay
