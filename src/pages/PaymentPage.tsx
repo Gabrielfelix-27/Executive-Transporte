@@ -122,15 +122,31 @@ export default function PaymentPage() {
         
         toast.success('Link de pagamento criado com sucesso!');
         
-        // Abrir link de pagamento - estratégia diferente para mobile
+        // Abrir link de pagamento - sempre em nova aba/janela
         if (isMobile) {
-          // No mobile, redirecionar imediatamente na mesma aba
-          toast.info('Redirecionando para o pagamento...', { duration: 1000 });
+          // No mobile, forçar abertura em nova aba
+          const newWindow = window.open(response.url, '_blank', 'noopener,noreferrer');
           
-          // Redirecionar imediatamente
-          setTimeout(() => {
-            window.location.href = response.url;
-          }, 500);
+          // Verificar se conseguiu abrir
+          if (newWindow) {
+            toast.success('Redirecionando para o pagamento...');
+          } else {
+            // Se não conseguiu abrir nova aba, mostrar aviso
+            toast.error('Pop-ups bloqueados. Clique no link abaixo para pagar.');
+            // Criar um link clicável como fallback
+            const linkElement = document.createElement('a');
+            linkElement.href = response.url;
+            linkElement.target = '_blank';
+            linkElement.rel = 'noopener noreferrer';
+            linkElement.textContent = 'Clique aqui para pagar';
+            linkElement.style.cssText = 'color: blue; text-decoration: underline; font-weight: bold;';
+            
+            // Adicionar o link na tela
+            const statusDiv = document.querySelector('.payment-status-container');
+            if (statusDiv) {
+              statusDiv.appendChild(linkElement);
+            }
+          }
         } else {
           // No desktop, abrir em nova aba
           window.open(response.url, '_blank');
@@ -393,7 +409,7 @@ export default function PaymentPage() {
                   <button
                     onClick={handlePayment}
                     disabled={isProcessing}
-                    className="relative w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group"
+                    className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isProcessing ? (
                       <div className="flex items-center justify-center">
@@ -401,21 +417,9 @@ export default function PaymentPage() {
                         Processando...
                       </div>
                     ) : (
-                      <>
-                        {/* Logo pequeno que aparece no hover */}
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
-                          <img 
-                            src="/Logos/Logo solo.webp" 
-                            alt="Executive Logo" 
-                            className="w-8 h-8 animate-pulse"
-                          />
-                        </div>
-                        
-                        {/* Texto com animação */}
-                        <span className="relative z-20 group-hover:animate-pulse transition-all duration-300">
-                          Pagar {formatPrice(finalPaymentData.price)}
-                        </span>
-                      </>
+                      <span>
+                        Pagar {formatPrice(finalPaymentData.price)}
+                      </span>
                     )}
                   </button>
                 </div>
@@ -430,7 +434,7 @@ export default function PaymentPage() {
             )}
 
             {paymentStatus === 'pending' && (
-              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg payment-status-container">
                 <p className="text-blue-800">Aguardando confirmação do pagamento...</p>
               </div>
             )}
