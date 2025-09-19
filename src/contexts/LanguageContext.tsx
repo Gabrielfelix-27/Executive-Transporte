@@ -68,7 +68,7 @@ const translations = {
     'services.subtitle': 'CONHEÇA NOSSOS SERVIÇOS PREMIUM',
     'services.onDemand': 'SOB DEMANDA',
     'services.onDemandDesc': 'Serviço personalizado para suas necessidades específicas.',
-    'services.airportTransfer': 'TRANSFER PARA<br className="md:hidden" />AEROPORTO',
+    'services.airportTransfer': 'TRANSFER PARA AEROPORTO',
     'services.airportTransferDesc': 'Transporte confiável para aeroportos com conforto e pontualidade',
     'services.pointToPoint': 'PONTO A PONTO',
     'services.pointToPointDesc': 'Viagens diretas entre destinos com máximo conforto.',
