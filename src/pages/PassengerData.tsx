@@ -332,90 +332,22 @@ const PassengerData = () => {
       // Salvar PDF no estado para uso posterior
       setGeneratedPDF(doc);
       
-      // Converter PDF para base64
-      const pdfBase64 = doc.output('datauristring').split(',')[1];
+      console.log('📄 PDF gerado com sucesso para orçamento');
       
-      // Preparar dados para envio via Vercel API
-      const reservationData = {
-        passengerName: passengerInfo.passengerName,
-        phone: passengerInfo.phoneNumber,
-        email: passengerInfo.email,
-        reserveFor: passengerInfo.reserveFor === 'para-mim' ? 'Para mim' : 'Para outra pessoa',
-        date: formatDateDisplay(quoteData?.date || ""),
-        time: formatTimeDisplay(quoteData?.time || ""),
-        pickup: quoteData?.pickup,
-        destination: quoteData?.destination,
-        distance: `${location.state?.calculatedDistance ? Math.round(location.state.calculatedDistance) : 25} KM`,
-        vehicleCategory: selectedVehicle?.name,
-        vehicleType: selectedVehicle?.type,
-        price: formatPrice(selectedVehicle?.price || 0),
-        flightNumber: isAirportTransfer() ? passengerInfo.flightNumber : null,
-        plateName: passengerInfo.plateNameShow,
-        luggageCount: passengerInfo.luggageCount,
-        observations: passengerInfo.additionalInfo
-      };
-
-      console.log('📧 Iniciando envio de email...');
-      console.log('📋 Dados da reserva:', reservationData);
-
-      // Indicar que está enviando email
-      setEmailStatus('sending');
-      setEmailMessage('Enviando email para a equipe...');
-
-      // Enviar email automaticamente para a equipe via Vercel API
-      try {
-        const response = await fetch('/api/send-reservation-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            reservationData,
-            pdfData: pdfBase64
-          })
-        });
-
-        console.log('📧 Response status:', response.status);
-        console.log('📧 Response ok:', response.ok);
-
-        if (response.ok) {
-          const result = await response.json();
-          console.log('✅ Email enviado com sucesso!', result);
-          
-          // Feedback positivo para o usuário
-          setEmailStatus('success');
-          setEmailMessage('Email enviado com sucesso para a equipe Executive Premium!');
-        } else {
-          const errorText = await response.text();
-          console.error('❌ Erro na resposta do servidor:', response.status, errorText);
-          
-          // Feedback de aviso para o usuário
-          setEmailStatus('warning');
-          setEmailMessage('PDF gerado com sucesso. Houve um problema no envio automático do email, mas você pode continuar com o WhatsApp.');
-        }
-      } catch (emailError) {
-        console.error('❌ Erro na requisição de email:', emailError);
-        
-        // Verificar tipo de erro
-        if (emailError.name === 'TypeError' && emailError.message.includes('fetch')) {
-          setEmailStatus('error');
-          setEmailMessage('Erro de conexão. Verifique sua internet e tente novamente.');
-        } else {
-          setEmailStatus('warning');
-          setEmailMessage('PDF gerado com sucesso. Continue com o WhatsApp para finalizar a reserva.');
-        }
-      }
+      // Feedback positivo para o usuário
+      setEmailStatus('success');
+      setEmailMessage('Orçamento gerado com sucesso! Use o WhatsApp para enviar à equipe.');
       
       // Rolar para o topo da página antes de avançar
       window.scrollTo(0, 0);
       
-      // Avançar para tela de confirmação sempre (mesmo se o email falhar)
+      // Avançar para tela de confirmação
       setCurrentStep('confirmation');
       
     } catch (error) {
-      console.error('❌ Erro geral ao processar reserva:', error);
+      console.error('❌ Erro ao gerar PDF:', error);
       setEmailStatus('error');
-      setEmailMessage('Erro ao processar reserva. Tente novamente.');
+      setEmailMessage('Erro ao gerar orçamento. Tente novamente.');
     }
   };
 
