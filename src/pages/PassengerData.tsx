@@ -326,17 +326,7 @@ const PassengerData = () => {
 
   const handleSubmit = async () => {
     try {
-      // Gerar PDF
-      const doc = generatePDF();
-      
-      // Salvar PDF no estado para uso posterior
-      setGeneratedPDF(doc);
-      
-      console.log('📄 PDF gerado com sucesso para orçamento');
-      
-      // Feedback positivo para o usuário
-      setEmailStatus('success');
-      setEmailMessage('Orçamento gerado com sucesso! Use o WhatsApp para enviar à equipe.');
+      console.log('📋 Dados do passageiro preenchidos, avançando para confirmação');
       
       // Rolar para o topo da página antes de avançar
       window.scrollTo(0, 0);
@@ -345,9 +335,7 @@ const PassengerData = () => {
       setCurrentStep('confirmation');
       
     } catch (error) {
-      console.error('❌ Erro ao gerar PDF:', error);
-      setEmailStatus('error');
-      setEmailMessage('Erro ao gerar orçamento. Tente novamente.');
+      console.error('❌ Erro ao processar dados:', error);
     }
   };
 
@@ -497,142 +485,25 @@ Reserva feita através do site Executive Premium`;
         <div className="max-w-2xl mx-auto px-6 py-8 pt-8">
           <Card>
             <CardContent className="p-8 text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </div>
               
               <h1 className="text-2xl font-bold text-gray-900 mb-6">
-                Reserva concluída com sucesso!
+                Dados preenchidos com sucesso!
               </h1>
               
-              {/* Status do envio de email */}
-              {emailStatus !== 'idle' && (
-                <div className={`p-4 rounded-lg mb-6 ${
-                  emailStatus === 'sending' ? 'bg-blue-50 border border-blue-200' :
-                  emailStatus === 'success' ? 'bg-green-50 border border-green-200' :
-                  emailStatus === 'warning' ? 'bg-yellow-50 border border-yellow-200' :
-                  'bg-red-50 border border-red-200'
-                }`}>
-                  <div className="flex items-start">
-                    <div className={`flex-shrink-0 mr-3 mt-0.5 ${
-                      emailStatus === 'sending' ? 'text-blue-600' :
-                      emailStatus === 'success' ? 'text-green-600' :
-                      emailStatus === 'warning' ? 'text-yellow-600' :
-                      'text-red-600'
-                    }`}>
-                      {emailStatus === 'sending' && (
-                        <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                      )}
-                      {emailStatus === 'success' && (
-                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                      )}
-                      {emailStatus === 'warning' && (
-                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.268 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
-                        </svg>
-                      )}
-                      {emailStatus === 'error' && (
-                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                      )}
-                    </div>
-                    <div>
-                      <h3 className={`text-sm font-medium ${
-                        emailStatus === 'sending' ? 'text-blue-800' :
-                        emailStatus === 'success' ? 'text-green-800' :
-                        emailStatus === 'warning' ? 'text-yellow-800' :
-                        'text-red-800'
-                      }`}>
-                        {emailStatus === 'sending' && 'Enviando notificação...'}
-                        {emailStatus === 'success' && 'Email enviado!'}
-                        {emailStatus === 'warning' && 'Aviso'}
-                        {emailStatus === 'error' && 'Erro no envio'}
-                      </h3>
-                      <p className={`text-sm mt-1 ${
-                        emailStatus === 'sending' ? 'text-blue-700' :
-                        emailStatus === 'success' ? 'text-green-700' :
-                        emailStatus === 'warning' ? 'text-yellow-700' :
-                        'text-red-700'
-                      }`}>
-                        {emailMessage}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
               <p className="text-gray-600 mb-8">
-                {t('passenger.reservationProcessed')}
-                {t('form.chooseOption')}
+                Agora você pode pagar diretamente ou fazer uma nova cotação.
               </p>
               
               <div className="space-y-4">
-                <Button 
-                  onClick={handleDownloadPDF}
-                  disabled={actionTaken === 'pdf' || actionTaken === 'both'}
-                  className={`w-full py-4 text-lg font-medium group transition-all ${
-                    actionTaken === 'pdf' || actionTaken === 'both' 
-                      ? 'bg-green-600 text-white cursor-default' 
-                      : 'bg-blue-600 hover:bg-blue-700 text-white'
-                  }`}
-                >
-                  <div className="flex items-center justify-center">
-                    {actionTaken === 'pdf' || actionTaken === 'both' ? (
-                      <>
-                        <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        {t('passenger.pdfDownloaded')}
-                      </>
-                    ) : (
-                      <>
-                        <Download className="h-5 w-5 mr-2 group-hover:animate-bounce" />
-                        {t('passenger.downloadQuotePdf')}
-                      </>
-                    )}
-                  </div>
-                </Button>
-                
-                <Button 
-                  onClick={handleWhatsAppRedirect}
-                  disabled={actionTaken === 'whatsapp' || actionTaken === 'both'}
-                  className={`w-full py-4 text-lg font-medium group transition-all ${
-                    actionTaken === 'whatsapp' || actionTaken === 'both' 
-                      ? 'bg-green-600 text-white cursor-default' 
-                      : 'bg-green-600 hover:bg-green-700 text-white'
-                  }`}
-                >
-                  <div className="flex items-center justify-center text-center break-words overflow-hidden flex-wrap px-2">
-                    {actionTaken === 'whatsapp' || actionTaken === 'both' ? (
-                      <>
-                        <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        {t('passenger.whatsappOpened')}
-                      </>
-                    ) : (
-                      <>
-                        <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.891 3.686"/>
-                        </svg>
-                        {t('passenger.contactAgent')}
-                      </>
-                    )}
-                  </div>
-                </Button>
-
                 {/* Botão de Pagamento */}
                 <Button 
                   onClick={handlePaymentRedirect}
-                  className="w-full py-4 text-lg font-medium bg-blue-600 hover:bg-blue-700 text-white"
+                  className="w-full py-4 text-lg font-medium bg-black hover:bg-gray-800 text-white"
                 >
                   <div className="flex items-center justify-center">
                     <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -642,15 +513,22 @@ Reserva feita através do site Executive Premium`;
                   </div>
                 </Button>
 
-                {/* Botão Concluir Atendimento - aparece apenas após usar uma das opções */}
-                {actionTaken && (
-                  <Button 
-                    onClick={handleCompleteService}
-                    className="w-full bg-gray-900 hover:bg-gray-800 text-white py-4 text-lg font-medium mt-6"
-                  >
-                    {t('passenger.completeService')}
-                  </Button>
-                )}
+                {/* Botão Nova Cotação */}
+                <Button 
+                  onClick={() => {
+                    window.scrollTo(0, 0);
+                    navigate('/');
+                  }}
+                  variant="outline"
+                  className="w-full py-4 text-lg font-medium"
+                >
+                  <div className="flex items-center justify-center">
+                    <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Realizar Nova Cotação
+                  </div>
+                </Button>
               </div>
             </CardContent>
           </Card>

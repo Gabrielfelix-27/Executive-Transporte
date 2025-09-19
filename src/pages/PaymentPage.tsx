@@ -258,29 +258,37 @@ export default function PaymentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-black relative">
+      {/* Logo da Executive no fundo */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-5">
+        <img 
+          src="/Logos/Logo Letras.webp" 
+          alt="Executive Background Logo" 
+          className="w-96 h-auto"
+        />
+      </div>
+      
       <Navbar showBreadcrumb={true} currentStep={3} />
       
-      <div className="max-w-2xl mx-auto px-6 py-8">
-        <Card>
+      <div className="max-w-2xl mx-auto px-6 py-8 relative z-10">
+        <Card className="shadow-lg bg-white">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CreditCard className="w-6 h-6" />
+            <CardTitle className="flex items-center gap-3">
+              <CreditCard className="w-6 h-6 text-blue-600" />
               Finalizar Pagamento
             </CardTitle>
           </CardHeader>
-          
           <CardContent className="space-y-6">
             {/* Resumo da reserva */}
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="font-semibold mb-2">Resumo da Reserva</h3>
-              <div className="space-y-1 text-sm">
+            <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+              <h3 className="font-semibold mb-2 text-gray-900">Resumo da Reserva</h3>
+              <div className="space-y-1 text-sm text-gray-700">
                 <p><strong>Veículo:</strong> {finalPaymentData.vehicleName}</p>
                 <p><strong>Origem:</strong> {finalPaymentData.pickup}</p>
                 <p><strong>Destino:</strong> {finalPaymentData.destination}</p>
                 <p><strong>Data:</strong> {finalPaymentData.date} às {finalPaymentData.time}</p>
                 <p><strong>Passageiros:</strong> {finalPaymentData.passengers}</p>
-                <p className="text-lg font-bold text-green-600">
+                <p className="text-lg font-bold text-blue-600 pt-2">
                   <strong>Total: {formatPrice(finalPaymentData.price)}</strong>
                 </p>
               </div>
@@ -290,10 +298,10 @@ export default function PaymentPage() {
               <>
                 {/* Dados do cliente */}
                 <div className="space-y-4">
-                  <h3 className="font-semibold">Dados para Pagamento</h3>
+                  <h3 className="font-semibold text-gray-900">Dados para Pagamento</h3>
                   
                   <div>
-                    <Label htmlFor="name">Nome Completo *</Label>
+                    <Label htmlFor="name" className="text-gray-700">Nome Completo *</Label>
                     <Input
                       id="name"
                       value={customerData.name}
@@ -302,39 +310,39 @@ export default function PaymentPage() {
                         if (errors.name) setErrors(prev => ({ ...prev, name: '' }));
                       }}
                       placeholder="Seu nome completo"
-                      className={errors.name ? 'border-red-500' : ''}
+                      className={`${errors.name ? 'border-red-400' : ''}`}
                     />
                     {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
                   </div>
 
                   <div>
-                    <Label htmlFor="cpf">CPF *</Label>
+                    <Label htmlFor="cpf" className="text-gray-700">CPF *</Label>
                     <Input
                       id="cpf"
                       value={customerData.cpf}
                       onChange={(e) => handleCPFChange(e.target.value)}
                       placeholder="000.000.000-00"
                       maxLength={14}
-                      className={errors.cpf ? 'border-red-500' : ''}
+                      className={`${errors.cpf ? 'border-red-400' : ''}`}
                     />
                     {errors.cpf && <p className="text-red-500 text-sm mt-1">{errors.cpf}</p>}
                   </div>
 
                   <div>
-                    <Label htmlFor="phone">Telefone *</Label>
+                    <Label htmlFor="phone" className="text-gray-700">Telefone *</Label>
                     <Input
                       id="phone"
                       value={customerData.phone}
                       onChange={(e) => handlePhoneChange(e.target.value)}
                       placeholder="(11) 99999-9999"
                       maxLength={15}
-                      className={errors.phone ? 'border-red-500' : ''}
+                      className={`${errors.phone ? 'border-red-400' : ''}`}
                     />
                     {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
                   </div>
 
                   <div>
-                    <Label htmlFor="email">E-mail *</Label>
+                    <Label htmlFor="email" className="text-gray-700">E-mail *</Label>
                     <Input
                       id="email"
                       type="email"
@@ -344,18 +352,18 @@ export default function PaymentPage() {
                         if (errors.email) setErrors(prev => ({ ...prev, email: '' }));
                       }}
                       placeholder="seu@email.com"
-                      className={errors.email ? 'border-red-500' : ''}
+                      className={`${errors.email ? 'border-red-400' : ''}`}
                     />
                     {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                   </div>
 
                   <div>
-                    <Label htmlFor="installments">Parcelas</Label>
+                    <Label htmlFor="installments" className="text-gray-700">Parcelas</Label>
                     <select
                       id="installments"
                       value={customerData.installments}
                       onChange={(e) => setCustomerData(prev => ({ ...prev, installments: parseInt(e.target.value) }))}
-                      className="w-full p-2 border border-gray-300 rounded-md"
+                      className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value={1}>À vista</option>
                       <option value={2}>2x</option>
@@ -368,60 +376,49 @@ export default function PaymentPage() {
                 </div>
 
                 {/* Botão de pagamento */}
-                <Button
-                  onClick={handlePayment}
-                  disabled={isProcessing}
-                  className="w-full py-3 text-lg"
-                >
-                  {isProcessing ? (
-                    <>
-                      <Clock className="w-4 h-4 mr-2 animate-spin" />
-                      Processando...
-                    </>
-                  ) : (
-                    <>
-                      <Lock className="w-4 h-4 mr-2" />
-                      Pagar {formatPrice(finalPaymentData.price)}
-                    </>
-                  )}
-                </Button>
+                <div className="mt-8">
+                  <button
+                    onClick={handlePayment}
+                    disabled={isProcessing}
+                    className="relative w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group"
+                  >
+                    {isProcessing ? (
+                      <div className="flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        Processando...
+                      </div>
+                    ) : (
+                      <>
+                        {/* Logo pequeno que aparece no hover */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                          <img 
+                            src="/Logos/Logo solo.webp" 
+                            alt="Executive Logo" 
+                            className="w-8 h-8 animate-pulse"
+                          />
+                        </div>
+                        
+                        {/* Texto com animação */}
+                        <span className="relative z-20 group-hover:animate-pulse transition-all duration-300">
+                          Pagar {formatPrice(finalPaymentData.price)}
+                        </span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </>
             )}
 
             {/* Status do pagamento */}
             {paymentStatus === 'processing' && (
-              <div className="text-center py-8">
-                <Clock className="w-12 h-12 mx-auto mb-4 animate-spin text-blue-500" />
-                <h3 className="text-lg font-semibold mb-2">Processando Pagamento</h3>
-                <p className="text-gray-600">Criando link de pagamento seguro...</p>
+              <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-yellow-800">Processando pagamento...</p>
               </div>
             )}
 
             {paymentStatus === 'pending' && (
-              <div className="text-center py-8">
-                <AlertCircle className="w-12 h-12 mx-auto mb-4 text-yellow-500" />
-                <h3 className="text-lg font-semibold mb-2">Aguardando Pagamento</h3>
-                <p className="text-gray-600 mb-4">
-                  O link de pagamento foi aberto em uma nova aba. Complete o pagamento e aguarde a confirmação.
-                </p>
-                <div className="space-y-2">
-                  <Button
-                    onClick={handleManualStatusCheck}
-                    variant="outline"
-                    className="w-full"
-                  >
-                    Verificar Status do Pagamento
-                  </Button>
-                  {paymentUrl && (
-                    <Button
-                      onClick={() => window.open(paymentUrl, '_blank')}
-                      variant="outline"
-                      className="w-full"
-                    >
-                      Abrir Link de Pagamento Novamente
-                    </Button>
-                  )}
-                </div>
+              <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-blue-800">Aguardando confirmação do pagamento...</p>
               </div>
             )}
 
