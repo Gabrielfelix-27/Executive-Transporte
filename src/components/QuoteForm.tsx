@@ -5,7 +5,7 @@ import { MapPin, Navigation, Calendar, Clock } from 'lucide-react';
 import { GoogleMapsPlacePicker } from '@/components/GoogleMapsPlacePicker';
 import { DatePicker } from '@/components/ui/date-picker';
 import { TimePicker } from '@/components/ui/time-picker';
-import { calculateTripPrice } from '@/utils/locationUtils';
+import { calculateTripPrice, cacheSelectedAddressCoordinates } from '@/utils/locationUtils';
 import { isGoogleMapsConfigured } from '@/config/maps';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -231,7 +231,6 @@ export const QuoteForm = () => {
                 
                 // Se é uma seleção do Google Maps, salvar coordenadas
                 if (place && place.geometry && place.geometry.location) {
-                  const { cacheSelectedAddressCoordinates } = require('@/utils/locationUtils');
                   const coords = {
                     lat: typeof place.geometry.location.lat === 'function' 
                       ? place.geometry.location.lat() 
@@ -277,7 +276,6 @@ export const QuoteForm = () => {
                 
                 // Se é uma seleção do Google Maps, salvar coordenadas
                 if (place && place.geometry && place.geometry.location) {
-                  const { cacheSelectedAddressCoordinates } = require('@/utils/locationUtils');
                   const coords = {
                     lat: typeof place.geometry.location.lat === 'function' 
                       ? place.geometry.location.lat() 

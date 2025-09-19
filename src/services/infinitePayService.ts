@@ -81,12 +81,13 @@ console.log('🌍 Ambiente detectado:', {
   timestamp: new Date().toISOString()
 });
 
+// Usar proxy serverless para resolver CORS em produção
 const INFINITEPAY_API_BASE = isProduction 
-  ? 'https://admin.executivepremium.com.br/infinitepay'
+  ? '/api/infinitepay-proxy'
   : '/api/infinitepay';
 
-const CREATE_PAYMENT_URL = `${INFINITEPAY_API_BASE}/api.php`;
-const CHECK_PAYMENT_URL = `${INFINITEPAY_API_BASE}/api_check.php`;
+const CREATE_PAYMENT_URL = `${INFINITEPAY_API_BASE}?endpoint=api`;
+const CHECK_PAYMENT_URL = `${INFINITEPAY_API_BASE}?endpoint=check`;
 
 console.log('🔗 URLs configuradas:', {
   INFINITEPAY_API_BASE,
@@ -145,15 +146,9 @@ export const createPaymentLink = async (paymentData: PaymentRequest): Promise<Pa
     const response = await fetch(CREATE_PAYMENT_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        ...(isProduction && {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type'
-        })
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(sanitizedPaymentData),
-      mode: isProduction ? 'cors' : 'same-origin'
+      body: JSON.stringify(sanitizedPaymentData)
     });
 
     if (!response.ok) {
@@ -213,15 +208,9 @@ export const checkPaymentStatus = async (orderNsu: string): Promise<PaymentStatu
       const response = await fetch(CHECK_PAYMENT_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          ...(isProduction && {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type'
-          })
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(statusRequest),
-        mode: isProduction ? 'cors' : 'same-origin'
+        body: JSON.stringify(statusRequest)
       });
 
       // Se receber erro 502, tenta novamente após um delay

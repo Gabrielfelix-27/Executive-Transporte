@@ -16,10 +16,7 @@
     "api/send-reservation-email.js": {
       "maxDuration": 30
     },
-    "api/infinitepay/api.php": {
-      "maxDuration": 30
-    },
-    "api/infinitepay/api_check.php": {
+    "api/infinitepay-proxy.js": {
       "maxDuration": 30
     }
   },
