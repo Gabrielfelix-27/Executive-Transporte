@@ -15,6 +15,12 @@
   "functions": {
     "api/send-reservation-email.js": {
       "maxDuration": 30
+    },
+    "api/infinitepay/api.php": {
+      "maxDuration": 30
+    },
+    "api/infinitepay/api_check.php": {
+      "maxDuration": 30
     }
   },
   "headers": [
@@ -36,4 +42,4 @@
       ]
     }
   ]
-} 
+}
