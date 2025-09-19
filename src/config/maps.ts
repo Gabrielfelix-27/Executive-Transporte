@@ -2,12 +2,14 @@
 
 // Google Maps API Key - usar a chave válida com fallback seguro
 export const GOOGLE_MAPS_API_KEY = (() => {
-  try {
-    return import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyAm_EEkVb9g5H7YdYGW6elk5OA0IdudtR8';
-  } catch (error) {
-    console.warn('Erro ao acessar variáveis de ambiente:', error);
-    return 'AIzaSyAm_EEkVb9g5H7YdYGW6elk5OA0IdudtR8';
+  // Pega apenas da variável de ambiente - sem fallback por segurança
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  
+  if (!apiKey) {
+    console.error('⚠️ GOOGLE_MAPS_API_KEY não configurada. Configure VITE_GOOGLE_MAPS_API_KEY no arquivo .env');
   }
+  
+  return apiKey;
 })();
 
 // Verificação se a chave está configurada

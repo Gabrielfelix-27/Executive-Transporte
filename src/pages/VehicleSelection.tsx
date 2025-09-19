@@ -215,18 +215,27 @@ export default function VehicleSelection() {
     }
 
     const selectedDriverType = driverTypes[selectedCategory.id] || 'monolingual';
+    const finalPrice = selectedDriverType === 'bilingual' ? selectedCategory.price * 1.3 : selectedCategory.price;
 
     // Rolar para o topo da página antes de navegar
     window.scrollTo(0, 0);
 
+    // Redirecionar para página de dados do passageiro
     navigate('/passenger-data', {
       state: {
+        vehicleName: selectedCategory.name,
+        price: finalPrice,
+        pickup: quoteData.pickup,
+        destination: quoteData.destination,
+        date: quoteData.date,
+        time: quoteData.time,
+        passengers: quoteData.passengers,
+        selectedDriverType,
         quoteData,
         selectedVehicle: {
           ...selectedCategory,
-          price: selectedDriverType === 'bilingual' ? selectedCategory.price * 1.3 : selectedCategory.price
-        },
-        selectedDriverType
+          price: finalPrice
+        }
       }
     });
   };

@@ -51,7 +51,12 @@ const loadGoogleMapsAPI = (): Promise<void> => {
     });
 
     // Usar a chave configurada
-    const apiKey = GOOGLE_MAPS_API_KEY || 'AIzaSyAm_EEkVb9g5H7YdYGW6elk5OA0IdudtR8';
+    const apiKey = GOOGLE_MAPS_API_KEY;
+    
+    if (!apiKey) {
+      console.error('⚠️ Google Maps API Key não configurada');
+      return;
+    }
     
     // Verificar se já existe script com a chave correta
     const correctScript = document.querySelector(`script[src*="${apiKey}"]`);

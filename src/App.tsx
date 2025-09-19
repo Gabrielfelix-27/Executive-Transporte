@@ -11,6 +11,9 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 const Index = React.lazy(() => import("./pages/Index"));
 const VehicleSelection = React.lazy(() => import("./pages/VehicleSelection"));
 const PassengerData = React.lazy(() => import("./pages/PassengerData"));
+const PaymentPage = React.lazy(() => import("./pages/PaymentPage"));
+const PaymentTest = React.lazy(() => import("./pages/PaymentTest"));
+const PaymentSuccess = React.lazy(() => import("./pages/PaymentSuccess"));
 const AboutUs = React.lazy(() => import("./pages/AboutUs"));
 const AirportTransfer = React.lazy(() => import("./pages/AirportTransfer"));
 const OnDemandService = React.lazy(() => import("./pages/OnDemandService"));
@@ -97,6 +100,9 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/vehicle-selection" element={<VehicleSelection />} />
                 <Route path="/passenger-data" element={<PassengerData />} />
+                <Route path="/payment" element={<PaymentPage />} />
+                <Route path="/payment-test" element={<PaymentTest />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="/about-us" element={<AboutUs />} />
                 <Route path="/airport-transfer" element={<AirportTransfer />} />
                 <Route path="/on-demand-service" element={<OnDemandService />} />

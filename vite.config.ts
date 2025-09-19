@@ -92,11 +92,42 @@ export default defineConfig(({ mode }) => ({
     cssMinify: true
   },
   
-  // Otimizações de servidor de desenvolvimento
+  // Configuração do servidor de desenvolvimento
   server: {
     host: "::",
     port: 8080,
-    // Pré-bundling otimizado
+    
+    // Headers de segurança
+    headers: {
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'X-XSS-Protection': '1; mode=block',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Permissions-Policy': 'camera=(), microphone=(), geolocation=()'
+    },
+    
+    // Configuração de proxy para resolver CORS
+    proxy: {
+      '/api/infinitepay': {
+        target: 'https://admin.executivepremium.com.br/infinitepay',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/infinitepay/, ''),
+        secure: true,
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.log('proxy error', err);
+          });
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            console.log('Sending Request to the Target:', req.method, req.url);
+          });
+          proxy.on('proxyRes', (proxyRes, req, _res) => {
+            console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
+          });
+        },
+      }
+    },
+
+    // Otimizações de dependências
     optimizeDeps: {
       include: [
         'react',

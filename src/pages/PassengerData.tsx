@@ -110,7 +110,7 @@ const PassengerData = () => {
 
 
   // Função para gerar PDF com papel timbrado
-  const generatePDF = () => {
+  const generatePDF = (isPaid: boolean = false, paymentDetails?: any) => {
     const doc = new jsPDF();
     
     // Configurações de página
@@ -122,11 +122,15 @@ const PassengerData = () => {
     // Configurar fonte
     doc.setFont('helvetica');
     
-    // Cabeçalho com fundo elegante
-    doc.setFillColor(0, 0, 0);
+    // Cabeçalho com fundo elegante (verde se pago, preto se cotação)
+    if (isPaid) {
+      doc.setFillColor(34, 197, 94); // Verde para pagamento aprovado
+    } else {
+      doc.setFillColor(0, 0, 0); // Preto para cotação
+    }
     doc.rect(0, 0, pageWidth, 55, 'F');
     
-    // Logo e texto do cabeçalho (em branco sobre fundo preto)
+    // Logo e texto do cabeçalho (em branco sobre fundo colorido)
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(24);
     doc.text('EXECUTIVE PREMIUM', margin, 25);
@@ -134,16 +138,26 @@ const PassengerData = () => {
     doc.text('Transporte Executivo de Alto Padrão', margin, 35);
     doc.text('Telefone: (11) 91585-3292', margin, 45);
     
+    // Status do pagamento no cabeçalho
+    if (isPaid) {
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      const statusText = '✅ PAGAMENTO APROVADO';
+      const statusWidth = doc.getTextWidth(statusText);
+      doc.text(statusText, pageWidth - margin - statusWidth, 25);
+    }
+    
     // Data e hora da geração
     const now = new Date();
     const dateStr = now.toLocaleDateString('pt-BR');
     const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
     
     // Posicionar data no canto direito do cabeçalho
     const dateText = `Gerado em: ${dateStr} às ${timeStr}`;
     const dateTextWidth = doc.getTextWidth(dateText);
-    doc.text(dateText, pageWidth - margin - dateTextWidth, 35);
+    doc.text(dateText, pageWidth - margin - dateTextWidth, isPaid ? 40 : 35);
     
     // Voltar para texto preto
     doc.setTextColor(0, 0, 0);
@@ -152,14 +166,16 @@ const PassengerData = () => {
     doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
     let yPosition = 75;
-    doc.text('CONFIRMAÇÃO DE RESERVA', margin, yPosition);
+    const documentTitle = isPaid ? 'COMPROVANTE DE PAGAMENTO' : 'CONFIRMAÇÃO DE RESERVA';
+    doc.text(documentTitle, margin, yPosition);
     
     // Número da reserva
     yPosition += 15;
     doc.setFontSize(11);
     doc.setFont('helvetica', 'normal');
-    const reserveNumber = `EP${Date.now().toString().slice(-6)}`;
-    doc.text(`Número da Reserva: ${reserveNumber}`, margin, yPosition);
+    const reserveNumber = paymentDetails?.order_nsu || `EP${Date.now().toString().slice(-6)}`;
+    const reserveLabel = isPaid ? 'NSU do Pagamento:' : 'Número da Reserva:';
+    doc.text(`${reserveLabel} ${reserveNumber}`, margin, yPosition);
     
     // Função auxiliar para adicionar seção
     const addSection = (title: string, items: { label: string; value: string }[]) => {
@@ -218,11 +234,23 @@ const PassengerData = () => {
     ]);
     
     // Veículo Selecionado
-    addSection('VEÍCULO SELECIONADO', [
+    const vehicleSection = [
       { label: 'Categoria', value: selectedVehicle?.name || 'Não informado' },
       { label: 'Tipo', value: selectedVehicle?.type || 'Não informado' },
       { label: 'Valor Total', value: formatPrice(selectedVehicle?.price || 0) }
-    ]);
+    ];
+    
+    // Adicionar informações de pagamento se foi pago
+    if (isPaid && paymentDetails) {
+      vehicleSection.push(
+        { label: 'Status do Pagamento', value: '✅ PAGO' },
+        { label: 'Valor Pago', value: formatPrice(paymentDetails.paid_amount_cents / 100) },
+        { label: 'Parcelas', value: `${paymentDetails.installments}x` },
+        { label: 'Método', value: paymentDetails.capture_method || 'Cartão de Crédito' }
+      );
+    }
+    
+    addSection(isPaid ? 'VEÍCULO E PAGAMENTO' : 'VEÍCULO SELECIONADO', vehicleSection);
     
     // Dados do Passageiro
     addSection('DADOS DO PASSAGEIRO', [
@@ -283,7 +311,9 @@ const PassengerData = () => {
     doc.setFontSize(10);
     doc.setTextColor(80, 80, 80);
     doc.text('Executive Premium - Transporte Executivo de Alto Padrão', margin, yPosition);
-    doc.text('Reserva gerada automaticamente pelo sistema', margin, yPosition + 8);
+    
+    const footerMiddleText = isPaid ? 'Comprovante de pagamento gerado automaticamente' : 'Reserva gerada automaticamente pelo sistema';
+    doc.text(footerMiddleText, margin, yPosition + 8);
     doc.text('Para dúvidas, entre em contato: (11) 91585-3292', margin, yPosition + 16);
     
     // Texto de direita do rodapé
@@ -397,6 +427,14 @@ const PassengerData = () => {
       setActionTaken(actionTaken === 'whatsapp' ? 'both' : 'pdf');
     }
   };
+  
+  // Função para baixar PDF de pagamento (será chamada da PaymentSuccess)
+  const generatePaidPDF = (paymentDetails: any, customerData: any) => {
+    const paidDoc = generatePDF(true, paymentDetails);
+    const fileName = `Executive_Premium_PAGO_${customerData.name.replace(/\s+/g, '_')}.pdf`;
+    paidDoc.save(fileName);
+    return paidDoc;
+  };
 
   // Função para redirecionar ao WhatsApp
   const handleWhatsAppRedirect = () => {
@@ -451,6 +489,26 @@ Reserva feita através do site Executive Premium`;
     window.open(whatsappUrl, '_blank');
     
     setActionTaken(actionTaken === 'pdf' ? 'both' : 'whatsapp');
+  };
+
+  // Função para redirecionar ao pagamento
+  const handlePaymentRedirect = () => {
+    navigate('/payment', {
+      state: {
+        vehicleName: selectedVehicle?.name,
+        price: selectedVehicle?.price,
+        pickup: quoteData?.pickup,
+        destination: quoteData?.destination,
+        date: quoteData?.date,
+        time: quoteData?.time,
+        passengers: quoteData?.passengers,
+        customerData: {
+          name: passengerInfo.passengerName,
+          phone: passengerInfo.phoneNumber,
+          email: passengerInfo.email
+        }
+      }
+    });
   };
 
   // Função para concluir atendimento
@@ -636,6 +694,19 @@ Reserva feita através do site Executive Premium`;
                         {t('passenger.contactAgent')}
                       </>
                     )}
+                  </div>
+                </Button>
+
+                {/* Botão de Pagamento */}
+                <Button 
+                  onClick={handlePaymentRedirect}
+                  className="w-full py-4 text-lg font-medium bg-blue-600 hover:bg-blue-700 text-white"
+                >
+                  <div className="flex items-center justify-center">
+                    <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                    </svg>
+                    Pagar Agora
                   </div>
                 </Button>
 

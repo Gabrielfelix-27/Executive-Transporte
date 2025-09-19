@@ -101,13 +101,9 @@ export const searchAddresses = async (query: string): Promise<AddressSuggestion[
   // VERIFICAR CONFIGURAÇÃO GOOGLE
   const googleConfigured = isGoogleMapsConfigured();
   console.log(`🗝️ [DEBUG] Google Maps configurado: ${googleConfigured}`);
-  console.log(`🔑 [DEBUG] API Key existe: ${GOOGLE_MAPS_API_KEY ? 'SIM' : 'NÃO'}`);
-  console.log(`🔑 [DEBUG] API Key valor: ${GOOGLE_MAPS_API_KEY ? GOOGLE_MAPS_API_KEY.substring(0, 10) + '...' : 'undefined'}`);
-
   // APENAS GOOGLE PLACES API
   if (!googleConfigured) {
-    console.warn('⚠️ [DEBUG] Google Maps API não configurada! Configure a API para usar o sistema.');
-    console.warn('⚠️ [DEBUG] Você precisa criar um arquivo .env com VITE_GOOGLE_MAPS_API_KEY=sua_chave_aqui');
+    console.warn('⚠️ Google Maps não configurado. Verifique as variáveis de ambiente.');
     return [];
   }
 
@@ -525,4 +521,4 @@ export default {
   reverseGeocode,
   getCoordinatesFromAddress,
   clearAllCaches
-}; 
+};

@@ -92,7 +92,6 @@ export const testGooglePlacesConnection = async (): Promise<boolean> => {
   }
   
   console.log('✅ Google Maps API configurada');
-  console.log('🔑 API Key:', GOOGLE_MAPS_API_KEY?.substring(0, 10) + '...');
   
   // ⚠️ DESABILITADO: Teste de carregamento pode causar conflitos
   console.log('ℹ️ Teste de carregamento desabilitado para evitar conflitos');
@@ -156,4 +155,4 @@ export default {
   getPlaceDetails,
   testGooglePlacesConnection,
   clearPlacesCache
-}; 
+};
