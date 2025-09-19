@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Navbar } from '@/components/Navbar';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCurrency } from '@/hooks/useCurrency';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { createPaymentLink, checkPaymentStatus, formatCpfForApi, formatPhoneForApi, isPaymentApproved } from '@/services/infinitePayService';
 import { toast } from 'sonner';
 import { CreditCard, Lock, CheckCircle, Clock, AlertCircle } from 'lucide-react';
@@ -31,6 +32,7 @@ export default function PaymentPage() {
   const location = useLocation();
   const { t } = useLanguage();
   const { formatPrice } = useCurrency();
+  const isMobile = useIsMobile();
   
   const paymentData: PaymentData = location.state || {};
   
@@ -120,8 +122,14 @@ export default function PaymentPage() {
         
         toast.success('Link de pagamento criado com sucesso!');
         
-        // Abrir link de pagamento em nova aba
-        window.open(response.url, '_blank');
+        // Abrir link de pagamento - usar window.location.href no mobile para garantir redirecionamento
+        if (isMobile) {
+          // No mobile, redirecionar na mesma aba para garantir que funcione
+          window.location.href = response.url;
+        } else {
+          // No desktop, abrir em nova aba
+          window.open(response.url, '_blank');
+        }
         
         // Iniciar verificação de status
         startPaymentStatusCheck(response.order_nsu);
