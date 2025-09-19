@@ -122,10 +122,15 @@ export default function PaymentPage() {
         
         toast.success('Link de pagamento criado com sucesso!');
         
-        // Abrir link de pagamento - usar window.location.href no mobile para garantir redirecionamento
+        // Abrir link de pagamento - estratégia diferente para mobile
         if (isMobile) {
-          // No mobile, redirecionar na mesma aba para garantir que funcione
-          window.location.href = response.url;
+          // No mobile, redirecionar imediatamente na mesma aba
+          toast.info('Redirecionando para o pagamento...', { duration: 1000 });
+          
+          // Redirecionar imediatamente
+          setTimeout(() => {
+            window.location.href = response.url;
+          }, 500);
         } else {
           // No desktop, abrir em nova aba
           window.open(response.url, '_blank');
