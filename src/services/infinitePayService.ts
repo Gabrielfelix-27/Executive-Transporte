@@ -75,12 +75,24 @@ export interface PaymentStatusResponse {
 // URLs da API - detecção automática de ambiente
 const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
 
+console.log('🌍 Ambiente detectado:', {
+  hostname: window.location.hostname,
+  isProduction,
+  timestamp: new Date().toISOString()
+});
+
 const INFINITEPAY_API_BASE = isProduction 
   ? 'https://admin.executivepremium.com.br/infinitepay'
   : '/api/infinitepay';
 
 const CREATE_PAYMENT_URL = `${INFINITEPAY_API_BASE}/api.php`;
 const CHECK_PAYMENT_URL = `${INFINITEPAY_API_BASE}/api_check.php`;
+
+console.log('🔗 URLs configuradas:', {
+  INFINITEPAY_API_BASE,
+  CREATE_PAYMENT_URL,
+  CHECK_PAYMENT_URL
+});
 
 /**
  * Cria um link de pagamento via InfinitePay
