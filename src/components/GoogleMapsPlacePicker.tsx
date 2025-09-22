@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { isGoogleMapsConfigured, GOOGLE_MAPS_API_KEY } from '@/config/maps';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { saoPauloAddresses } from '@/data/saoPauloAddresses';
+import { extractCepFromAddress, findCepInLocalData } from '@/utils/locationUtils';
 
 interface GoogleMapsPlacePickerProps {
   id: string;
@@ -180,43 +181,31 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
     
     for (const component of addressComponents) {
       if (component.types.includes('postal_code')) {
-        return component.long_name;
+        const cep = component.long_name;
+        // Normalizar formato do CEP
+        if (cep && /^\d{5}-?\d{3}$/.test(cep.replace(/\D/g, '').replace(/(\d{5})(\d{3})/, '$1-$2'))) {
+          const digits = cep.replace(/\D/g, '');
+          return digits.length === 8 ? `${digits.slice(0, 5)}-${digits.slice(5)}` : cep;
+        }
+        return cep;
       }
     }
     return null;
   };
 
   // Função para buscar CEP nos dados locais
-  const findCepInLocalData = (addressText: string): string | null => {
-    const normalizedQuery = addressText.toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // Remove acentos
-      .trim();
-
-    // Buscar nos dados locais
-    const foundAddress = saoPauloAddresses.find(addr => {
-      const addressMatch = addr.main_text.toLowerCase().includes(normalizedQuery) ||
-                          addr.secondary_text.toLowerCase().includes(normalizedQuery) ||
-                          addr.keywords.some(keyword => normalizedQuery.includes(keyword.toLowerCase()));
-      return addressMatch;
-    });
-
-    if (foundAddress) {
-      // Extrair CEP do full_address
-      const cepMatch = foundAddress.full_address.match(/\d{5}-?\d{3}/);
-      return cepMatch ? cepMatch[0] : null;
-    }
-
-    return null;
+  const findCepInLocalDataComponent = (addressText: string): string | null => {
+    // Usar a função melhorada do locationUtils
+    return findCepInLocalData(addressText);
   };
 
   // Função para formatar endereço com CEP sempre visível
   const formatAddressWithCep = (place: any): string => {
     let baseAddress = place.formatted_address || place.name || '';
     
-    // Verificar se já tem CEP no endereço
-    const existingCepMatch = baseAddress.match(/\d{5}-?\d{3}/);
-    if (existingCepMatch) {
+    // Verificar se já tem CEP no endereço usando a função melhorada
+    const existingCep = extractCepFromAddress(baseAddress);
+    if (existingCep) {
       return baseAddress; // Já tem CEP, retornar como está
     }
     
@@ -228,7 +217,7 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
     }
     
     // FALLBACK: Buscar CEP nos dados locais se Google Maps não retornou
-    const localCep = findCepInLocalData(baseAddress);
+    const localCep = findCepInLocalDataComponent(baseAddress);
     if (localCep) {
       console.log(`🔄 ${id} - CEP encontrado nos dados locais: ${localCep} para "${baseAddress}"`);
       return `${baseAddress}, ${localCep}`;

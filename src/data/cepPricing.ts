@@ -137,6 +137,57 @@ export const CEP_REGIONS: { [key: string]: CepRegion } = {
     name: 'Grande São Paulo',
     cep: '06000-000',
     cepRange: { start: '06000-000', end: '09999-999' }
+  },
+  // Novas regiões com preços negociáveis
+  osasco: {
+    name: 'Osasco',
+    cep: '06000-000',
+    cepRange: { start: '06000-000', end: '06299-999' }
+  },
+  carapicuiba: {
+    name: 'Carapicuíba',
+    cep: '06300-000',
+    cepRange: { start: '06300-000', end: '06399-999' }
+  },
+  barueriAlphaville: {
+    name: 'Barueri (Alphaville)',
+    cep: '06454-000',
+    cepRange: { start: '06454-000', end: '06455-040' }
+  },
+  barueriAlphavilleResidencial: {
+    name: 'Barueri (Alphaville Residencial Um)',
+    cep: '06474-000',
+    cepRange: { start: '06474-000', end: '06474-330' }
+  },
+  santanaParnaiba: {
+    name: 'Santana de Parnaíba',
+    cep: '06500-000',
+    cepRange: { start: '06500-000', end: '06549-999' }
+  },
+  itapevi: {
+    name: 'Itapevi',
+    cep: '06650-000',
+    cepRange: { start: '06650-000', end: '06699-999' }
+  },
+  cotia: {
+    name: 'Cotia',
+    cep: '06700-000',
+    cepRange: { start: '06700-000', end: '06729-999' }
+  },
+  vargemGrandePaulista: {
+    name: 'Vargem Grande Paulista',
+    cep: '06730-000',
+    cepRange: { start: '06730-000', end: '06749-999' }
+  },
+  taboaoSerra: {
+    name: 'Taboão da Serra',
+    cep: '06750-000',
+    cepRange: { start: '06750-000', end: '06799-999' }
+  },
+  itapecerica: {
+    name: 'Itapecerica da Serra',
+    cep: '06850-000',
+    cepRange: { start: '06850-000', end: '06889-999' }
   }
 };
 
@@ -595,7 +646,7 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
     from: 'viracopos',
     to: 'grandeSaoPaulo',
     prices: {
-      executivoSedan: 890.00,
+      executivoSedan: 690.00,
       executivoComum: 890.00,
       executivoPremiumBlindado: 1450.00,
       minivanComum: 1100.00,
@@ -603,30 +654,78 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
       van15Lugares: 1390.00
     }
   },
-  // Congonhas para Alphaville
+  // Congonhas para Alphaville/Osasco/Carapicuíba
   {
     from: 'congonhas',
     to: 'alphaville',
     prices: {
-      executivoSedan: 490.00,
+      executivoSedan: 390.00,
       executivoComum: 490.00,
-      executivoPremiumBlindado: 990.00,
+      executivoPremiumBlindado: 890.00,
       minivanComum: 790.00,
       minivanBlindada: 1450.00,
-      van15Lugares: 990.00
+      van15Lugares: 790.00
     }
   },
-  // Guarulhos para Alphaville
+  {
+    from: 'congonhas',
+    to: 'osasco',
+    prices: {
+      executivoSedan: 390.00,
+      executivoComum: 490.00,
+      executivoPremiumBlindado: 890.00,
+      minivanComum: 790.00,
+      minivanBlindada: 1450.00,
+      van15Lugares: 790.00
+    }
+  },
+  {
+    from: 'congonhas',
+    to: 'carapicuiba',
+    prices: {
+      executivoSedan: 390.00,
+      executivoComum: 490.00,
+      executivoPremiumBlindado: 890.00,
+      minivanComum: 790.00,
+      minivanBlindada: 1450.00,
+      van15Lugares: 790.00
+    }
+  },
+  // Guarulhos para Alphaville/Osasco/Carapicuíba
   {
     from: 'guarulhos',
     to: 'alphaville',
     prices: {
-      executivoSedan: 540.00,
+      executivoSedan: 440.00,
       executivoComum: 540.00,
-      executivoPremiumBlindado: 1450.00,
+      executivoPremiumBlindado: 990.00,
       minivanComum: 890.00,
       minivanBlindada: 1600.00,
-      van15Lugares: 1190.00
+      van15Lugares: 890.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: 'osasco',
+    prices: {
+      executivoSedan: 440.00,
+      executivoComum: 540.00,
+      executivoPremiumBlindado: 990.00,
+      minivanComum: 890.00,
+      minivanBlindada: 1600.00,
+      van15Lugares: 890.00
+    }
+  },
+  {
+    from: 'guarulhos',
+    to: 'carapicuiba',
+    prices: {
+      executivoSedan: 440.00,
+      executivoComum: 540.00,
+      executivoPremiumBlindado: 990.00,
+      minivanComum: 890.00,
+      minivanBlindada: 1600.00,
+      van15Lugares: 890.00
     }
   },
   // Congonhas → Porto de Santos
@@ -897,18 +996,7 @@ export const CEP_PRICE_ROUTES: CepPriceRoute[] = [
       van15Lugares: 990.00
     }
   },
-  {
-    from: 'congonhas',
-    to: 'alphaville',
-    prices: {
-      executivoSedan: 390.00,
-      executivoComum: 490.00,
-      executivoPremiumBlindado: 990.00,
-      minivanComum: 790.00,
-      minivanBlindada: 1450.00,
-      van15Lugares: 990.00
-    }
-  },
+
   {
     from: 'guarulhos',
     to: 'alphaville',
@@ -957,6 +1045,62 @@ export const isInGrandeSaoPauloRange = (cep: string): boolean => {
   const normalizedCep = normalizeCep(cep);
   const cepNumber = parseInt(normalizedCep);
   return cepNumber >= 6000000 && cepNumber <= 9999999;
+};
+
+// Função para verificar se um CEP está na região intra-regional da Grande São Paulo
+export const isInIntraRegionalGrandeSaoPaulo = (cep: string): boolean => {
+  const normalizedCep = normalizeCep(cep);
+  const cepNumber = parseInt(normalizedCep);
+  
+  // Verificar todas as faixas específicas da região intra-regional
+  return (
+    // Av. Paulista
+    (cepNumber >= 1310100 && cepNumber <= 1310100) ||
+    // Itaim Bibi
+    (cepNumber >= 4532060 && cepNumber <= 4532060) ||
+    // Vila Olímpia
+    (cepNumber >= 4551000 && cepNumber <= 4551000) ||
+    // Pinheiros
+    (cepNumber >= 5422000 && cepNumber <= 5422000) ||
+    // Lapa
+    (cepNumber >= 5075010 && cepNumber <= 5075010) ||
+    // Butantã
+    (cepNumber >= 5508900 && cepNumber <= 5508900) ||
+    // Congonhas
+    (cepNumber >= 4626000 && cepNumber <= 4627999) ||
+    // São Paulo Capital
+    (cepNumber >= 1000000 && cepNumber <= 5999999) ||
+    // São Paulo Capital (Continuação)
+    (cepNumber >= 8000000 && cepNumber <= 8499999) ||
+    // Zona Oeste
+    (cepNumber >= 5000000 && cepNumber <= 5999999) ||
+    // Zona Sul
+    (cepNumber >= 4000000 && cepNumber <= 4999999) ||
+    // Zona Leste
+    (cepNumber >= 3000000 && cepNumber <= 3999999) ||
+    // Alphaville Centro Industrial e Empresarial
+    (cepNumber >= 6454000 && cepNumber <= 6455040) ||
+    // Alphaville Residencial Um
+    (cepNumber >= 6474000 && cepNumber <= 6474330) ||
+    // Osasco
+    (cepNumber >= 6000000 && cepNumber <= 6299999) ||
+    // Carapicuíba
+    (cepNumber >= 6300000 && cepNumber <= 6399999) ||
+    // Diadema
+    (cepNumber >= 9900000 && cepNumber <= 9999999) ||
+    // São Bernardo do Campo
+    (cepNumber >= 9600000 && cepNumber <= 9899999) ||
+    // Santo André
+    (cepNumber >= 9000000 && cepNumber <= 9299999) ||
+    // Mauá
+    (cepNumber >= 9300000 && cepNumber <= 9399999) ||
+    // Ribeirão Pires
+    (cepNumber >= 9400000 && cepNumber <= 9449999) ||
+    // Rio Grande da Serra
+    (cepNumber >= 9450000 && cepNumber <= 9499999) ||
+    // São Caetano do Sul
+    (cepNumber >= 9500000 && cepNumber <= 9599999)
+  );
 };
 
 // Função para identificar região baseada no CEP
@@ -1023,6 +1167,61 @@ export const identifyRegionByCep = (cep: string): string | null => {
     return 'maua';
   }
   
+  // Verificar regiões específicas com preços negociáveis
+  // Osasco
+  if (cepNumber >= 6000000 && cepNumber <= 6299999) {
+    console.log(`✅ CEP ${cep} identificado como Osasco`);
+    return 'osasco';
+  }
+  
+  // Carapicuíba
+  if (cepNumber >= 6300000 && cepNumber <= 6399999) {
+    console.log(`✅ CEP ${cep} identificado como Carapicuíba`);
+    return 'carapicuiba';
+  }
+  
+  // Barueri (Alphaville)
+  if (cepNumber >= 6400000 && cepNumber <= 6499999) {
+    console.log(`✅ CEP ${cep} identificado como Barueri (Alphaville)`);
+    return 'barueriAlphaville';
+  }
+  
+  // Santana de Parnaíba
+  if (cepNumber >= 6500000 && cepNumber <= 6549999) {
+    console.log(`✅ CEP ${cep} identificado como Santana de Parnaíba`);
+    return 'santanaParnaiba';
+  }
+  
+  // Itapevi
+  if (cepNumber >= 6650000 && cepNumber <= 6699999) {
+    console.log(`✅ CEP ${cep} identificado como Itapevi`);
+    return 'itapevi';
+  }
+  
+  // Cotia
+  if (cepNumber >= 6700000 && cepNumber <= 6729999) {
+    console.log(`✅ CEP ${cep} identificado como Cotia`);
+    return 'cotia';
+  }
+  
+  // Vargem Grande Paulista
+  if (cepNumber >= 6730000 && cepNumber <= 6749999) {
+    console.log(`✅ CEP ${cep} identificado como Vargem Grande Paulista`);
+    return 'vargemGrandePaulista';
+  }
+  
+  // Taboão da Serra
+  if (cepNumber >= 6750000 && cepNumber <= 6799999) {
+    console.log(`✅ CEP ${cep} identificado como Taboão da Serra`);
+    return 'taboaoSerra';
+  }
+  
+  // Itapecerica da Serra
+  if (cepNumber >= 6850000 && cepNumber <= 6889999) {
+    console.log(`✅ CEP ${cep} identificado como Itapecerica da Serra`);
+    return 'itapecerica';
+  }
+
   // Verificar se está na faixa da Grande São Paulo (outras regiões)
   if (isInGrandeSaoPauloRange(cep)) {
     console.log(`✅ CEP ${cep} identificado como Grande São Paulo`);
@@ -1043,6 +1242,23 @@ export const identifyRegionByCep = (cep: string): string | null => {
   return null;
 };
 
+// Função para verificar se uma rota é negociável (aeroportos para regiões específicas)
+export const isNegotiableRoute = (originRegion: string, destinationRegion: string): boolean => {
+  const airportRegions = ['guarulhos', 'congonhas'];
+  const negotiableDestinations = [
+    'osasco', 'carapicuiba', 'barueriAlphaville', 'santanaParnaiba', 
+    'itapevi', 'cotia', 'vargemGrandePaulista', 'taboaoSerra', 'itapecerica'
+  ];
+  
+  // Verificar se origem é aeroporto e destino é região negociável
+  const isAirportToNegotiable = airportRegions.includes(originRegion) && negotiableDestinations.includes(destinationRegion);
+  
+  // Verificar se origem é região negociável e destino é aeroporto (rota inversa)
+  const isNegotiableToAirport = negotiableDestinations.includes(originRegion) && airportRegions.includes(destinationRegion);
+  
+  return isAirportToNegotiable || isNegotiableToAirport;
+};
+
 // Função para buscar preço baseado em CEPs (bidirecional)
 export const findPriceByCep = (
   originCep: string,
@@ -1057,6 +1273,33 @@ export const findPriceByCep = (
   if (!originRegion || !destinationRegion) {
     console.log(`❌ Uma das regiões não foi identificada`);
     return null;
+  }
+  
+  // Verificar se ambos os CEPs estão na região intra-regional da Grande São Paulo
+  if (isInIntraRegionalGrandeSaoPaulo(originCep) && isInIntraRegionalGrandeSaoPaulo(destinationCep)) {
+    console.log(`🏙️ Rota intra-regional da Grande São Paulo detectada`);
+    
+    // Preços específicos para viagens dentro da região da Grande São Paulo
+    const intraRegionalPrices = {
+      executivoSedan: 240.00,
+      executivoComum: 330.00,
+      executivoPremiumBlindado: 650.00,
+      minivanComum: 650.00,
+      minivanBlindada: 1150.00,
+      van15Lugares: 790.00
+    };
+    
+    const price = intraRegionalPrices[vehicleType];
+    if (price !== undefined) {
+      console.log(`✅ Preço intra-regional encontrado: R$ ${price.toFixed(2)}`);
+      return price;
+    }
+  }
+  
+  // Verificar se é uma rota negociável
+  if (isNegotiableRoute(originRegion, destinationRegion)) {
+    console.log(`🤝 Rota negociável detectada: ${originRegion} ↔ ${destinationRegion}`);
+    return -1; // Valor especial para indicar rota negociável
   }
   
   // Buscar rota direta

@@ -20,17 +20,30 @@ export const QuoteForm = () => {
   const [useGoogleMaps] = useState(isGoogleMapsConfigured());
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  // Função para obter horário atual com 2 horas de antecedência
+  // Função para obter horário atual de Brasília com 24 horas de antecedência
   const getCurrentTime = () => {
+    // Criar data atual no horário de Brasília (UTC-3)
     const now = new Date();
-    // Adicionar 2 horas de antecedência mínima
-    now.setHours(now.getHours() + 2);
-    return now.toTimeString().slice(0, 5); // HH:MM
+    const brasiliaTime = new Date(now.toLocaleString("en-US", {timeZone: "America/Sao_Paulo"}));
+    
+    // Adicionar 24 horas de antecedência mínima
+    brasiliaTime.setHours(brasiliaTime.getHours() + 24);
+    return brasiliaTime.toTimeString().slice(0, 5); // HH:MM
   };
 
-  // Função para obter a data atual
+  // Função para obter a data atual de Brasília
   const getCurrentDate = () => {
-    return new Date();
+    // Criar data atual no horário de Brasília (UTC-3)
+    const now = new Date();
+    return new Date(now.toLocaleString("en-US", {timeZone: "America/Sao_Paulo"}));
+  };
+
+  // Função para obter data/hora mínima de Brasília com 24 horas de antecedência
+  const getMinDateTime = () => {
+    const now = new Date();
+    const brasiliaTime = new Date(now.toLocaleString("en-US", {timeZone: "America/Sao_Paulo"}));
+    brasiliaTime.setHours(brasiliaTime.getHours() + 24);
+    return brasiliaTime;
   };
 
   // Inicializar campos com valores padrão
@@ -71,6 +84,13 @@ export const QuoteForm = () => {
       const minivanBlindadaData = await calculateTripPrice(pickup, destination, 'minivanBlindada');
       const van15LugaresData = await calculateTripPrice(pickup, destination, 'van15Lugares');
 
+      // Verificar se é uma rota negociável (preço -1)
+      if (executivoSedanData.finalPrice === -1) {
+        // Rota negociável - redirecionar para página especial ou mostrar mensagem
+        setErrorMessage('Esta rota requer negociação. Entre em contato com nosso consultor para obter um orçamento personalizado.');
+        return;
+      }
+
       const tripData = {
         pickup,
         destination,
@@ -97,7 +117,7 @@ export const QuoteForm = () => {
             description: 'Veículo executivo padrão com bom conforto'
           },
           executivoPremiumBlindado: {
-            name: 'Executivo Premium Blindado',
+            name: 'EXECUTIVO BLINDADO',
             price: executivoPremiumBlindadoData.finalPrice,
             basePrice: executivoPremiumBlindadoData.basePrice,
             passengers: 4,
@@ -113,7 +133,7 @@ export const QuoteForm = () => {
             description: 'Espaço amplo para grupos de até 7 pessoas'
           },
           minivanBlindada: {
-            name: 'MiniVan Blindada',
+            name: 'VAN BLINDADA',
             price: minivanBlindadaData.finalPrice,
             basePrice: minivanBlindadaData.basePrice,
             passengers: 7,
@@ -121,7 +141,7 @@ export const QuoteForm = () => {
             description: 'Segurança máxima para grupos com blindagem completa'
           },
           van15Lugares: {
-            name: 'Van 15 Lugares',
+            name: 'VAN 15',
             price: van15LugaresData.finalPrice,
             basePrice: van15LugaresData.basePrice,
             passengers: 15,
@@ -158,16 +178,21 @@ export const QuoteForm = () => {
     setSelectedDate(newDate);
     setErrorMessage(''); // Limpar erro ao alterar data
     
-    // Se a data for hoje e o horário atual for no passado, sugerir horário atual
-    // Mas fazer isso silenciosamente, sem mostrar erro
+    // Se a data/hora selecionada for antes do mínimo (24h de antecedência), ajustar
     if (newDate && selectedTime) {
-      const today = new Date();
+      const minDateTime = getMinDateTime();
+      const selectedDateTime = new Date(newDate);
+      const [hours, minutes] = selectedTime.split(':').map(Number);
+      selectedDateTime.setHours(hours, minutes, 0, 0);
       
-      if (newDate.toDateString() === today.toDateString()) {
-        const currentMinTime = getCurrentTime();
-        
-        // Se o horário selecionado for antes do horário mínimo (atual + 2h), atualizar silenciosamente
-        if (selectedTime < currentMinTime) {
+      if (selectedDateTime < minDateTime) {
+        // Se a data selecionada for antes do mínimo, usar a data mínima
+        if (newDate < minDateTime) {
+          setSelectedDate(minDateTime);
+          setSelectedTime(minDateTime.toTimeString().slice(0, 5));
+        } else {
+          // Se a data é válida mas o horário não, ajustar apenas o horário
+          const currentMinTime = getCurrentTime();
           setSelectedTime(currentMinTime);
         }
       }
@@ -178,14 +203,31 @@ export const QuoteForm = () => {
   const getMinTime = () => {
     if (!selectedDate) return '';
     
-    const today = new Date();
+    const minDateTime = getMinDateTime();
+    const brasiliaToday = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Sao_Paulo"}));
     
-    // Se a data selecionada for hoje, o horário mínimo é o horário atual + 2 horas
-    if (selectedDate.toDateString() === today.toDateString()) {
+    // Se a data selecionada for hoje (horário de Brasília), o horário mínimo é atual + 24h
+    if (selectedDate.toDateString() === brasiliaToday.toDateString()) {
       return getCurrentTime();
     }
     
-    // Se for uma data futura, pode ser qualquer horário
+    // Se a data selecionada for amanhã (horário de Brasília)
+    const tomorrow = new Date(brasiliaToday);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    if (selectedDate.toDateString() === tomorrow.toDateString()) {
+      // Para amanhã, verificar se ainda precisa respeitar as 24h de antecedência
+      const now = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Sao_Paulo"}));
+      const hoursUntilTomorrow = (tomorrow.getTime() - now.getTime()) / (1000 * 60 * 60);
+      
+      if (hoursUntilTomorrow < 24) {
+        // Se faltam menos de 24h para amanhã, calcular horário mínimo
+        const minTime = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+        return minTime.toTimeString().slice(0, 5);
+      }
+    }
+    
+    // Para datas futuras (mais de 24h), pode ser qualquer horário
     return '00:00';
   };
 
@@ -210,6 +252,20 @@ export const QuoteForm = () => {
       {errorMessage && (
         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
           {errorMessage}
+          {errorMessage.includes('Esta rota requer negociação') && (
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={() => window.open('https://wa.me/5511915853292', '_blank')}
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-medium py-1.5 px-4 rounded transition-colors duration-200 flex items-center justify-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.787"/>
+                </svg>
+                Falar com Consultor
+              </button>
+            </div>
+          )}
         </div>
       )}
       

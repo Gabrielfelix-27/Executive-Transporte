@@ -432,12 +432,168 @@ export const calculateTripPrice = async (
     const originCep = extractCepWithFallback(origin);
     const destinationCep = extractCepWithFallback(destination);
     
+    // Verificar se é uma rota negociável baseada no nome da cidade ou faixa de CEP
+    const isNegotiableCityRoute = (origin: string, destination: string): boolean => {
+      const originLower = origin.toLowerCase().trim();
+      const destinationLower = destination.toLowerCase().trim();
+      
+      // Verificar se um dos endereços é aeroporto ou cidade de São Paulo
+      const isAirportOrSaoPaulo = (addr: string) => 
+        addr.includes('congonhas') || addr.includes('guarulhos') || 
+        addr.includes('04626') || addr.includes('07190') ||
+        addr.includes('são paulo') || addr.includes('sao paulo') ||
+        // CEPs de São Paulo (01000-000 a 05999-999 e 08000-000 a 08499-999)
+        /\b0[1-5]\d{3}-?\d{3}\b/.test(addr) || /\b08[0-4]\d{2}-?\d{3}\b/.test(addr);
+      
+      // Lista de cidades negociáveis com suas variações de nome
+      const negotiableCities = [
+        'osasco',
+        'carapicuiba', 'carapicuíba',
+        'barueri', 'alphaville', 'tambore', 'tamboré',
+        'santana de parnaiba', 'santana de parnaíba',
+        'itapevi',
+        'jandira',
+        'cotia',
+        'vargem grande paulista',
+        'taboao da serra', 'taboão da serra',
+        'embu', 'embu das artes',
+        'itapecerica da serra',
+        'embu-guacu', 'embu-guaçu', 'embu guacu', 'embu guaçu',
+        'aruja', 'arujá',
+        'santa isabel',
+        'mairipora', 'mairiporã',
+        'caieiras',
+        'cajamar',
+        'jordanesia', 'jordanésia',
+        'polvilho',
+        'franco da rocha',
+        'francisco morato',
+        'ferraz de vasconcelos',
+        'poa', 'poá',
+        'itaquaquecetuba',
+        'suzano',
+        'mogi das cruzes',
+        'guararema'
+      ];
+      
+      // Faixas de CEP das cidades negociáveis
+      const negotiableCepRanges = [
+        { start: '06000', end: '06299' }, // Osasco
+        { start: '06300', end: '06399' }, // Carapicuíba
+        { start: '06400', end: '06499' }, // Barueri (Alphaville, Tamboré)
+        { start: '06500', end: '06549' }, // Santana de Parnaíba
+        { start: '06650', end: '06699' }, // Itapevi
+        { start: '06600', end: '06649' }, // Jandira
+        { start: '06700', end: '06729' }, // Cotia
+        { start: '06730', end: '06749' }, // Vargem Grande Paulista
+        { start: '06750', end: '06799' }, // Taboão da Serra
+        { start: '06800', end: '06849' }, // Embu
+        { start: '06850', end: '06899' }, // Itapecerica da Serra
+        { start: '06900', end: '06999' }, // Embu-Guaçu
+        { start: '07400', end: '07499' }, // Arujá
+        { start: '07500', end: '07599' }, // Santa Isabel
+        { start: '07600', end: '07699' }, // Mairiporã
+        { start: '07700', end: '07749' }, // Caieiras
+        { start: '07750', end: '07759' }, // Cajamar
+        { start: '07760', end: '07769' }, // Jordanésia
+        { start: '07770', end: '07799' }, // Polvilho
+        { start: '07800', end: '07870' }, // Franco da Rocha
+        { start: '07900', end: '07999' }, // Francisco Morato
+        { start: '08500', end: '08549' }, // Ferraz de Vasconcelos
+        { start: '08550', end: '08569' }, // Poá
+        { start: '08570', end: '08599' }, // Itaquaquecetuba
+        { start: '08600', end: '08699' }, // Suzano
+        { start: '08700', end: '08899' }, // Mogi das Cruzes
+        { start: '08900', end: '08999' }  // Guararema
+      ];
+      
+      const isNegotiableCep = (addr: string): boolean => {
+        const cepMatch = addr.match(/\b(\d{5})-?(\d{3})\b/);
+        if (!cepMatch) return false;
+        
+        const cep = cepMatch[1] + cepMatch[2];
+        return negotiableCepRanges.some(range => 
+          cep >= range.start + '000' && cep <= range.end + '999'
+        );
+      };
+      
+      const containsNegotiableCity = (addr: string) => {
+        // Verificar se contém alguma cidade negociável pelo nome (sem CEP específico)
+        const hasCityName = negotiableCities.some(city => addr.includes(city));
+        const hasSpecificCep = addr.match(/\d{5}-?\d{3}/);
+        
+        // Se tem nome da cidade e não tem CEP, ou se tem CEP negociável
+        return (hasCityName && !hasSpecificCep) || isNegotiableCep(addr);
+      };
+      
+      return (isAirportOrSaoPaulo(originLower) && containsNegotiableCity(destinationLower)) ||
+             (containsNegotiableCity(originLower) && isAirportOrSaoPaulo(destinationLower));
+    };
+    
+    // Se é uma rota negociável baseada no nome da cidade
+    if (isNegotiableCityRoute(origin, destination)) {
+      console.log(`🤝 Rota negociável detectada (nome da cidade): "${origin}" → "${destination}"`);
+      
+      // Obter dados de distância e tempo para informação
+      let distance: number = 15;
+      let estimatedTime: number = 45;
+      
+      try {
+        const googleMapsData = await getGoogleMapsDistanceAndTime(origin, destination);
+        if (googleMapsData) {
+          distance = googleMapsData.distance;
+          estimatedTime = googleMapsData.duration;
+        } else {
+          distance = await calculateDistanceBetweenAddresses(origin, destination);
+          estimatedTime = estimateTravelTime(distance);
+        }
+      } catch (error) {
+        console.warn('⚠️ Erro ao obter dados de distância/tempo para rota negociável, usando valores padrão');
+      }
+      
+      return {
+        distance: Math.round(distance * 10) / 10,
+        estimatedTime: Math.round(estimatedTime),
+        basePrice: -1, // Indica rota negociável
+        finalPrice: -1 // Indica rota negociável
+      };
+    }
+    
     if (originCep && destinationCep) {
        console.log(`🏷️ CEPs detectados (com fallback): ${originCep} → ${destinationCep}`);
       
       const cepPrice = findPriceByCep(originCep, destinationCep, fixedPriceVehicleType);
       
       if (cepPrice !== null) {
+        // Verificar se é uma rota negociável (retorna -1)
+        if (cepPrice === -1) {
+          console.log(`🤝 Rota negociável detectada: ${originCep} → ${destinationCep}`);
+          
+          // Obter dados de distância e tempo para informação
+          let distance: number = 15;
+          let estimatedTime: number = 45;
+          
+          try {
+            const googleMapsData = await getGoogleMapsDistanceAndTime(origin, destination);
+            if (googleMapsData) {
+              distance = googleMapsData.distance;
+              estimatedTime = googleMapsData.duration;
+            } else {
+              distance = await calculateDistanceBetweenAddresses(origin, destination);
+              estimatedTime = estimateTravelTime(distance);
+            }
+          } catch (error) {
+            console.warn('⚠️ Erro ao obter dados de distância/tempo para CEP, usando valores padrão');
+          }
+          
+          return {
+            distance: Math.round(distance * 10) / 10,
+            estimatedTime: Math.round(estimatedTime),
+            basePrice: -1, // Indica rota negociável
+            finalPrice: -1 // Indica rota negociável
+          };
+        }
+        
         console.log(`✅ Usando precificação por CEP: R$ ${cepPrice.toFixed(2)}`);
         
         // Obter dados de distância e tempo para informação
@@ -649,26 +805,85 @@ export const findCepInLocalData = (addressText: string): string | null => {
     .replace(/[\u0300-\u036f]/g, '') // Remove acentos
     .trim();
 
-  // Buscar nos dados locais
+  // Buscar nos dados locais com múltiplas estratégias
   const foundAddress = saoPauloAddresses.find(addr => {
-    const addressMatch = addr.main_text.toLowerCase().includes(normalizedQuery) ||
-                        addr.secondary_text.toLowerCase().includes(normalizedQuery) ||
-                        addr.keywords.some(keyword => normalizedQuery.includes(keyword.toLowerCase()));
-    return addressMatch;
+    const normalizedMainText = addr.main_text.toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+    const normalizedSecondaryText = addr.secondary_text.toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '');
+    
+    // Estratégia 1: Busca exata no texto principal
+    if (normalizedMainText.includes(normalizedQuery) || normalizedQuery.includes(normalizedMainText)) {
+      return true;
+    }
+    
+    // Estratégia 2: Busca no texto secundário
+    if (normalizedSecondaryText.includes(normalizedQuery) || normalizedQuery.includes(normalizedSecondaryText)) {
+      return true;
+    }
+    
+    // Estratégia 3: Busca por palavras-chave
+    const queryWords = normalizedQuery.split(/\s+/);
+    const addressWords = [...normalizedMainText.split(/\s+/), ...normalizedSecondaryText.split(/\s+/)];
+    
+    // Verificar se pelo menos 2 palavras coincidem
+    const matchingWords = queryWords.filter(word => 
+      word.length > 2 && addressWords.some(addrWord => 
+        addrWord.includes(word) || word.includes(addrWord)
+      )
+    );
+    
+    if (matchingWords.length >= 2) {
+      return true;
+    }
+    
+    // Estratégia 4: Busca por keywords específicas
+    return addr.keywords.some(keyword => {
+      const normalizedKeyword = keyword.toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+      return normalizedQuery.includes(normalizedKeyword) || normalizedKeyword.includes(normalizedQuery);
+    });
   });
 
   if (foundAddress) {
-    // Extrair CEP do full_address
-    const cepMatch = foundAddress.full_address.match(/\d{5}-?\d{3}/);
-    return cepMatch ? cepMatch[0] : null;
+    // Extrair CEP do full_address usando a função melhorada
+    return extractCepFromAddress(foundAddress.full_address);
   }
 
   return null;
 };
 
 export const extractCepFromAddress = (address: string): string | null => {
-  const cepMatch = address.match(/\d{5}-?\d{3}/);
-  return cepMatch ? cepMatch[0] : null;
+  // Múltiplos padrões para reconhecer CEPs em diferentes formatos
+  const patterns = [
+    /\b(\d{5})-?(\d{3})\b/g,           // 12345-678 ou 12345678
+    /\bCEP:?\s*(\d{5})-?(\d{3})\b/gi, // CEP: 12345-678 ou CEP 12345678
+    /\b(\d{5})\s*-\s*(\d{3})\b/g,     // 12345 - 678 (com espaços)
+    /\b(\d{5})\.(\d{3})\b/g,          // 12345.678
+    /\b(\d{5})\s+(\d{3})\b/g          // 12345 678 (separado por espaço)
+  ];
+
+  for (const pattern of patterns) {
+    const matches = [...address.matchAll(pattern)];
+    if (matches.length > 0) {
+      const match = matches[0];
+      // Normalizar para formato padrão 12345-678
+      if (match[1] && match[2]) {
+        return `${match[1]}-${match[2]}`;
+      } else if (match[0]) {
+        // Para padrões que capturam o CEP completo
+        const digits = match[0].replace(/\D/g, '');
+        if (digits.length === 8) {
+          return `${digits.slice(0, 5)}-${digits.slice(5)}`;
+        }
+      }
+    }
+  }
+
+  return null;
 };
 
 // Função melhorada para extrair CEP com fallback nos dados locais

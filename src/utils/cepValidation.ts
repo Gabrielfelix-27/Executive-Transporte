@@ -97,9 +97,11 @@ export const getViracoposPriceByVehicleType = (vehicleType: string): number | nu
     'economico': 890.00,
     'executivoComum': 890.00,
     
+    // Executivo Sedan
+    'executivo': 690.00,
+    
     // Executivo Premium Blindado
     'luxo': 1450.00,
-    'executivo': 1450.00,
     'executivoPremiumBlindado': 1450.00,
     
     // Van 15 lugares (mantendo valor existente)

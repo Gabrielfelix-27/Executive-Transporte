@@ -358,12 +358,9 @@ export default function VehicleSelection() {
                     <img 
                       src={category.image} 
                       alt={category.name}
-                      className={`w-full h-40 object-cover ${
-                        category.image.includes('EXECUTIVO COMUM') ? 'object-center' : ''
-                      }`}
+                      className="w-full h-40 object-contain"
                       style={{
-                        objectPosition: category.image.includes('EXECUTIVO COMUM') ? 'center 70%' : 
-                                      category.image.includes('Executivo Sedan') ? 'center 65%' : 'center'
+                        objectPosition: 'center'
                       }}
                     />
                   </div>
@@ -463,12 +460,9 @@ export default function VehicleSelection() {
                         <img 
                           src={category.image} 
                           alt={category.name}
-                          className={`w-full h-40 object-cover ${
-                            category.image.includes('EXECUTIVO COMUM') ? 'object-center' : ''
-                          }`}
+                          className="w-full h-40 object-contain"
                           style={{
-                            objectPosition: category.image.includes('EXECUTIVO COMUM') ? 'center 30%' : 
-                                          category.image.includes('Executivo Sedan') ? 'center 20%' : 'center'
+                            objectPosition: 'center'
                           }}
                         />
                       </div>
