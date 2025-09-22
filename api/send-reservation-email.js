@@ -72,9 +72,16 @@ export default async function handler(req, res) {
 
     // Configurar opções do email
     console.log('🔄 Configurando opções do email...');
+    
+    // Lista de emails para envio (principal e cópia)
+    const emailRecipients = [
+      'executivetransportepremium@gmail.com',
+      'gabriel.gbllima10@gmail.com'  // Email adicional para cópia
+    ];
+    
     const mailOptions = {
       from: process.env.GMAIL_USER,
-      to: 'gabriel.gbllima10@gmail.com',
+      to: emailRecipients.join(', '),  // Múltiplos destinatários separados por vírgula
       subject: `● Nova Reserva - ${reservationData.passengerName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
