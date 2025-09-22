@@ -2,6 +2,7 @@ import { searchAddresses, getCoordinatesFromAddress as getCoords } from '@/servi
 import { isGoogleMapsConfigured } from '@/config/maps';
 import { findFixedPrice, isDailyRequest, DAILY_RATES, identifyLocation, KNOWN_LOCATIONS } from '@/data/fixedPricing';
 import { findPriceByCep, identifyRegionByCep, normalizeCep } from '@/data/cepPricing';
+import { getRegionalPrice, RegionalPrices } from '@/data/regionalPricing';
 import { isValidViracoposRoute, getViracoposPriceByVehicleType } from './cepValidation';
 import { saoPauloAddresses } from '@/data/saoPauloAddresses';
 
@@ -431,6 +432,49 @@ export const calculateTripPrice = async (
     // Verificar se os endereços contêm CEPs (com fallback nos dados locais) e tentar usar sistema de precificação por CEP
     const originCep = extractCepWithFallback(origin);
     const destinationCep = extractCepWithFallback(destination);
+    
+    // NOVO: Verificar sistema de preços regionais primeiro
+    const regionalPrice = getRegionalPrice(originCep || '', destinationCep || '', origin, destination);
+    
+    if (regionalPrice) {
+      const vehicleTypeMapping: { [key: string]: keyof RegionalPrices } = {
+        'economico': 'executivoComum',
+        'executivo': 'executivoSedan',
+        'luxo': 'executivoPremiumBlindado',
+        'suv': 'minivanComum',
+        'minivanBlindada': 'minivanBlindada',
+        'van15Lugares': 'van15Lugares'
+      };
+      
+      const regionalVehicleType = vehicleTypeMapping[vehicleType] || 'executivoSedan';
+      const price = regionalPrice[regionalVehicleType];
+      
+      console.log(`🏙️ Usando preço regional: R$ ${price.toFixed(2)} [${vehicleType}]`);
+      
+      // Obter dados de distância e tempo para informação
+      let distance: number = 15;
+      let estimatedTime: number = 45;
+      
+      try {
+        const googleMapsData = await getGoogleMapsDistanceAndTime(origin, destination);
+        if (googleMapsData) {
+          distance = googleMapsData.distance;
+          estimatedTime = googleMapsData.duration;
+        } else {
+          distance = await calculateDistanceBetweenAddresses(origin, destination);
+          estimatedTime = estimateTravelTime(distance);
+        }
+      } catch (error) {
+        console.warn('⚠️ Erro ao obter dados de distância/tempo para preço regional, usando valores padrão');
+      }
+      
+      return {
+        distance: Math.round(distance * 10) / 10,
+        estimatedTime: Math.round(estimatedTime),
+        basePrice: price,
+        finalPrice: price
+      };
+    }
     
     // Verificar se é uma rota negociável baseada no nome da cidade ou faixa de CEP
     const isNegotiableCityRoute = (origin: string, destination: string): boolean => {
