@@ -101,17 +101,6 @@ export default function VehicleSelection() {
       // Categorias padrão se não houver dados
       const defaultCategories = [
         {
-          id: 'sedan',
-          type: 'Sedan',
-          name: 'Executivo Sedan',
-          description: 'Sedan executivo confortável',
-          image: '/vehicles/Executivo Sedan.webp',
-          capacity: 3,
-          price: 184,
-          features: ['Ar condicionado', 'Wi-Fi', 'Água'],
-          luggage: { small: 2, medium: 2, large: 1 }
-        },
-        {
           id: 'comum',
           type: 'Sedan',
           name: 'Executivo Comum',
@@ -123,14 +112,14 @@ export default function VehicleSelection() {
           luggage: { small: 2, medium: 2, large: 1 }
         },
         {
-          id: 'premium',
-          type: 'Premium',
-          name: 'Executivo Premium Blindado',
-          description: 'Máxima segurança e conforto',
-          image: '/vehicles/EXECUTIVO PREMIUM BLINDADO.webp',
+          id: 'sedan',
+          type: 'Sedan',
+          name: 'Executivo Sedan',
+          description: 'Sedan executivo confortável',
+          image: '/vehicles/Executivo Sedan.webp',
           capacity: 3,
-          price: 384,
-          features: ['Ar condicionado', 'Wi-Fi', 'Água', 'Blindagem', 'Segurança'],
+          price: 184,
+          features: ['Ar condicionado', 'Wi-Fi', 'Água'],
           luggage: { small: 2, medium: 2, large: 1 }
         },
         {
@@ -143,6 +132,17 @@ export default function VehicleSelection() {
           price: 284,
           features: ['Ar condicionado', 'Wi-Fi', 'Água', 'Espaço amplo'],
           luggage: { small: 3, medium: 3, large: 2 }
+        },
+        {
+          id: 'premium',
+          type: 'Premium',
+          name: 'Executivo Premium Blindado',
+          description: 'Máxima segurança e conforto',
+          image: '/vehicles/EXECUTIVO PREMIUM BLINDADO.webp',
+          capacity: 3,
+          price: 384,
+          features: ['Ar condicionado', 'Wi-Fi', 'Água', 'Blindagem', 'Segurança'],
+          luggage: { small: 2, medium: 2, large: 1 }
         },
         {
           id: 'minivan-blindada',
