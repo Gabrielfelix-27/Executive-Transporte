@@ -144,7 +144,7 @@ export const QuoteForm = () => {
             description: 'Veículo executivo padrão com bom conforto'
           },
           executivoPremiumBlindado: {
-            name: 'EXECUTIVO BLINDADO',
+            name: 'Executivo Premium Blindado',
             price: executivoPremiumBlindadoData.finalPrice,
             basePrice: executivoPremiumBlindadoData.basePrice,
             passengers: 4,
@@ -160,7 +160,7 @@ export const QuoteForm = () => {
             description: 'Espaço amplo para grupos de até 7 pessoas'
           },
           minivanBlindada: {
-            name: 'VAN BLINDADA',
+            name: 'MiniVan Blindada',
             price: minivanBlindadaData.finalPrice,
             basePrice: minivanBlindadaData.basePrice,
             passengers: 7,
@@ -168,7 +168,7 @@ export const QuoteForm = () => {
             description: 'Segurança máxima para grupos com blindagem completa'
           },
           van15Lugares: {
-            name: 'VAN 15',
+            name: 'Van 15 Lugares',
             price: van15LugaresData.finalPrice,
             basePrice: van15LugaresData.basePrice,
             passengers: 15,
