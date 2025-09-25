@@ -75,27 +75,60 @@ export default function VehicleSelection() {
     console.log('🔍 VehicleSelection recebeu dados:', quoteData);
     
     if (quoteData.vehicles && typeof quoteData.vehicles === 'object') {
-      // Converter objeto de veículos em array
-      const vehicleArray = Object.entries(quoteData.vehicles).map(([key, vehicle]: [string, any]) => ({
-        id: key,
-        type: vehicle.name.includes('Sedan') ? 'Sedan' : 
-              vehicle.name.includes('Van') ? 'Van' : 
-              vehicle.name.includes('MiniVan') ? 'SUV' : 'Sedan',
-        name: vehicle.name,
-        description: vehicle.description,
-        image: vehicle.name.includes('Sedan') ? '/vehicles/Executivo Sedan.webp' :
-        vehicle.name.includes('Executivo Comum') ? '/vehicles/EXECUTIVO COMUM.webp' :
-        vehicle.name.includes('Premium') || vehicle.name.includes('Blindado') ? '/vehicles/EXECUTIVO PREMIUM BLINDADO.webp' :
-        vehicle.name.includes('MiniVan Blindada') ? '/vehicles/MINIVAN BLINDADA.webp' :
-        vehicle.name.includes('MiniVan') ? '/vehicles/MINIVAN COMUM.webp' :
-        vehicle.name.includes('Van') ? '/vehicles/VAN 15 LUGARES.webp' : '/vehicles/EXECUTIVO COMUM.webp',
-        capacity: vehicle.passengers,
-        price: vehicle.price,
-        features: ['Ar condicionado', 'Wi-Fi', 'Água'],
-        luggage: { small: 2, medium: 2, large: 1 }
-      }));
+      // Converter objeto de veículos em array e criar ordem específica
+      const vehicleEntries = Object.entries(quoteData.vehicles);
       
-      console.log('🚗 Categorias processadas:', vehicleArray);
+      // Definir ordem desejada dos veículos
+      const desiredOrder = [
+        'Executivo Comum',
+        'Executivo Sedan', 
+        'MiniVan Comum',
+        'Executivo Premium Blindado',
+        'MiniVan Blindada',
+        'Van 15 Lugares'
+      ];
+      
+      // Mapear veículos mantendo ordem específica e evitando duplicatas
+      const vehicleArray = desiredOrder
+        .map(desiredName => {
+          // Encontrar veículo correspondente nos dados
+          const vehicleEntry = vehicleEntries.find(([key, vehicle]: [string, any]) => 
+            vehicle.name === desiredName || 
+            vehicle.name.includes(desiredName) ||
+            (desiredName === 'Executivo Sedan' && vehicle.name.includes('Sedan')) ||
+            (desiredName === 'Executivo Comum' && vehicle.name.includes('Executivo') && !vehicle.name.includes('Sedan') && !vehicle.name.includes('Premium') && !vehicle.name.includes('Blindado')) ||
+            (desiredName === 'MiniVan Comum' && vehicle.name.includes('MiniVan') && !vehicle.name.includes('Blindada')) ||
+            (desiredName === 'Executivo Premium Blindado' && (vehicle.name.includes('Premium') || vehicle.name.includes('Blindado')) && vehicle.name.includes('Executivo')) ||
+            (desiredName === 'MiniVan Blindada' && vehicle.name.includes('MiniVan') && vehicle.name.includes('Blindada')) ||
+            (desiredName === 'Van 15 Lugares' && vehicle.name.includes('Van') && !vehicle.name.includes('MiniVan'))
+          );
+          
+          if (!vehicleEntry) return null;
+          
+          const [key, vehicle] = vehicleEntry;
+          
+          return {
+            id: key,
+            type: desiredName.includes('Sedan') ? 'Sedan' : 
+                  desiredName.includes('Van') && !desiredName.includes('MiniVan') ? 'Van' : 
+                  desiredName.includes('MiniVan') ? 'SUV' : 'Sedan',
+            name: desiredName,
+            description: vehicle.description,
+            image: desiredName === 'Executivo Sedan' ? '/vehicles/Executivo Sedan.webp' :
+                   desiredName === 'Executivo Comum' ? '/vehicles/EXECUTIVO COMUM.webp' :
+                   desiredName === 'Executivo Premium Blindado' ? '/vehicles/EXECUTIVO PREMIUM BLINDADO.webp' :
+                   desiredName === 'MiniVan Blindada' ? '/vehicles/MINIVAN BLINDADA.webp' :
+                   desiredName === 'MiniVan Comum' ? '/vehicles/MINIVAN COMUM.webp' :
+                   desiredName === 'Van 15 Lugares' ? '/vehicles/VAN 15 LUGARES.webp' : '/vehicles/EXECUTIVO COMUM.webp',
+            capacity: vehicle.passengers,
+            price: vehicle.price,
+            features: ['Ar condicionado', 'Wi-Fi', 'Água'],
+            luggage: { small: 2, medium: 2, large: 1 }
+          };
+        })
+        .filter(Boolean); // Remove entradas nulas
+      
+      console.log('🚗 Categorias processadas com ordem específica:', vehicleArray);
       setCategories(vehicleArray);
     } else {
       // Categorias padrão se não houver dados
