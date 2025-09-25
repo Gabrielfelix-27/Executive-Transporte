@@ -73,10 +73,19 @@ export default function VehicleSelection() {
   // Processar dados da viagem
   useEffect(() => {
     console.log('🔍 VehicleSelection recebeu dados:', quoteData);
+    console.log('🔍 Tipo de quoteData.vehicles:', typeof quoteData.vehicles);
+    console.log('🔍 quoteData.vehicles:', quoteData.vehicles);
     
     if (quoteData.vehicles && typeof quoteData.vehicles === 'object') {
       // Converter objeto de veículos em array e criar ordem específica
       const vehicleEntries = Object.entries(quoteData.vehicles);
+      console.log('🔍 vehicleEntries encontradas:', vehicleEntries);
+      console.log('🔍 Número de veículos encontrados:', vehicleEntries.length);
+      
+      // Log dos nomes dos veículos encontrados
+      vehicleEntries.forEach(([key, vehicle]: [string, any]) => {
+        console.log(`🚗 Veículo encontrado: "${vehicle.name}" (key: ${key})`);
+      });
       
       // Definir ordem desejada dos veículos
       const desiredOrder = [
@@ -91,19 +100,29 @@ export default function VehicleSelection() {
       // Mapear veículos mantendo ordem específica e evitando duplicatas
       const vehicleArray = desiredOrder
         .map(desiredName => {
-          // Encontrar veículo correspondente nos dados
-          const vehicleEntry = vehicleEntries.find(([key, vehicle]: [string, any]) => 
-            vehicle.name === desiredName || 
-            vehicle.name.includes(desiredName) ||
-            (desiredName === 'Executivo Sedan' && vehicle.name.includes('Sedan')) ||
-            (desiredName === 'Executivo Comum' && vehicle.name.includes('Executivo') && !vehicle.name.includes('Sedan') && !vehicle.name.includes('Premium') && !vehicle.name.includes('Blindado')) ||
-            (desiredName === 'MiniVan Comum' && vehicle.name.includes('MiniVan') && !vehicle.name.includes('Blindada')) ||
-            (desiredName === 'Executivo Premium Blindado' && (vehicle.name.includes('Premium') || vehicle.name.includes('Blindado')) && vehicle.name.includes('Executivo')) ||
-            (desiredName === 'MiniVan Blindada' && vehicle.name.includes('MiniVan') && vehicle.name.includes('Blindada')) ||
-            (desiredName === 'Van 15 Lugares' && vehicle.name.includes('Van') && !vehicle.name.includes('MiniVan'))
-          );
+          console.log(`🔍 Procurando por: "${desiredName}"`);
           
-          if (!vehicleEntry) return null;
+          // Encontrar veículo correspondente nos dados
+          const vehicleEntry = vehicleEntries.find(([key, vehicle]: [string, any]) => {
+            const matches = vehicle.name === desiredName || 
+              vehicle.name.includes(desiredName) ||
+              (desiredName === 'Executivo Sedan' && vehicle.name.includes('Sedan')) ||
+              (desiredName === 'Executivo Comum' && vehicle.name.includes('Executivo') && !vehicle.name.includes('Sedan') && !vehicle.name.includes('Premium') && !vehicle.name.includes('Blindado')) ||
+              (desiredName === 'MiniVan Comum' && vehicle.name.includes('MiniVan') && !vehicle.name.includes('Blindada')) ||
+              (desiredName === 'Executivo Premium Blindado' && (vehicle.name.includes('Premium') || vehicle.name.includes('Blindado')) && vehicle.name.includes('Executivo')) ||
+              (desiredName === 'MiniVan Blindada' && vehicle.name.includes('MiniVan') && vehicle.name.includes('Blindada')) ||
+              (desiredName === 'Van 15 Lugares' && vehicle.name.includes('Van') && !vehicle.name.includes('MiniVan'));
+            
+            if (matches) {
+              console.log(`✅ Match encontrado para "${desiredName}": "${vehicle.name}"`);
+            }
+            return matches;
+          });
+          
+          if (!vehicleEntry) {
+            console.log(`❌ Nenhum match encontrado para: "${desiredName}"`);
+            return null;
+          }
           
           const [key, vehicle] = vehicleEntry;
           
