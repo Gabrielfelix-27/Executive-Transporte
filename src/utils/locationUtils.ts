@@ -35,7 +35,7 @@ const toRad = (value: number): number => {
   return value * Math.PI / 180;
 };
 
-// Nova função para obter distância real usando Google Maps Distance Matrix API
+// Nova função para obter distância real usando Google Maps Routes API (recomendada)
 export const getGoogleMapsDistanceAndTime = async (
   origin: string,
   destination: string
@@ -49,7 +49,7 @@ export const getGoogleMapsDistanceAndTime = async (
     // Verificar cache primeiro
     if (distanceMatrixCache.has(cacheKey)) {
       const cached = distanceMatrixCache.get(cacheKey)!;
-      console.log(`📋 [DEBUG] Distance Matrix cache hit: ${cached.distance}km, ${cached.duration}min`);
+      console.log(`📋 [DEBUG] Routes API cache hit: ${cached.distance}km, ${cached.duration}min`);
       return cached;
     }
 
@@ -65,12 +65,95 @@ export const getGoogleMapsDistanceAndTime = async (
     });
     
     if (!isConfigured || !hasGoogleMaps) {
-      console.warn('⚠️ [DEBUG] Google Maps não configurado para Distance Matrix');
+      console.warn('⚠️ [DEBUG] Google Maps não configurado para Routes API');
       return null;
     }
 
-    console.log(`🚀 [DEBUG] Iniciando chamada ao Google Maps Distance Matrix API`);
+    // Tentar usar Routes API primeiro (recomendada)
+    if (window.google?.maps?.routes?.DirectionsService) {
+      console.log(`🚀 [DEBUG] Usando Routes API (recomendada)`);
+      return await getDistanceUsingRoutesAPI(origin, destination, cacheKey);
+    }
+    
+    // Fallback para Distance Matrix API (depreciada)
+    console.warn(`⚠️ [DEBUG] Routes API não disponível, usando Distance Matrix API (depreciada)`);
+    return await getDistanceUsingDistanceMatrix(origin, destination, cacheKey);
 
+  } catch (error) {
+    console.error('❌ [DEBUG] Erro no Google Maps API:', error);
+    return null;
+  }
+};
+
+// Função para usar Routes API (nova e recomendada)
+const getDistanceUsingRoutesAPI = async (
+  origin: string,
+  destination: string,
+  cacheKey: string
+): Promise<{ distance: number; duration: number } | null> => {
+  try {
+    const directionsService = new window.google.maps.routes.DirectionsService();
+    
+    const result = await new Promise<google.maps.DirectionsResult>((resolve, reject) => {
+      directionsService.route(
+        {
+          origin: origin,
+          destination: destination,
+          travelMode: google.maps.TravelMode.DRIVING,
+          unitSystem: google.maps.UnitSystem.METRIC,
+          avoidHighways: false,
+          avoidTolls: false,
+          region: 'BR'
+        },
+        (response, status) => {
+          console.log(`📡 [DEBUG] Routes API resposta:`, { status, response });
+          
+          if (status === 'OK' && response) {
+            resolve(response);
+          } else {
+            reject(new Error(`Routes API error: ${status}`));
+          }
+        }
+      );
+    });
+
+    const route = result.routes[0];
+    const leg = route?.legs[0];
+    
+    if (leg?.distance && leg?.duration) {
+      const distanceKm = leg.distance.value / 1000; // Converter metros para km
+      const durationMin = Math.round(leg.duration.value / 60); // Converter segundos para minutos
+      
+      const data = { distance: distanceKm, duration: durationMin };
+      
+      // Salvar no cache
+      distanceMatrixCache.set(cacheKey, data);
+      
+      // Limitar tamanho do cache
+      if (distanceMatrixCache.size > 50) {
+        const firstKey = distanceMatrixCache.keys().next().value;
+        distanceMatrixCache.delete(firstKey);
+      }
+      
+      console.log(`✅ [DEBUG] Routes API sucesso: ${distanceKm.toFixed(1)}km, ${durationMin}min`);
+      return data;
+    } else {
+      console.warn('⚠️ [DEBUG] Routes API retornou dados inválidos:', leg);
+      return null;
+    }
+  } catch (error) {
+    console.error('❌ [DEBUG] Erro na Routes API:', error);
+    return null;
+  }
+};
+
+// Função para usar Distance Matrix API (fallback para compatibilidade)
+const getDistanceUsingDistanceMatrix = async (
+  origin: string,
+  destination: string,
+  cacheKey: string
+): Promise<{ distance: number; duration: number } | null> => {
+  try {
     const service = new window.google.maps.DistanceMatrixService();
     
     const result = await new Promise<google.maps.DistanceMatrixResponse>((resolve, reject) => {
@@ -114,21 +197,14 @@ export const getGoogleMapsDistanceAndTime = async (
         distanceMatrixCache.delete(firstKey);
       }
       
-      console.log(`✅ [DEBUG] Google Maps Distance Matrix sucesso: ${distanceKm.toFixed(1)}km, ${durationMin}min`);
-      console.log(`📊 [DEBUG] Dados detalhados:`, {
-        distance: element.distance,
-        duration: element.duration,
-        status: element.status
-      });
-      
+      console.log(`✅ [DEBUG] Distance Matrix API sucesso: ${distanceKm.toFixed(1)}km, ${durationMin}min`);
       return data;
     } else {
-      console.warn('⚠️ [DEBUG] Google Maps Distance Matrix retornou dados inválidos:', element);
+      console.warn('⚠️ [DEBUG] Distance Matrix API retornou dados inválidos:', element);
       return null;
     }
-
   } catch (error) {
-    console.error('❌ [DEBUG] Erro no Google Maps Distance Matrix:', error);
+    console.error('❌ [DEBUG] Erro na Distance Matrix API:', error);
     return null;
   }
 };

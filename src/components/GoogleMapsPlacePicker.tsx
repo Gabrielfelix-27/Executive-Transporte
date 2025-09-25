@@ -136,13 +136,13 @@ export const GoogleMapsPlacePicker: React.FC<GoogleMapsPlacePickerProps> = ({
       await new Promise(resolve => setTimeout(resolve, 300));
       
       if ((window as any).google && (window as any).google.maps && (window as any).google.maps.places) {
-        // Verificar se a nova API está disponível
+        // Priorizar a nova API PlaceAutocompleteElement
         if ((window as any).google.maps.places.PlaceAutocompleteElement) {
           setUseNewAPI(true);
-          console.log('✅ Usando nova PlaceAutocompleteElement API');
+          console.log('✅ Usando nova PlaceAutocompleteElement API (recomendada)');
           initializeNewAutocomplete();
         } else {
-          console.log('ℹ️ Usando Autocomplete clássico (será depreciado)');
+          console.warn('⚠️ PlaceAutocompleteElement não disponível, usando Autocomplete clássico (depreciado)');
           initializeClassicAutocomplete();
         }
         
