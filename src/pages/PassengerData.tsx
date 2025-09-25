@@ -55,7 +55,7 @@ const PassengerData = () => {
   const [passengerInfo, setPassengerInfo] = useState<PassengerInfo>({
     reserveFor: "para-mim",
     flightNumber: "",
-    plateNameShow: t('passenger.executiveTransport'),
+    plateNameShow: "", // Iniciar vazio para preenchimento automático
     luggageCount: 2,
     additionalInfo: "",
     passengerName: "",
@@ -447,7 +447,7 @@ Reserva feita através do site Executive Premium`;
 
   // Verificar se todos os campos obrigatórios estão preenchidos
   const isFormValid = () => {
-    if (!passengerInfo.passengerName || !passengerInfo.phoneNumber || !passengerInfo.email) {
+    if (!passengerInfo.passengerName || !passengerInfo.phoneNumber || !passengerInfo.email || !passengerInfo.plateNameShow) {
       return false;
     }
     
@@ -720,7 +720,15 @@ Reserva feita através do site Executive Premium`;
                       placeholder={t('placeholder.fullName')}
                       className="bg-gray-100"
                       value={passengerInfo.passengerName}
-                      onChange={(e) => setPassengerInfo({...passengerInfo, passengerName: e.target.value})}
+                      onChange={(e) => {
+                        const newName = e.target.value;
+                        setPassengerInfo({
+                          ...passengerInfo, 
+                          passengerName: newName,
+                          // Preencher automaticamente o nome na placa se estiver vazio
+                          plateNameShow: passengerInfo.plateNameShow === "" ? newName : passengerInfo.plateNameShow
+                        });
+                      }}
                       required
                     />
                   </div>
@@ -731,12 +739,14 @@ Reserva feita através do site Executive Premium`;
                   {/* Name on Plate */}
                   <div>
                     <Label className="text-sm text-gray-600 mb-2 block">
-                      {t('passenger.plateName')}
+                      {t('passenger.plateName')} *
                     </Label>
                     <Input
                       className="bg-gray-100"
+                      placeholder="Nome que aparecerá na placa"
                       value={passengerInfo.plateNameShow}
                       onChange={(e) => setPassengerInfo({...passengerInfo, plateNameShow: e.target.value})}
+                      required
                     />
                   </div>
 

@@ -35,23 +35,40 @@ export const QuoteForm = () => {
   const getCurrentDate = () => {
     // Criar data atual no horário de Brasília (UTC-3)
     const now = new Date();
-    return new Date(now.toLocaleString("en-US", {timeZone: "America/Sao_Paulo"}));
+    const brasiliaTime = new Date(now.toLocaleString("en-US", {timeZone: "America/Sao_Paulo"}));
+    
+    // REGRA: Após 17h, automaticamente ajustar para o próximo dia
+    if (brasiliaTime.getHours() >= 17) {
+      brasiliaTime.setDate(brasiliaTime.getDate() + 1);
+      brasiliaTime.setHours(8, 0, 0, 0); // Definir para 8h do próximo dia
+    }
+    
+    return brasiliaTime;
   };
 
   // Função para obter data/hora mínima de Brasília com 24 horas de antecedência
   const getMinDateTime = () => {
     const now = new Date();
     const brasiliaTime = new Date(now.toLocaleString("en-US", {timeZone: "America/Sao_Paulo"}));
+    
+    // REGRA: Após 17h, automaticamente ajustar para o próximo dia
+    if (brasiliaTime.getHours() >= 17) {
+      brasiliaTime.setDate(brasiliaTime.getDate() + 1);
+      brasiliaTime.setHours(8, 0, 0, 0); // Definir para 8h do próximo dia
+      return brasiliaTime;
+    }
+    
+    // Antes das 17h, aplicar regra normal de 24h de antecedência
     brasiliaTime.setHours(brasiliaTime.getHours() + 24);
     return brasiliaTime;
   };
 
   // Inicializar campos com valores padrão
   useEffect(() => {
-    const currentDate = getCurrentDate();
-    const currentTime = getCurrentTime();
+    const minDateTime = getMinDateTime();
+    const currentTime = minDateTime.toTimeString().slice(0, 5);
     
-    setSelectedDate(currentDate);
+    setSelectedDate(minDateTime);
     setSelectedTime(currentTime);
   }, []);
 
@@ -71,7 +88,17 @@ export const QuoteForm = () => {
       return;
     }
 
-    // Nota: O sistema já aplica automaticamente 2 horas de antecedência no TimePicker
+    // Validar se a data/hora selecionada atende ao requisito de 24h de antecedência
+    const selectedDateTime = new Date(selectedDate);
+    const [hours, minutes] = selectedTime.split(':').map(Number);
+    selectedDateTime.setHours(hours, minutes, 0, 0);
+    
+    const minDateTime = getMinDateTime();
+    
+    if (selectedDateTime < minDateTime) {
+      setErrorMessage(t('quote.minAdvanceTime'));
+      return;
+    }
 
     setIsCalculating(true);
 
@@ -204,27 +231,15 @@ export const QuoteForm = () => {
     if (!selectedDate) return '';
     
     const minDateTime = getMinDateTime();
-    const brasiliaToday = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Sao_Paulo"}));
+    const selectedDateOnly = new Date(selectedDate);
+    selectedDateOnly.setHours(0, 0, 0, 0);
     
-    // Se a data selecionada for hoje (horário de Brasília), o horário mínimo é atual + 24h
-    if (selectedDate.toDateString() === brasiliaToday.toDateString()) {
-      return getCurrentTime();
-    }
+    const minDateOnly = new Date(minDateTime);
+    minDateOnly.setHours(0, 0, 0, 0);
     
-    // Se a data selecionada for amanhã (horário de Brasília)
-    const tomorrow = new Date(brasiliaToday);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    
-    if (selectedDate.toDateString() === tomorrow.toDateString()) {
-      // Para amanhã, verificar se ainda precisa respeitar as 24h de antecedência
-      const now = new Date(new Date().toLocaleString("en-US", {timeZone: "America/Sao_Paulo"}));
-      const hoursUntilTomorrow = (tomorrow.getTime() - now.getTime()) / (1000 * 60 * 60);
-      
-      if (hoursUntilTomorrow < 24) {
-        // Se faltam menos de 24h para amanhã, calcular horário mínimo
-        const minTime = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-        return minTime.toTimeString().slice(0, 5);
-      }
+    // Se a data selecionada for a mesma que a data mínima, usar o horário mínimo
+    if (selectedDateOnly.getTime() === minDateOnly.getTime()) {
+      return minDateTime.toTimeString().slice(0, 5);
     }
     
     // Para datas futuras (mais de 24h), pode ser qualquer horário
@@ -370,7 +385,7 @@ export const QuoteForm = () => {
             date={selectedDate}
             onDateSelect={handleDateChange}
             placeholder={t('quote.date')}
-            minDate={new Date()}
+            minDate={getMinDateTime()}
             className="text-gray-700"
           />
         </div>

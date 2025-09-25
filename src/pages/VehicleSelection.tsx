@@ -85,7 +85,7 @@ export default function VehicleSelection() {
         description: vehicle.description,
         image: vehicle.name.includes('Sedan') ? '/vehicles/Executivo Sedan.webp' :
         vehicle.name.includes('Executivo Comum') ? '/vehicles/EXECUTIVO COMUM.webp' :
-        vehicle.name.includes('Blindado') ? '/vehicles/EXECUTIVO PREMIUM BLINDADO.webp' :
+        vehicle.name.includes('Premium') || vehicle.name.includes('Blindado') ? '/vehicles/EXECUTIVO PREMIUM BLINDADO.webp' :
         vehicle.name.includes('MiniVan Blindada') ? '/vehicles/MINIVAN BLINDADA.webp' :
         vehicle.name.includes('MiniVan') ? '/vehicles/MINIVAN COMUM.webp' :
         vehicle.name.includes('Van') ? '/vehicles/VAN 15 LUGARES.webp' : '/vehicles/EXECUTIVO COMUM.webp',
@@ -101,35 +101,68 @@ export default function VehicleSelection() {
       // Categorias padrão se não houver dados
       const defaultCategories = [
         {
-          id: 'economy',
+          id: 'sedan',
           type: 'Sedan',
-          name: 'Economy',
-          description: 'Confortável e econômico',
-          image: '/vehicles/EXECUTIVO COMUM.webp',
+          name: 'Executivo Sedan',
+          description: 'Sedan executivo confortável',
+          image: '/vehicles/Executivo Sedan.webp',
           capacity: 3,
           price: 184,
           features: ['Ar condicionado', 'Wi-Fi', 'Água'],
           luggage: { small: 2, medium: 2, large: 1 }
         },
         {
-          id: 'executive',
-          type: 'SUV',
-          name: 'Executive',
-          description: 'Luxo e conforto premium',
-          image: '/vehicles/Executivo Sedan.webp',
+          id: 'comum',
+          type: 'Sedan',
+          name: 'Executivo Comum',
+          description: 'Veículo executivo padrão',
+          image: '/vehicles/EXECUTIVO COMUM.webp',
+          capacity: 3,
+          price: 204,
+          features: ['Ar condicionado', 'Wi-Fi', 'Água'],
+          luggage: { small: 2, medium: 2, large: 1 }
+        },
+        {
+          id: 'premium',
+          type: 'Premium',
+          name: 'Executivo Premium Blindado',
+          description: 'Máxima segurança e conforto',
+          image: '/vehicles/EXECUTIVO PREMIUM BLINDADO.webp',
+          capacity: 3,
+          price: 384,
+          features: ['Ar condicionado', 'Wi-Fi', 'Água', 'Blindagem', 'Segurança'],
+          luggage: { small: 2, medium: 2, large: 1 }
+        },
+        {
+          id: 'minivan',
+          type: 'MiniVan',
+          name: 'MiniVan Comum',
+          description: 'Espaço e conforto para grupos',
+          image: '/vehicles/MINIVAN COMUM.webp',
           capacity: 6,
           price: 284,
-          features: ['Ar condicionado', 'Wi-Fi', 'Água', 'Jornais'],
+          features: ['Ar condicionado', 'Wi-Fi', 'Água', 'Espaço amplo'],
           luggage: { small: 3, medium: 3, large: 2 }
         },
         {
-          id: 'luxury',
+          id: 'minivan-blindada',
+          type: 'MiniVan',
+          name: 'MiniVan Blindada',
+          description: 'Segurança e espaço premium',
+          image: '/vehicles/MINIVAN BLINDADA.webp',
+          capacity: 6,
+          price: 484,
+          features: ['Ar condicionado', 'Wi-Fi', 'Água', 'Blindagem', 'Espaço amplo'],
+          luggage: { small: 3, medium: 3, large: 2 }
+        },
+        {
+          id: 'van',
           type: 'Van',
-          name: 'Luxury',
-          description: 'Máximo conforto e espaço',
+          name: 'Van 15 Lugares',
+          description: 'Máximo espaço para grandes grupos',
           image: '/vehicles/VAN 15 LUGARES.webp',
           capacity: 14,
-          price: 384,
+          price: 584,
           features: ['Ar condicionado', 'Wi-Fi', 'Água', 'TV', 'Som premium'],
           luggage: { small: 4, medium: 4, large: 3 }
         }
@@ -354,11 +387,11 @@ export default function VehicleSelection() {
               >
                 <CardContent className="p-6">
                   {/* Vehicle Image */}
-                  <div className="bg-gray-100 rounded-lg p-4 mb-4">
+                  <div className="bg-gray-100 rounded-lg mb-4 overflow-hidden">
                     <img 
                       src={category.image} 
                       alt={category.name}
-                      className="w-full h-40 object-contain"
+                      className="w-full h-48 object-cover"
                       style={{
                         objectPosition: 'center'
                       }}
@@ -456,11 +489,11 @@ export default function VehicleSelection() {
                   >
                     <CardContent className="p-6">
                       {/* Vehicle Image */}
-                      <div className="bg-gray-100 rounded-lg p-4 mb-4">
+                      <div className="bg-gray-100 rounded-lg mb-4 overflow-hidden">
                         <img 
                           src={category.image} 
                           alt={category.name}
-                          className="w-full h-40 object-contain"
+                          className="w-full h-48 object-cover"
                           style={{
                             objectPosition: 'center'
                           }}
