@@ -89,10 +89,10 @@ export default function VehicleSelection() {
       
       // Definir ordem desejada dos veículos
       const desiredOrder = [
-        'Executivo Comum',
-        'Executivo Sedan', 
-        'MiniVan Comum',
+        'Executivo Sedan',
+        'Executivo Comum', 
         'Executivo Premium Blindado',
+        'MiniVan Comum',
         'MiniVan Blindada',
         'Van 15 Lugares'
       ];
@@ -153,6 +153,17 @@ export default function VehicleSelection() {
       // Categorias padrão se não houver dados
       const defaultCategories = [
         {
+          id: 'sedan',
+          type: 'Sedan',
+          name: 'Executivo Sedan',
+          description: 'Sedan executivo confortável',
+          image: '/vehicles/Executivo Sedan.webp',
+          capacity: 3,
+          price: 184,
+          features: ['Ar condicionado', 'Wi-Fi', 'Água'],
+          luggage: { small: 2, medium: 2, large: 1 }
+        },
+        {
           id: 'comum',
           type: 'Sedan',
           name: 'Executivo Comum',
@@ -164,14 +175,14 @@ export default function VehicleSelection() {
           luggage: { small: 2, medium: 2, large: 1 }
         },
         {
-          id: 'sedan',
-          type: 'Sedan',
-          name: 'Executivo Sedan',
-          description: 'Sedan executivo confortável',
-          image: '/vehicles/Executivo Sedan.webp',
+          id: 'premium',
+          type: 'Premium',
+          name: 'Executivo Premium Blindado',
+          description: 'Máxima segurança e conforto',
+          image: '/vehicles/EXECUTIVO PREMIUM BLINDADO.webp',
           capacity: 3,
-          price: 184,
-          features: ['Ar condicionado', 'Wi-Fi', 'Água'],
+          price: 384,
+          features: ['Ar condicionado', 'Wi-Fi', 'Água', 'Blindagem', 'Segurança'],
           luggage: { small: 2, medium: 2, large: 1 }
         },
         {
@@ -184,17 +195,6 @@ export default function VehicleSelection() {
           price: 284,
           features: ['Ar condicionado', 'Wi-Fi', 'Água', 'Espaço amplo'],
           luggage: { small: 3, medium: 3, large: 2 }
-        },
-        {
-          id: 'premium',
-          type: 'Premium',
-          name: 'Executivo Premium Blindado',
-          description: 'Máxima segurança e conforto',
-          image: '/vehicles/EXECUTIVO PREMIUM BLINDADO.webp',
-          capacity: 3,
-          price: 384,
-          features: ['Ar condicionado', 'Wi-Fi', 'Água', 'Blindagem', 'Segurança'],
-          luggage: { small: 2, medium: 2, large: 1 }
         },
         {
           id: 'minivan-blindada',
@@ -445,15 +445,14 @@ export default function VehicleSelection() {
                       alt={category.name}
                       className="w-full h-48 object-cover"
                       style={{
-                        objectPosition: 'center'
+                        objectPosition: (category.name === 'Executivo Comum' || category.name === 'Executivo Sedan') 
+                          ? 'center bottom' 
+                          : 'center'
                       }}
                     />
                   </div>
 
-                  {/* Vehicle Type */}
-                  <div className="text-xs text-gray-500 text-center mb-2">
-                    {category.type.toUpperCase()}
-                  </div>
+
 
                   {/* Category Name */}
                   <h3 className="font-bold text-center mb-4 text-gray-900">
@@ -552,10 +551,7 @@ export default function VehicleSelection() {
                         />
                       </div>
 
-                      {/* Vehicle Type */}
-                      <div className="text-xs text-gray-500 text-center mb-2">
-                        {category.type.toUpperCase()}
-                      </div>
+
 
                       {/* Category Name */}
                       <h3 className="font-bold text-center mb-4 text-gray-900 text-base">

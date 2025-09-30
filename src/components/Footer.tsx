@@ -17,6 +17,19 @@ export const Footer = () => {
                 <p>{t('footer.companyFull')}</p>
                 <p>{t('footer.address')}</p>
                 <p>{t('footer.phone')}</p>
+                <div className="mt-1">
+                  <a 
+                    href="https://wa.me/5511915853292" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="hover:text-[#ffc68b] transition-colors cursor-pointer"
+                  >
+                    WhatsApp: (11) 91585-3292
+                  </a>
+                </div>
+                <div className="mt-1">
+                  <p>Telefone Fixo: (11) 5128-5606</p>
+                </div>
                 <p>{t('footer.email')}</p>
               </div>
             </div>
