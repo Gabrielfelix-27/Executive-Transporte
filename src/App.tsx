@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { Analytics } from "@vercel/analytics/react";
 
 // Lazy loading das páginas para code splitting
 const Index = React.lazy(() => import("./pages/Index"));
@@ -119,6 +120,7 @@ const App = () => (
           {/* WhatsApp Button - Aparece em todas as páginas */}
           </BrowserRouter>
         <WhatsAppButton />
+        <Analytics />
       </TooltipProvider>
     </LanguageProvider>
   </QueryClientProvider>
