@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Lazy loading das páginas para code splitting
 const Index = React.lazy(() => import("./pages/Index"));
@@ -121,6 +122,7 @@ const App = () => (
           </BrowserRouter>
         <WhatsAppButton />
         <Analytics />
+        <SpeedInsights />
       </TooltipProvider>
     </LanguageProvider>
   </QueryClientProvider>
