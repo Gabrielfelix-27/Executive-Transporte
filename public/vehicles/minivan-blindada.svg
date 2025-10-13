@@ -1,0 +1,107 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="carGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2d2d2d;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0a0a0a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="windowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d3748;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#1a202c;stop-opacity:0.95" />
+    </linearGradient>
+    <radialGradient id="wheelGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#4a5568;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#2d3748;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a202c;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="400" fill="#f7fafc"/>
+  
+  <!-- Armored Minivan Body (Reinforced look) -->
+  <path d="M90 240 L130 180 L170 160 L630 160 L670 180 L710 240 L710 305 L670 325 L130 325 L90 305 Z" 
+        fill="url(#carGradient)" stroke="#000" stroke-width="3"/>
+  
+  <!-- Armored Roof (Reinforced) -->
+  <path d="M150 180 L170 140 L630 140 L650 180 Z" 
+        fill="url(#carGradient)" stroke="#000" stroke-width="2"/>
+  
+  <!-- Armored Windows (Darker and thicker) -->
+  <path d="M160 175 L180 145 L270 145 L270 175 Z" 
+        fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  <path d="M280 175 L280 145 L370 145 L370 175 Z" 
+        fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  <path d="M380 175 L380 145 L470 145 L470 175 Z" 
+        fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  <path d="M480 175 L480 145 L570 145 L570 175 Z" 
+        fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  <path d="M580 175 L580 145 L620 145 L640 175 Z" 
+        fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  
+  <!-- Armored Side Windows (Thicker frames) -->
+  <rect x="190" y="200" width="75" height="35" fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  <rect x="285" y="200" width="75" height="35" fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  <rect x="380" y="200" width="75" height="35" fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  <rect x="475" y="200" width="75" height="35" fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  
+  <!-- Front and Rear Armored Windows -->
+  <path d="M130 240 L160 175 L170 160 L130 210 Z" 
+        fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  <path d="M670 240 L640 175 L630 160 L670 210 Z" 
+        fill="url(#windowGradient)" stroke="#1a202c" stroke-width="2"/>
+  
+  <!-- Reinforced Wheels -->
+  <circle cx="190" cy="305" r="40" fill="url(#wheelGradient)" stroke="#000" stroke-width="3"/>
+  <circle cx="190" cy="305" r="25" fill="#1a202c" stroke="#4a5568" stroke-width="2"/>
+  <circle cx="610" cy="305" r="40" fill="url(#wheelGradient)" stroke="#000" stroke-width="3"/>
+  <circle cx="610" cy="305" r="25" fill="#1a202c" stroke="#4a5568" stroke-width="2"/>
+  
+  <!-- Armored Wheel Design -->
+  <path d="M190 280 L190 330 M165 305 L215 305" stroke="#718096" stroke-width="3"/>
+  <path d="M610 280 L610 330 M585 305 L635 305" stroke="#718096" stroke-width="3"/>
+  
+  <!-- LED Headlights -->
+  <ellipse cx="110" cy="220" rx="18" ry="25" fill="#f7fafc" stroke="#e2e8f0" stroke-width="2"/>
+  <ellipse cx="690" cy="220" rx="18" ry="25" fill="#fed7d7" stroke="#fc8181" stroke-width="2"/>
+  <circle cx="110" cy="215" r="5" fill="#3182ce"/>
+  <circle cx="110" cy="225" r="5" fill="#3182ce"/>
+  
+  <!-- Reinforced Grille -->
+  <rect x="80" y="210" width="35" height="18" fill="#2d3748" stroke="#4a5568" stroke-width="2"/>
+  <line x1="85" y1="212" x2="85" y2="226" stroke="#718096" stroke-width="2"/>
+  <line x1="90" y1="212" x2="90" y2="226" stroke="#718096" stroke-width="2"/>
+  <line x1="95" y1="212" x2="95" y2="226" stroke="#718096" stroke-width="2"/>
+  <line x1="100" y1="212" x2="100" y2="226" stroke="#718096" stroke-width="2"/>
+  <line x1="105" y1="212" x2="105" y2="226" stroke="#718096" stroke-width="2"/>
+  <line x1="110" y1="212" x2="110" y2="226" stroke="#718096" stroke-width="2"/>
+  
+  <!-- Armored Sliding Door Tracks -->
+  <line x1="240" y1="180" x2="240" y2="280" stroke="#2d3748" stroke-width="4"/>
+  <line x1="560" y1="180" x2="560" y2="280" stroke="#2d3748" stroke-width="4"/>
+  
+  <!-- Reinforced Door Handles -->
+  <rect x="210" y="230" width="10" height="5" fill="#718096" rx="2"/>
+  <rect x="310" y="230" width="10" height="5" fill="#718096" rx="2"/>
+  <rect x="410" y="230" width="10" height="5" fill="#718096" rx="2"/>
+  <rect x="510" y="230" width="10" height="5" fill="#718096" rx="2"/>
+  
+  <!-- Armored Protection Details -->
+  <rect x="130" y="270" width="540" height="10" fill="#2d3748" rx="5"/>
+  <rect x="140" y="285" width="520" height="6" fill="#4a5568" rx="3"/>
+  <rect x="150" y="295" width="500" height="4" fill="#718096" rx="2"/>
+  
+  <!-- Armored Badge -->
+  <rect x="350" y="290" width="100" height="20" fill="#2d3748" stroke="#4a5568" stroke-width="1" rx="10"/>
+  <text x="400" y="304" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#f7fafc">
+    BLINDADA
+  </text>
+  
+  <!-- Text -->
+  <text x="400" y="360" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#2d3748">
+    MINIVAN BLINDADA
+  </text>
+  <text x="400" y="385" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#718096">
+    Minivan blindada de luxo preta
+  </text>
+</svg>
