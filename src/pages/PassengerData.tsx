@@ -43,7 +43,6 @@ interface PassengerInfo {
   phoneNumber: string;
   email: string;
   cpf: string;
-  installments: number;
 }
 
 const PassengerData = () => {
@@ -65,8 +64,7 @@ const PassengerData = () => {
     passengerName: "",
     phoneNumber: "",
     email: "",
-    cpf: "",
-    installments: 1
+    cpf: ""
   });
 
   // Estados para controlar o fluxo de finalização
@@ -326,17 +324,43 @@ const PassengerData = () => {
   };
 
   const handleSubmit = async () => {
+    if (!isFormValid()) {
+      toast.error('Por favor, preencha todos os campos obrigatórios');
+      return;
+    }
+
     try {
-      console.log('📋 Dados do passageiro preenchidos, avançando para confirmação');
+      toast.loading('Criando link de pagamento...');
+
+      const paymentRequest = {
+        name: passengerInfo.passengerName,
+        cpf: formatCpfForApi(passengerInfo.cpf),
+        phone: formatPhoneForApi(passengerInfo.phoneNumber),
+        email: passengerInfo.email,
+        amount_cents: Math.round(selectedVehicle.price * 100),
+        installments: 1
+      };
+
+      console.log('🔄 Criando link de pagamento direto...', paymentRequest);
       
-      // Rolar para o topo da página antes de avançar
-      window.scrollTo(0, 0);
+      const response = await createPaymentLink(paymentRequest);
       
-      // Avançar para tela de confirmação
-      setCurrentStep('confirmation');
-      
+      if (response.ok && response.url) {
+        toast.dismiss();
+        toast.success('Redirecionando para o pagamento...');
+        
+        // Redirecionar diretamente para o InfinitePay
+        window.open(response.url, '_blank', 'noopener,noreferrer');
+        
+        // Opcional: navegar para página de sucesso ou aguardar confirmação
+        // navigate('/payment-success', { state: { ... } });
+      } else {
+        throw new Error(response.message || 'Erro ao criar link de pagamento');
+      }
     } catch (error) {
-      console.error('❌ Erro ao processar dados:', error);
+      console.error('Erro ao processar pagamento:', error);
+      toast.dismiss();
+      toast.error(`Erro ao processar pagamento: ${error}`);
     }
   };
 
@@ -425,7 +449,7 @@ Reserva feita através do site Executive Premium`;
         phone: formatPhoneForApi(passengerInfo.phoneNumber),
         email: passengerInfo.email,
         amount_cents: Math.round(selectedVehicle.price * 100),
-        installments: passengerInfo.installments
+        installments: 1
       };
 
       console.log('🔄 Criando link de pagamento direto...', paymentRequest);
@@ -812,25 +836,6 @@ Reserva feita através do site Executive Premium`;
                       }}
                       required
                     />
-                  </div>
-
-                  {/* Parcelas */}
-                  <div>
-                    <Label className="text-sm text-gray-600 mb-2 block">
-                      Parcelas
-                    </Label>
-                    <select
-                      value={passengerInfo.installments}
-                      onChange={(e) => setPassengerInfo({...passengerInfo, installments: parseInt(e.target.value)})}
-                      className="w-full p-2 border border-gray-300 rounded-md bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value={1}>À vista</option>
-                      <option value={2}>2x</option>
-                      <option value={3}>3x</option>
-                      <option value={4}>4x</option>
-                      <option value={5}>5x</option>
-                      <option value={6}>6x</option>
-                    </select>
                   </div>
 
                   {/* Additional Observations */}

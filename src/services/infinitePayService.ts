@@ -98,6 +98,40 @@ console.log('🔗 URLs configuradas:', {
  * @param paymentData Dados do pagamento (cliente, valor, parcelas)
  * @returns Promise com a resposta da API contendo o link de pagamento
  */
+// Função auxiliar para retry com backoff exponencial
+const retryWithBackoff = async <T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  baseDelay: number = 1000
+): Promise<T> => {
+  let lastError: Error;
+  
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error as Error;
+      
+      // Se não é erro de rede, não tenta novamente
+      if (!(error instanceof TypeError && error.message.includes('Failed to fetch'))) {
+        throw error;
+      }
+      
+      // Se é a última tentativa, lança o erro
+      if (attempt === maxRetries) {
+        break;
+      }
+      
+      // Aguarda antes da próxima tentativa (backoff exponencial)
+      const delay = baseDelay * Math.pow(2, attempt);
+      console.log(`🔄 Tentativa ${attempt + 1} falhou, tentando novamente em ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+  
+  throw lastError!;
+};
+
 export const createPaymentLink = async (paymentData: PaymentRequest): Promise<PaymentResponse> => {
   try {
     console.log('🔄 Criando link de pagamento InfinitePay');
@@ -140,29 +174,40 @@ export const createPaymentLink = async (paymentData: PaymentRequest): Promise<Pa
       installments: validInstallments
     };
 
-    // Fazer requisição para criar o link de pagamento
-    const response = await fetch(CREATE_PAYMENT_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(sanitizedPaymentData)
+    // Fazer requisição com retry automático
+    const result = await retryWithBackoff(async () => {
+      const response = await fetch(CREATE_PAYMENT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(sanitizedPaymentData),
+        // Adicionar timeout
+        signal: AbortSignal.timeout(30000) // 30 segundos
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text().catch(() => 'Resposta não disponível');
+        console.error(`❌ Erro HTTP ${response.status}:`, errorText);
+        
+        // Se é erro 5xx, pode ser temporário - permite retry
+        if (response.status >= 500) {
+          throw new TypeError('Server error - retry allowed');
+        }
+        
+        throw new Error(`Erro na API de pagamento (${response.status}): ${response.statusText}`);
+      }
+
+      const result: PaymentResponse = await response.json();
+      
+      if (!result.ok) {
+        throw new Error(result.message || 'Erro ao criar link de pagamento');
+      }
+
+      return result;
     });
-
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => 'Resposta não disponível');
-      console.error(`❌ Erro HTTP ${response.status}:`, errorText);
-      throw new Error(`Erro na API de pagamento (${response.status}): ${response.statusText}`);
-    }
-
-    const result: PaymentResponse = await response.json();
     
     console.log('✅ Link de pagamento criado com sucesso');
-    
-    if (!result.ok) {
-      throw new Error(result.message || 'Erro ao criar link de pagamento');
-    }
-
     return result;
 
   } catch (error) {
@@ -170,7 +215,11 @@ export const createPaymentLink = async (paymentData: PaymentRequest): Promise<Pa
     
     // Melhor tratamento de erros específicos
     if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-      throw new Error('Erro de conectividade: Não foi possível conectar com o servidor de pagamentos. Verifique sua conexão com a internet.');
+      throw new Error('Erro de conectividade: Não foi possível conectar com o servidor de pagamentos. Verifique sua conexão com a internet e tente novamente.');
+    }
+    
+    if (error instanceof Error && error.name === 'TimeoutError') {
+      throw new Error('Timeout: O servidor de pagamentos demorou muito para responder. Tente novamente em alguns instantes.');
     }
     
     if (error instanceof Error) {
