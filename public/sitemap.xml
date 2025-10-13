@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://executivepremium.com.br/</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://executivepremium.com.br/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://executivepremium.com.br/en/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://executivepremium.com.br/es/" />
+    <image:image>
+      <image:loc>https://executivepremium.com.br/og-image.jpg</image:loc>
+      <image:title>Transporte Executivo Premium São Paulo</image:title>
+      <image:caption>Veículos de luxo para transporte executivo em São Paulo</image:caption>
+    </image:image>
+  </url>
+
+  <!-- About Us -->
+  <url>
+    <loc>https://executivepremium.com.br/about-us</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://executivepremium.com.br/about-us" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://executivepremium.com.br/en/about-us" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://executivepremium.com.br/es/about-us" />
+  </url>
+
+  <!-- Airport Transfer -->
+  <url>
+    <loc>https://executivepremium.com.br/airport-transfer</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://executivepremium.com.br/airport-transfer" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://executivepremium.com.br/en/airport-transfer" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://executivepremium.com.br/es/airport-transfer" />
+  </url>
+
+  <!-- Point to Point -->
+  <url>
+    <loc>https://executivepremium.com.br/point-to-point</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://executivepremium.com.br/point-to-point" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://executivepremium.com.br/en/point-to-point" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://executivepremium.com.br/es/point-to-point" />
+  </url>
+
+  <!-- Business Services -->
+  <url>
+    <loc>https://executivepremium.com.br/business</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://executivepremium.com.br/business" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://executivepremium.com.br/en/business" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://executivepremium.com.br/es/business" />
+  </url>
+
+  <!-- Executive Protection -->
+  <url>
+    <loc>https://executivepremium.com.br/executive-protection</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://executivepremium.com.br/executive-protection" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://executivepremium.com.br/en/executive-protection" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://executivepremium.com.br/es/executive-protection" />
+  </url>
+
+  <!-- VIP 360 -->
+  <url>
+    <loc>https://executivepremium.com.br/vip-360</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://executivepremium.com.br/vip-360" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://executivepremium.com.br/en/vip-360" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://executivepremium.com.br/es/vip-360" />
+  </url>
+
+  <!-- On Demand Service -->
+  <url>
+    <loc>https://executivepremium.com.br/on-demand</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://executivepremium.com.br/on-demand" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://executivepremium.com.br/en/on-demand" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://executivepremium.com.br/es/on-demand" />
+  </url>
+
+  <!-- Vehicle Selection -->
+  <url>
+    <loc>https://executivepremium.com.br/vehicle-selection</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://executivepremium.com.br/vehicle-selection" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://executivepremium.com.br/en/vehicle-selection" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://executivepremium.com.br/es/vehicle-selection" />
+  </url>
+
+  <!-- Passenger Data -->
+  <url>
+    <loc>https://executivepremium.com.br/passenger-data</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://executivepremium.com.br/passenger-data" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://executivepremium.com.br/en/passenger-data" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://executivepremium.com.br/es/passenger-data" />
+  </url>
+
+</urlset>
