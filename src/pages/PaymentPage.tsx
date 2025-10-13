@@ -345,6 +345,8 @@ export default function PaymentPage() {
                       <Label htmlFor="cpf" className="text-gray-700">CPF *</Label>
                       <Input
                         id="cpf"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         value={customerData.cpf}
                         onChange={(e) => handleCPFChange(e.target.value)}
                         placeholder="000.000.000-00"

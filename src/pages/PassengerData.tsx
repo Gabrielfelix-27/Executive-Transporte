@@ -821,6 +821,8 @@ Reserva feita através do site Executive Premium`;
                     </Label>
                     <Input
                       type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       placeholder="000.000.000-00"
                       className="bg-gray-100"
                       value={passengerInfo.cpf}
