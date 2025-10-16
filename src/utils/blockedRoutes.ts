@@ -4,6 +4,7 @@
  * Verifica se uma rota deve ser bloqueada baseada nas regras:
  * - Rotas saindo de SP para Viracopos, Sorocaba, Campinas
  * - Rotas voltando de Viracopos, Sorocaba, Campinas para SP
+ * - NOVA LÓGICA INVERSA: Bloqueia rotas DE outros estados PARA São Paulo
  */
 export const isBlockedRoute = (origin: string, destination: string): boolean => {
   const originLower = origin.toLowerCase().trim();
@@ -80,7 +81,70 @@ export const isBlockedRoute = (origin: string, destination: string): boolean => 
     return hasSorocabaKeyword || hasSorocabaCep;
   };
 
-  // Verificar rotas bloqueadas:
+  // Função para detectar outros estados (fora de São Paulo)
+  const isOutOfSaoPauloState = (address: string): boolean => {
+    // Estados brasileiros e suas siglas
+    const otherStatesKeywords = [
+      // Rio de Janeiro
+      'rio de janeiro', 'rj', 'copacabana', 'ipanema', 'barra da tijuca',
+      'tijuca', 'zona sul', 'centro rj', 'niterói', 'nova iguaçu',
+      
+      // Minas Gerais
+      'minas gerais', 'mg', 'belo horizonte', 'uberlândia', 'contagem',
+      'juiz de fora', 'betim', 'montes claros',
+      
+      // Paraná
+      'paraná', 'pr', 'curitiba', 'londrina', 'maringá', 'ponta grossa',
+      'cascavel', 'são josé dos pinhais',
+      
+      // Rio Grande do Sul
+      'rio grande do sul', 'rs', 'porto alegre', 'caxias do sul',
+      'pelotas', 'canoas', 'santa maria', 'gravataí',
+      
+      // Santa Catarina
+      'santa catarina', 'sc', 'florianópolis', 'joinville', 'blumenau',
+      'são josé', 'criciúma', 'chapecó',
+      
+      // Bahia
+      'bahia', 'ba', 'salvador', 'feira de santana', 'vitória da conquista',
+      'camaçari', 'juazeiro', 'ilhéus',
+      
+      // Goiás
+      'goiás', 'go', 'goiânia', 'aparecida de goiânia', 'anápolis',
+      'rio verde', 'luziânia', 'águas lindas',
+      
+      // Espírito Santo
+      'espírito santo', 'es', 'vitória', 'vila velha', 'cariacica',
+      'serra', 'cachoeiro de itapemirim', 'linhares',
+      
+      // Distrito Federal
+      'distrito federal', 'df', 'brasília', 'brasilia', 'taguatinga',
+      'ceilândia', 'samambaia', 'planaltina'
+    ];
+
+    // CEPs de outros estados (exemplos principais)
+    const otherStatesCepPatterns = [
+      /\b2[0-8]\d{3}-?\d{3}\b/, // RJ: 20000-000 a 28999-999
+      /\b3[0-9]\d{3}-?\d{3}\b/, // MG: 30000-000 a 39999-999
+      /\b8[0-7]\d{3}-?\d{3}\b/, // PR: 80000-000 a 87999-999
+      /\b9[0-9]\d{3}-?\d{3}\b/, // RS: 90000-000 a 99999-999
+      /\b8[8-9]\d{3}-?\d{3}\b/, // SC: 88000-000 a 89999-999
+      /\b4[0-8]\d{3}-?\d{3}\b/, // BA: 40000-000 a 48999-999
+      /\b7[2-7]\d{3}-?\d{3}\b/, // GO: 72000-000 a 77999-999
+      /\b2[9]\d{3}-?\d{3}\b/,   // ES: 29000-000 a 29999-999
+      /\b7[0-1]\d{3}-?\d{3}\b/  // DF: 70000-000 a 71999-999
+    ];
+
+    // Verificar se contém palavras-chave de outros estados
+    const hasOtherStateKeyword = otherStatesKeywords.some(keyword => address.includes(keyword));
+    
+    // Verificar se contém CEP de outros estados
+    const hasOtherStateCep = otherStatesCepPatterns.some(pattern => pattern.test(address));
+
+    return hasOtherStateKeyword || hasOtherStateCep;
+  };
+
+  // LÓGICA ORIGINAL: Verificar rotas bloqueadas SP ↔ Viracopos/Sorocaba
   // 1. SP → Viracopos/Campinas
   if (isSaoPauloRegion(originLower) && isViracoposCampinas(destinationLower)) {
     return true;
@@ -98,6 +162,12 @@ export const isBlockedRoute = (origin: string, destination: string): boolean => 
 
   // 4. Sorocaba → SP
   if (isSorocaba(originLower) && isSaoPauloRegion(destinationLower)) {
+    return true;
+  }
+
+  // NOVA LÓGICA INVERSA: Bloquear rotas DE outros estados PARA São Paulo
+  // 5. Outros Estados → SP
+  if (isOutOfSaoPauloState(originLower) && isSaoPauloRegion(destinationLower)) {
     return true;
   }
 
