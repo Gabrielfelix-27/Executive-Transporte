@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Detecção Estados Fora de SP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .inside-sp {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .outside-sp {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste - Detecção de Estados Fora de São Paulo</h1>
+    
+    <div class="test-container">
+        <h2>Teste Manual</h2>
+        <input type="text" id="testAddress" placeholder="Digite um endereço para testar...">
+        <button onclick="testAddress()">Testar Endereço</button>
+        <div id="manualResult"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>Testes Automáticos</h2>
+        <div id="automaticResults"></div>
+    </div>
+
+    <script>
+        // Simulação da função isOutsideSaoPauloState
+        function isOutsideSaoPauloState(address) {
+            const addressLower = address.toLowerCase().trim();
+            
+            // Extrair CEP do endereço
+            const cepMatch = address.match(/\b(\d{5})-?(\d{3})\b/);
+            
+            if (cepMatch) {
+                const cep = cepMatch[1] + cepMatch[2];
+                const cepNumber = parseInt(cep);
+                
+                // Faixas de CEP do estado de São Paulo: 01000-000 a 19999-999
+                if (cepNumber >= 1000000 && cepNumber <= 19999999) {
+                    console.log(`✅ CEP ${cep} está dentro do estado de São Paulo`);
+                    return false;
+                } else {
+                    console.log(`❌ CEP ${cep} está fora do estado de São Paulo`);
+                    return true;
+                }
+            }
+            
+            // Lista de estados/cidades fora de SP
+            const outsideStates = [
+                // Rio de Janeiro
+                'rio de janeiro', 'rj', 'niterói', 'niteroi', 'petrópolis', 'petropolis',
+                // Brasília/DF
+                'brasília', 'brasilia', 'distrito federal', 'df', 'taguatinga', 'ceilândia',
+                // Minas Gerais
+                'belo horizonte', 'mg', 'minas gerais', 'contagem', 'uberlândia', 'uberlandia',
+                // Paraná
+                'curitiba', 'paraná', 'parana', 'pr', 'londrina', 'maringá', 'maringa',
+                // Espírito Santo
+                'vitória', 'vitoria', 'es', 'espírito santo', 'espirito santo', 'vila velha',
+                // Bahia
+                'salvador', 'ba', 'bahia', 'feira de santana',
+                // Goiás
+                'goiânia', 'goiania', 'go', 'goiás', 'goias'
+            ];
+            
+            const isOutside = outsideStates.some(location => addressLower.includes(location));
+            
+            if (isOutside) {
+                console.log(`❌ Endereço "${address}" detectado como fora do estado de São Paulo`);
+                return true;
+            }
+            
+            console.log(`✅ Endereço "${address}" não foi detectado como fora do estado de São Paulo`);
+            return false;
+        }
+
+        function testAddress() {
+            const address = document.getElementById('testAddress').value;
+            const result = isOutsideSaoPauloState(address);
+            const resultDiv = document.getElementById('manualResult');
+            
+            resultDiv.innerHTML = `
+                <div class="test-result ${result ? 'outside-sp' : 'inside-sp'}">
+                    <strong>Endereço:</strong> ${address}<br>
+                    <strong>Resultado:</strong> ${result ? '❌ Fora de São Paulo' : '✅ Dentro de São Paulo'}
+                </div>
+            `;
+        }
+
+        // Testes automáticos
+        function runAutomaticTests() {
+            const testCases = [
+                // Dentro de SP
+                { address: 'Avenida Paulista, 1000, São Paulo, SP', expected: false },
+                { address: 'Rua Augusta, 500, São Paulo, SP, 01305-000', expected: false },
+                { address: 'Campinas, SP', expected: false },
+                { address: 'Santos, SP', expected: false },
+                { address: 'Guarulhos, SP', expected: false },
+                
+                // Fora de SP - Rio de Janeiro
+                { address: 'Copacabana, Rio de Janeiro, RJ', expected: true },
+                { address: 'Rua das Flores, 123, Rio de Janeiro, RJ, 22071-900', expected: true },
+                { address: 'Niterói, RJ', expected: true },
+                
+                // Fora de SP - Brasília
+                { address: 'Brasília, DF', expected: true },
+                { address: 'Taguatinga, DF', expected: true },
+                { address: 'Asa Norte, Brasília, DF, 70040-010', expected: true },
+                
+                // Fora de SP - Minas Gerais
+                { address: 'Belo Horizonte, MG', expected: true },
+                { address: 'Contagem, MG', expected: true },
+                { address: 'Rua da Bahia, 1000, Belo Horizonte, MG, 30160-011', expected: true },
+                
+                // Fora de SP - Paraná
+                { address: 'Curitiba, PR', expected: true },
+                { address: 'Londrina, PR', expected: true },
+                
+                // Fora de SP - Outros estados
+                { address: 'Salvador, BA', expected: true },
+                { address: 'Vitória, ES', expected: true },
+                { address: 'Goiânia, GO', expected: true }
+            ];
+
+            const resultsDiv = document.getElementById('automaticResults');
+            let html = '';
+            let passed = 0;
+            let failed = 0;
+
+            testCases.forEach((testCase, index) => {
+                const result = isOutsideSaoPauloState(testCase.address);
+                const success = result === testCase.expected;
+                
+                if (success) passed++;
+                else failed++;
+
+                html += `
+                    <div class="test-result ${success ? 'inside-sp' : 'outside-sp'}">
+                        <strong>Teste ${index + 1}:</strong> ${testCase.address}<br>
+                        <strong>Esperado:</strong> ${testCase.expected ? 'Fora de SP' : 'Dentro de SP'}<br>
+                        <strong>Resultado:</strong> ${result ? 'Fora de SP' : 'Dentro de SP'}<br>
+                        <strong>Status:</strong> ${success ? '✅ PASSOU' : '❌ FALHOU'}
+                    </div>
+                `;
+            });
+
+            html = `
+                <div style="margin-bottom: 20px; padding: 15px; background-color: ${failed === 0 ? '#d4edda' : '#f8d7da'}; border-radius: 4px;">
+                    <strong>Resumo dos Testes:</strong><br>
+                    ✅ Passou: ${passed}<br>
+                    ❌ Falhou: ${failed}<br>
+                    📊 Total: ${testCases.length}
+                </div>
+            ` + html;
+
+            resultsDiv.innerHTML = html;
+        }
+
+        // Executar testes automáticos ao carregar a página
+        window.onload = runAutomaticTests;
+    </script>
+</body>
+</html>

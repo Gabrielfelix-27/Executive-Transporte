@@ -6,27 +6,27 @@ import { getRegionalPrice, RegionalPrices } from '@/data/regionalPricing';
 import { isValidViracoposRoute, getViracoposPriceByVehicleType } from './cepValidation';
 import { saoPauloAddresses } from '@/data/saoPauloAddresses';
 
-// Cache global para coordenadas de endereços selecionados via autocomplete
+// Cache para coordenadas de endereços selecionados
 const selectedAddressCoordinatesCache = new Map<string, { lat: number; lng: number }>();
 
-// Cache para dados do Distance Matrix API
+// Cache para resultados da Distance Matrix API
 const distanceMatrixCache = new Map<string, { distance: number; duration: number }>();
 
 // Função para armazenar coordenadas de endereços selecionados
 export const cacheSelectedAddressCoordinates = (address: string, coords: { lat: number; lng: number }) => {
-  const normalizedAddress = address.toLowerCase().trim();
-  selectedAddressCoordinatesCache.set(normalizedAddress, coords);
-  console.log(`💾 Coordenadas armazenadas em cache para "${address}":`, coords);
+  const key = address.toLowerCase().trim();
+  selectedAddressCoordinatesCache.set(key, coords);
+  console.log(`📍 Coordenadas armazenadas para "${address}":`, coords);
 };
 
-// Função para calcular distância entre dois pontos usando a fórmula de Haversine (FALLBACK)
+// Função para calcular distância entre duas coordenadas usando a fórmula de Haversine
 export const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
   const R = 6371; // Raio da Terra em km
   const dLat = toRad(lat2 - lat1);
   const dLng = toRad(lng2 - lng1);
   const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLng / 2) * Math.sin(dLng / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 };
@@ -35,181 +35,151 @@ const toRad = (value: number): number => {
   return value * Math.PI / 180;
 };
 
-// Nova função para obter distância real usando Google Maps Routes API (recomendada)
+// Função para obter distância e tempo usando Google Maps APIs
 export const getGoogleMapsDistanceAndTime = async (
   origin: string,
   destination: string
 ): Promise<{ distance: number; duration: number } | null> => {
+  if (!isGoogleMapsConfigured()) {
+    console.warn('⚠️ Google Maps não está configurado');
+    return null;
+  }
+
+  const cacheKey = `${origin.toLowerCase().trim()}_${destination.toLowerCase().trim()}`;
+  
+  // Verificar cache primeiro
+  if (distanceMatrixCache.has(cacheKey)) {
+    const cached = distanceMatrixCache.get(cacheKey)!;
+    console.log(`🎯 Cache hit para distância: ${cached.distance.toFixed(1)}km, ${cached.duration}min`);
+    return cached;
+  }
+
   try {
-    console.log(`🗺️ [DEBUG] getGoogleMapsDistanceAndTime iniciado: "${origin}" → "${destination}"`);
-    
-    // Criar chave de cache
-    const cacheKey = `${origin.toLowerCase().trim()}|${destination.toLowerCase().trim()}`;
-    
-    // Verificar cache primeiro
-    if (distanceMatrixCache.has(cacheKey)) {
-      const cached = distanceMatrixCache.get(cacheKey)!;
-      console.log(`📋 [DEBUG] Routes API cache hit: ${cached.distance}km, ${cached.duration}min`);
-      return cached;
+    // Tentar Routes API primeiro (mais precisa)
+    const routesResult = await getDistanceUsingRoutesAPI(origin, destination, cacheKey);
+    if (routesResult) {
+      return routesResult;
     }
 
-    // Verificar se Google Maps está configurado
-    const isConfigured = isGoogleMapsConfigured();
-    const hasGoogleMaps = !!window.google?.maps;
-    
-    console.log(`🔧 [DEBUG] Verificações Google Maps:`, {
-      isConfigured,
-      hasGoogleMaps,
-      windowGoogle: !!window.google,
-      googleMaps: !!window.google?.maps
-    });
-    
-    if (!isConfigured || !hasGoogleMaps) {
-      console.warn('⚠️ [DEBUG] Google Maps não configurado para Routes API');
-      return null;
+    // Fallback para Distance Matrix API
+    const matrixResult = await getDistanceUsingDistanceMatrix(origin, destination, cacheKey);
+    if (matrixResult) {
+      return matrixResult;
     }
 
-    // Tentar usar Routes API primeiro (recomendada)
-    if (window.google?.maps?.routes?.DirectionsService) {
-      console.log(`🚀 [DEBUG] Usando Routes API (recomendada)`);
-      return await getDistanceUsingRoutesAPI(origin, destination, cacheKey);
-    }
-    
-    // Fallback para Distance Matrix API (depreciada)
-    console.warn(`⚠️ [DEBUG] Routes API não disponível, usando Distance Matrix API (depreciada)`);
-    return await getDistanceUsingDistanceMatrix(origin, destination, cacheKey);
-
+    console.warn('⚠️ Ambas as APIs do Google Maps falharam');
+    return null;
   } catch (error) {
-    console.error('❌ [DEBUG] Erro no Google Maps API:', error);
+    console.error('❌ Erro ao obter dados do Google Maps:', error);
     return null;
   }
 };
 
-// Função para usar Routes API (nova e recomendada)
+// Função para usar Routes API
 const getDistanceUsingRoutesAPI = async (
   origin: string,
   destination: string,
   cacheKey: string
 ): Promise<{ distance: number; duration: number } | null> => {
   try {
-    const directionsService = new window.google.maps.routes.DirectionsService();
-    
-    const result = await new Promise<google.maps.DirectionsResult>((resolve, reject) => {
-      directionsService.route(
-        {
-          origin: origin,
-          destination: destination,
-          travelMode: google.maps.TravelMode.DRIVING,
-          unitSystem: google.maps.UnitSystem.METRIC,
-          avoidHighways: false,
-          avoidTolls: false,
-          region: 'BR'
-        },
-        (response, status) => {
-          console.log(`📡 [DEBUG] Routes API resposta:`, { status, response });
-          
-          if (status === 'OK' && response) {
-            resolve(response);
-          } else {
-            reject(new Error(`Routes API error: ${status}`));
-          }
-        }
-      );
+    const response = await fetch('/api/google-routes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        origin,
+        destination,
+      }),
     });
 
-    const route = result.routes[0];
-    const leg = route?.legs[0];
-    
-    if (leg?.distance && leg?.duration) {
-      const distanceKm = leg.distance.value / 1000; // Converter metros para km
-      const durationMin = Math.round(leg.duration.value / 60); // Converter segundos para minutos
-      
-      const data = { distance: distanceKm, duration: durationMin };
-      
-      // Salvar no cache
-      distanceMatrixCache.set(cacheKey, data);
-      
-      // Limitar tamanho do cache
-      if (distanceMatrixCache.size > 50) {
-        const firstKey = distanceMatrixCache.keys().next().value;
-        distanceMatrixCache.delete(firstKey);
-      }
-      
-      console.log(`✅ [DEBUG] Routes API sucesso: ${distanceKm.toFixed(1)}km, ${durationMin}min`);
-      return data;
-    } else {
-      console.warn('⚠️ [DEBUG] Routes API retornou dados inválidos:', leg);
+    if (!response.ok) {
+      console.warn(`⚠️ Routes API falhou: ${response.status}`);
       return null;
     }
+
+    const data = await response.json();
+    
+    if (data.error) {
+      console.warn('⚠️ Routes API retornou erro:', data.error);
+      return null;
+    }
+
+    if (data.distance && data.duration) {
+      const result = {
+        distance: data.distance,
+        duration: data.duration
+      };
+      
+      // Armazenar no cache
+      distanceMatrixCache.set(cacheKey, result);
+      console.log(`🗺️ Routes API: ${result.distance.toFixed(1)}km, ${result.duration}min`);
+      
+      return result;
+    }
+
+    return null;
   } catch (error) {
-    console.error('❌ [DEBUG] Erro na Routes API:', error);
+    console.warn('⚠️ Erro na Routes API:', error);
     return null;
   }
 };
 
-// Função para usar Distance Matrix API (fallback para compatibilidade)
+// Função para usar Distance Matrix API
 const getDistanceUsingDistanceMatrix = async (
   origin: string,
   destination: string,
   cacheKey: string
 ): Promise<{ distance: number; duration: number } | null> => {
   try {
-    const service = new window.google.maps.DistanceMatrixService();
-    
-    const result = await new Promise<google.maps.DistanceMatrixResponse>((resolve, reject) => {
-      service.getDistanceMatrix(
-        {
-          origins: [origin],
-          destinations: [destination],
-          travelMode: google.maps.TravelMode.DRIVING,
-          unitSystem: google.maps.UnitSystem.METRIC,
-          avoidHighways: false,
-          avoidTolls: false,
-          region: 'BR'
-        },
-        (response, status) => {
-          console.log(`📡 [DEBUG] Distance Matrix resposta:`, { status, response });
-          
-          if (status === 'OK' && response) {
-            resolve(response);
-          } else {
-            reject(new Error(`Distance Matrix API error: ${status}`));
-          }
-        }
-      );
+    const response = await fetch('/api/google-distance', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        origins: [origin],
+        destinations: [destination],
+      }),
     });
 
-    const element = result.rows[0]?.elements[0];
-    console.log(`🔍 [DEBUG] Elemento da resposta:`, element);
-    
-    if (element?.status === 'OK' && element.distance && element.duration) {
-      const distanceKm = element.distance.value / 1000; // Converter metros para km
-      const durationMin = Math.round(element.duration.value / 60); // Converter segundos para minutos
-      
-      const data = { distance: distanceKm, duration: durationMin };
-      
-      // Salvar no cache
-      distanceMatrixCache.set(cacheKey, data);
-      
-      // Limitar tamanho do cache
-      if (distanceMatrixCache.size > 50) {
-        const firstKey = distanceMatrixCache.keys().next().value;
-        distanceMatrixCache.delete(firstKey);
-      }
-      
-      console.log(`✅ [DEBUG] Distance Matrix API sucesso: ${distanceKm.toFixed(1)}km, ${durationMin}min`);
-      return data;
-    } else {
-      console.warn('⚠️ [DEBUG] Distance Matrix API retornou dados inválidos:', element);
+    if (!response.ok) {
+      console.warn(`⚠️ Distance Matrix API falhou: ${response.status}`);
       return null;
     }
+
+    const data = await response.json();
+    
+    if (data.error) {
+      console.warn('⚠️ Distance Matrix API retornou erro:', data.error);
+      return null;
+    }
+
+    if (data.rows && data.rows[0] && data.rows[0].elements && data.rows[0].elements[0]) {
+      const element = data.rows[0].elements[0];
+      
+      if (element.status === 'OK' && element.distance && element.duration) {
+        const result = {
+          distance: element.distance.value / 1000, // Converter de metros para km
+          duration: Math.round(element.duration.value / 60) // Converter de segundos para minutos
+        };
+        
+        // Armazenar no cache
+        distanceMatrixCache.set(cacheKey, result);
+        console.log(`🗺️ Distance Matrix: ${result.distance.toFixed(1)}km, ${result.duration}min`);
+        
+        return result;
+      }
+    }
+
+    return null;
   } catch (error) {
-    console.error('❌ [DEBUG] Erro na Distance Matrix API:', error);
+    console.warn('⚠️ Erro na Distance Matrix API:', error);
     return null;
   }
 };
 
-// Coordenadas de pontos conhecidos (fallback)
+// Locais conhecidos com coordenadas
 const knownLocations: { [key: string]: { lat: number; lng: number } } = {
   'aeroporto guarulhos': { lat: -23.4356, lng: -46.4731 },
   'aeroporto congonhas': { lat: -23.6267, lng: -46.6554 },
@@ -220,102 +190,40 @@ const knownLocations: { [key: string]: { lat: number; lng: number } } = {
   'shopping ibirapuera': { lat: -23.6167, lng: -46.6642 }
 };
 
-// Função para extrair coordenadas de um endereço
+// Função para obter coordenadas de um endereço
 export const getCoordinatesFromAddress = async (address: string): Promise<{ lat: number; lng: number } | null> => {
   try {
-    console.log(`🔍 Buscando coordenadas para: "${address}"`);
-    
-    // Primeiro, verificar cache de endereços selecionados
     const normalizedAddress = address.toLowerCase().trim();
+    
+    // Verificar cache de endereços selecionados primeiro
     if (selectedAddressCoordinatesCache.has(normalizedAddress)) {
-      const cachedCoords = selectedAddressCoordinatesCache.get(normalizedAddress)!;
-      console.log(`📋 Coordenadas encontradas no cache para "${address}":`, cachedCoords);
-      console.log(`📍 CACHE: lat=${cachedCoords.lat}, lng=${cachedCoords.lng}`);
-      return cachedCoords;
+      const cached = selectedAddressCoordinatesCache.get(normalizedAddress)!;
+      console.log(`🎯 Cache hit para coordenadas de "${address}":`, cached);
+      return cached;
     }
     
-    // Segundo, tenta buscar através da API real do Google Maps
-    const results = await searchAddresses(address.trim());
-    console.log(`📡 Resultados da API Google Maps:`, results);
+    // Verificar locais conhecidos
+    for (const [key, coords] of Object.entries(knownLocations)) {
+      if (normalizedAddress.includes(key)) {
+        console.log(`📍 Local conhecido encontrado: "${key}"`);
+        return coords;
+      }
+    }
     
-    if (results.length > 0 && results[0].geometry) {
-      const coords = {
-        lat: results[0].geometry.location.lat,
-        lng: results[0].geometry.location.lng
-      };
-      console.log(`✅ Coordenadas encontradas via Google Maps API:`, coords);
-      console.log(`📍 GOOGLE MAPS: lat=${coords.lat}, lng=${coords.lng}`);
+    // Usar serviço de geocodificação
+    console.log(`🔍 Buscando coordenadas para: "${address}"`);
+    const coords = await getCoords(address);
+    
+    if (coords) {
+      console.log(`✅ Coordenadas encontradas para "${address}":`, coords);
       return coords;
     }
     
-    // Tentar usar diretamente o Google Geocoding API se Places não funcionou
-    if (isGoogleMapsConfigured() && window.google?.maps?.Geocoder) {
-      console.log(`🔄 Tentando Google Geocoding API diretamente para "${address}"...`);
-      try {
-        const geocoder = new window.google.maps.Geocoder();
-        const geocodeResult = await new Promise<any>((resolve, reject) => {
-          geocoder.geocode(
-            { 
-              address: address,
-              region: 'BR',
-              componentRestrictions: { country: 'BR' }
-            },
-            (results, status) => {
-              if (status === 'OK' && results && results.length > 0) {
-                resolve(results[0]);
-              } else {
-                reject(`Geocoding failed: ${status}`);
-              }
-            }
-          );
-        });
-        
-        const coords = {
-          lat: geocodeResult.geometry.location.lat(),
-          lng: geocodeResult.geometry.location.lng()
-        };
-        console.log(`✅ Coordenadas encontradas via Google Geocoding:`, coords);
-        console.log(`📍 GOOGLE GEOCODING: lat=${coords.lat}, lng=${coords.lng}`);
-        return coords;
-      } catch (geocodingError) {
-        console.log(`⚠️ Google Geocoding falhou:`, geocodingError);
-      }
-    }
-    
-    // Se não encontrou na API, usa a função de fallback do geocodingService
-    console.log(`🔄 Tentando fallback geocodingService para "${address}"...`);
-    const fallbackCoords = getCoords(address);
-    if (fallbackCoords) {
-      console.log(`✅ Coordenadas encontradas via fallback geocodingService para "${address}":`, fallbackCoords);
-      console.log(`📍 FALLBACK: lat=${fallbackCoords.lat}, lng=${fallbackCoords.lng}`);
-      return fallbackCoords;
-    }
-    
-    // Se ainda não encontrou, tenta no fallback local
-    console.log(`🔄 Tentando fallback local...`);
-    const localNormalizedAddress = address.toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, ''); // Remove acentos
-    
-    for (const [key, coords] of Object.entries(knownLocations)) {
-      if (localNormalizedAddress.includes(key)) {
-        console.log(`✅ Coordenadas encontradas via fallback local para "${key}":`, coords);
-        return coords;
-      }
-    }
-    
-    // Se não encontrou em lugar nenhum, retorna coordenadas do centro de SP
-    console.warn(`⚠️ Coordenadas não encontradas para: ${address}. Usando centro de São Paulo.`);
-    const defaultCoords = { lat: -23.5505, lng: -46.6333 };
-    console.log(`🏙️ Usando coordenadas padrão (Centro SP):`, defaultCoords);
-    return defaultCoords;
-    
+    console.warn(`⚠️ Não foi possível obter coordenadas para: "${address}"`);
+    return null;
   } catch (error) {
-    console.error('❌ Erro ao obter coordenadas:', error);
-    // Em caso de erro, usa coordenadas do centro de SP
-    const defaultCoords = { lat: -23.5505, lng: -46.6333 };
-    console.log(`🏙️ Usando coordenadas padrão por erro (Centro SP):`, defaultCoords);
-    return defaultCoords;
+    console.error(`❌ Erro ao obter coordenadas para "${address}":`, error);
+    return null;
   }
 };
 
@@ -332,44 +240,28 @@ export const calculateDistanceBetweenAddresses = async (origin: string, destinat
       return Math.round(googleMapsData.distance * 10) / 10;
     }
     
-    // Fallback: usar coordenadas e cálculo de Haversine
-    console.log(`⚠️ Fallback: usando cálculo de Haversine (linha reta)`);
+    // Fallback: usar coordenadas e cálculo de distância em linha reta
+    console.log(`⚠️ Fallback: calculando distância usando coordenadas`);
     
-    const [originCoords, destCoords] = await Promise.all([
-      getCoordinatesFromAddress(origin),
-      getCoordinatesFromAddress(destination)
-    ]);
+    const originCoords = await getCoordinatesFromAddress(origin);
+    const destCoords = await getCoordinatesFromAddress(destination);
     
-    console.log('📍 Coordenadas encontradas:', { 
-      origem: originCoords, 
-      destino: destCoords 
-    });
-    
-    // Log detalhado das coordenadas
     if (originCoords && destCoords) {
-      console.log(`📍 ORIGEM: lat=${originCoords.lat}, lng=${originCoords.lng}`);
-      console.log(`📍 DESTINO: lat=${destCoords.lat}, lng=${destCoords.lng}`);
+      const distance = calculateDistance(
+        originCoords.lat, originCoords.lng,
+        destCoords.lat, destCoords.lng
+      );
+      
+      // Aplicar fator de correção para distância rodoviária (aproximadamente 1.3x a distância em linha reta)
+      const roadDistance = Math.round(distance * 1.3 * 10) / 10;
+      console.log(`📏 Distância calculada: ${roadDistance} KM (linha reta: ${distance.toFixed(1)} KM)`);
+      
+      return roadDistance;
     }
     
-    if (!originCoords || !destCoords) {
-      console.warn('⚠️ Não foi possível obter coordenadas para um dos endereços');
-      return 15; // Distância padrão de 15km
-    }
-    
-    const distance = calculateDistance(
-      originCoords.lat,
-      originCoords.lng,
-      destCoords.lat,
-      destCoords.lng
-    );
-    
-    // Aplicar fator de correção para distância de rota real (aproximadamente 1.4x a distância em linha reta)
-    const routeDistance = distance * 1.4;
-    
-    console.log(`📏 Distância linha reta: ${distance.toFixed(1)} KM`);
-    console.log(`📏 Distância estimada da rota: ${routeDistance.toFixed(1)} KM`);
-    
-    return Math.round(routeDistance * 10) / 10; // Arredondar para 1 casa decimal
+    // Se não conseguir obter coordenadas, usar estimativa baseada em CEPs ou nomes
+    console.warn(`⚠️ Não foi possível obter coordenadas, usando estimativa padrão`);
+    return 15; // Distância padrão em km
   } catch (error) {
     console.error('❌ Erro ao calcular distância:', error);
     return 15; // Distância padrão em caso de erro
@@ -466,6 +358,136 @@ export const calculateLocationSurcharge = (locationType: string): number => {
   }
 };
 
+// Função para detectar se um CEP ou endereço está fora do estado de São Paulo
+export const isOutsideSaoPauloState = (address: string): boolean => {
+  const addressLower = address.toLowerCase().trim();
+  
+  // Extrair CEP do endereço
+  const cepMatch = address.match(/\b(\d{5})-?(\d{3})\b/);
+  
+  if (cepMatch) {
+    const cep = cepMatch[1] + cepMatch[2];
+    const cepNumber = parseInt(cep);
+    
+    // Faixas de CEP do estado de São Paulo
+    // São Paulo: 01000-000 a 19999-999
+    if (cepNumber >= 1000000 && cepNumber <= 19999999) {
+      console.log(`✅ CEP ${cep} está dentro do estado de São Paulo`);
+      return false;
+    } else {
+      console.log(`❌ CEP ${cep} está fora do estado de São Paulo`);
+      return true;
+    }
+  }
+  
+  // Se não tem CEP, verificar por nomes de estados/cidades conhecidas fora de SP
+  const outsideStates = [
+    // Rio de Janeiro
+    'rio de janeiro', 'rj', 'niterói', 'niteroi', 'petrópolis', 'petropolis', 
+    'nova iguaçu', 'nova iguacu', 'duque de caxias', 'são gonçalo', 'sao goncalo',
+    'volta redonda', 'campos dos goytacazes', 'belford roxo', 'são joão de meriti', 
+    'sao joao de meriti', 'nova friburgo', 'macaé', 'macae', 'cabo frio',
+    'angra dos reis', 'resende', 'barra mansa', 'teresópolis', 'teresopolis',
+    'magé', 'mage', 'itaboraí', 'itaborai', 'maricá', 'marica', 'araruama',
+    'saquarema', 'silva jardim', 'casimiro de abreu', 'rio das ostras',
+    'búzios', 'buzios', 'arraial do cabo', 'iguaba grande', 'são pedro da aldeia',
+    'sao pedro da aldeia', 'cabo frio', 'armação dos búzios', 'armacao dos buzios',
+    
+    // Brasília/DF
+    'brasília', 'brasilia', 'distrito federal', 'df', 'taguatinga', 'ceilândia',
+    'ceilandia', 'samambaia', 'planaltina', 'águas claras', 'aguas claras',
+    'guará', 'guara', 'sobradinho', 'gama', 'santa maria', 'são sebastião',
+    'sao sebastiao', 'paranoá', 'paranoa', 'riacho fundo', 'núcleo bandeirante',
+    'nucleo bandeirante', 'cruzeiro', 'lago sul', 'lago norte', 'sudoeste',
+    'octogonal', 'candangolândia', 'candangolandia', 'estrutural', 'itapoã',
+    'itapoa', 'jardim botânico', 'jardim botanico', 'park way', 'scia',
+    'vicente pires', 'fercal', 'varjão', 'varjao',
+    
+    // Minas Gerais
+    'belo horizonte', 'mg', 'minas gerais', 'contagem', 'uberlândia', 'uberlandia',
+    'juiz de fora', 'betim', 'montes claros', 'ribeirão das neves', 'ribeirao das neves',
+    'uberaba', 'governador valadares', 'ipatinga', 'sete lagoas', 'divinópolis',
+    'divinopolis', 'santa luzia', 'ibirité', 'ibirite', 'poços de caldas',
+    'pocos de caldas', 'patos de minas', 'teófilo otoni', 'teofilo otoni',
+    'barbacena', 'sabará', 'sabara', 'vespasiano', 'araguari', 'conselheiro lafaiete',
+    'itabira', 'passos', 'coronel fabriciano', 'muriaé', 'muriae', 'ituiutaba',
+    'lavras', 'nova lima', 'pará de minas', 'para de minas', 'paracatu',
+    'pouso alegre', 'timóteo', 'timoteo', 'unaí', 'unai', 'varginha',
+    'araxá', 'araxa', 'formiga', 'itajubá', 'itajuba', 'joão monlevade',
+    'joao monlevade', 'manhuaçu', 'manhuacu', 'nova serrana', 'ouro preto',
+    'pedro leopoldo', 'são joão del rei', 'sao joao del rei', 'três corações',
+    'tres coracoes', 'viçosa', 'vicosa',
+    
+    // Outros estados importantes
+    'curitiba', 'paraná', 'parana', 'pr', 'londrina', 'maringá', 'maringa',
+    'ponta grossa', 'cascavel', 'são josé dos pinhais', 'sao jose dos pinhais',
+    'foz do iguaçu', 'foz do iguacu', 'colombo', 'guarapuava', 'paranaguá',
+    'paranagua', 'araucária', 'araucaria', 'toledo', 'apucarana', 'pinhais',
+    'campo largo', 'arapongas', 'almirante tamandaré', 'almirante tamandare',
+    'umuarama', 'paranavaí', 'paranavai', 'cambé', 'cambe', 'francisco beltrão',
+    'francisco beltrao', 'fazenda rio grande', 'sarandi', 'fazenda rio grande',
+    'são josé da lapa', 'sao jose da lapa', 'telêmaco borba', 'telemaco borba',
+    
+    // Espírito Santo
+    'vitória', 'vitoria', 'es', 'espírito santo', 'espirito santo', 'vila velha',
+    'cariacica', 'serra', 'cachoeiro de itapemirim', 'linhares', 'são mateus',
+    'sao mateus', 'colatina', 'guarapari', 'nova venécia', 'nova venecia',
+    'aracruz', 'viana', 'marataízes', 'marataizes', 'santa teresa', 'itapemirim',
+    'castelo', 'domingos martins', 'alegre', 'baixo guandu', 'barra de são francisco',
+    'barra de sao francisco', 'conceição da barra', 'conceicao da barra',
+    'fundão', 'fundao', 'iúna', 'iuna', 'jaguaré', 'jaguare', 'mimoso do sul',
+    'muqui', 'piúma', 'piuma', 'presidente kennedy', 'rio novo do sul',
+    'santa leopoldina', 'santa maria de jetibá', 'santa maria de jetiba',
+    'são gabriel da palha', 'sao gabriel da palha', 'são roque do canaã',
+    'sao roque do canaa', 'vargem alta', 'vila pavão', 'vila pavao',
+    'vila valério', 'vila valerio',
+    
+    // Bahia
+    'salvador', 'ba', 'bahia', 'feira de santana', 'vitória da conquista',
+    'vitoria da conquista', 'camaçari', 'camacari', 'juazeiro', 'ilhéus',
+    'ilheus', 'itabuna', 'lauro de freitas', 'jequié', 'jequie', 'alagoinhas',
+    'barreiras', 'porto seguro', 'simões filho', 'simoes filho', 'paulo afonso',
+    'eunápolis', 'eunapolis', 'santo antônio de jesus', 'santo antonio de jesus',
+    'valença', 'valenca', 'candeias', 'guanambi', 'jacobina', 'serrinha',
+    'senhor do bonfim', 'dias d\'ávila', 'dias d\'avila', 'bom jesus da lapa',
+    'cruz das almas', 'santo amaro', 'conceição do coité', 'conceicao do coite',
+    'livramento de nossa senhora', 'ribeira do pombal', 'tucano', 'euclides da cunha',
+    'casa nova', 'barra', 'xique-xique', 'remanso', 'campo formoso', 'juazeiro',
+    'petrolina', 'sobradinho', 'casa nova', 'sento sé', 'sento se', 'pilão arcado',
+    'pilao arcado', 'campo alegre de lourdes', 'curaçá', 'curaca', 'uauá', 'uaua',
+    'canudos', 'monte santo', 'euclides da cunha', 'paripiranga', 'ribeira do amparo',
+    'cícero dantas', 'cicero dantas', 'banzaê', 'banzae', 'fátima', 'fatima',
+    'heliópolis', 'heliopolis', 'nova soure', 'olindina', 'ouriçangas', 'ouricangas',
+    'quijingue', 'retirolandia', 'santaluz', 'são domingos', 'sao domingos',
+    'teofilândia', 'teofilandia', 'tucano', 'valente', 'biritinga', 'barrocas',
+    'boa vista do tupim', 'central', 'cansanção', 'cansancao', 'ichu', 'itiúba',
+    'itiuba', 'lamarão', 'lamarao', 'monte santo', 'nordestina', 'queimadas',
+    'quijingue', 'retirolândia', 'retirolandia', 'santaluz', 'são domingos',
+    'sao domingos', 'serrinha', 'teofilândia', 'teofilandia', 'tucano', 'valente',
+    
+    // Goiás
+    'goiânia', 'goiania', 'go', 'goiás', 'goias', 'aparecida de goiânia',
+    'aparecida de goiania', 'anápolis', 'anapolis', 'rio verde', 'luziânia',
+    'luziania', 'águas lindas de goiás', 'aguas lindas de goias', 'valparaíso de goiás',
+    'valparaiso de goias', 'trindade', 'formosa', 'novo gama', 'itumbiara',
+    'senador canedo', 'catalão', 'catalao', 'jataí', 'jatai', 'planaltina',
+    'caldas novas', 'santo antônio do descoberto', 'santo antonio do descoberto',
+    'cidade ocidental', 'mineiros', 'cristalina', 'inhumas', 'goianésia',
+    'goianesia', 'quirinópolis', 'quirinopolis', 'ceres', 'porangatu', 'morrinhos'
+  ];
+  
+  // Verificar se contém algum estado/cidade fora de SP
+  const isOutside = outsideStates.some(location => addressLower.includes(location));
+  
+  if (isOutside) {
+    console.log(`❌ Endereço "${address}" detectado como fora do estado de São Paulo`);
+    return true;
+  }
+  
+  console.log(`✅ Endereço "${address}" não foi detectado como fora do estado de São Paulo`);
+  return false;
+};
+
 // Função principal para calcular preço da viagem
 export const calculateTripPrice = async (
   origin: string,
@@ -552,169 +574,12 @@ export const calculateTripPrice = async (
       };
     }
     
-    // Verificar se é uma rota negociável baseada no nome da cidade ou faixa de CEP
-    const isNegotiableCityRoute = (origin: string, destination: string): boolean => {
-      const originLower = origin.toLowerCase().trim();
-      const destinationLower = destination.toLowerCase().trim();
-      
-      // Verificar se um dos endereços é aeroporto ou cidade de São Paulo
-      const isAirportOrSaoPaulo = (addr: string) => 
-        addr.includes('congonhas') || addr.includes('guarulhos') || 
-        addr.includes('04626') || addr.includes('07190') ||
-        addr.includes('são paulo') || addr.includes('sao paulo') ||
-        // CEPs de São Paulo (01000-000 a 05999-999 e 08000-000 a 08499-999)
-        /\b0[1-5]\d{3}-?\d{3}\b/.test(addr) || /\b08[0-4]\d{2}-?\d{3}\b/.test(addr);
-      
-      // Lista de cidades negociáveis com suas variações de nome
-      const negotiableCities = [
-        'osasco',
-        'carapicuiba', 'carapicuíba',
-        'barueri', 'alphaville', 'tambore', 'tamboré',
-        'santana de parnaiba', 'santana de parnaíba',
-        'itapevi',
-        'jandira',
-        'cotia',
-        'vargem grande paulista',
-        'taboao da serra', 'taboão da serra',
-        'embu', 'embu das artes',
-        'itapecerica da serra',
-        'embu-guacu', 'embu-guaçu', 'embu guacu', 'embu guaçu',
-        'aruja', 'arujá',
-        'santa isabel',
-        'mairipora', 'mairiporã',
-        'caieiras',
-        'cajamar',
-        'jordanesia', 'jordanésia',
-        'polvilho',
-        'franco da rocha',
-        'francisco morato',
-        'ferraz de vasconcelos',
-        'poa', 'poá',
-        'itaquaquecetuba',
-        'suzano',
-        'mogi das cruzes',
-        'guararema'
-      ];
-      
-      // Faixas de CEP das cidades negociáveis
-      const negotiableCepRanges = [
-        { start: '06000', end: '06299' }, // Osasco
-        { start: '06300', end: '06399' }, // Carapicuíba
-        { start: '06400', end: '06499' }, // Barueri (Alphaville, Tamboré)
-        { start: '06500', end: '06549' }, // Santana de Parnaíba
-        { start: '06650', end: '06699' }, // Itapevi
-        { start: '06600', end: '06649' }, // Jandira
-        { start: '06700', end: '06729' }, // Cotia
-        { start: '06730', end: '06749' }, // Vargem Grande Paulista
-        { start: '06750', end: '06799' }, // Taboão da Serra
-        { start: '06800', end: '06849' }, // Embu
-        { start: '06850', end: '06899' }, // Itapecerica da Serra
-        { start: '06900', end: '06999' }, // Embu-Guaçu
-        { start: '07400', end: '07499' }, // Arujá
-        { start: '07500', end: '07599' }, // Santa Isabel
-        { start: '07600', end: '07699' }, // Mairiporã
-        { start: '07700', end: '07749' }, // Caieiras
-        { start: '07750', end: '07759' }, // Cajamar
-        { start: '07760', end: '07769' }, // Jordanésia
-        { start: '07770', end: '07799' }, // Polvilho
-        { start: '07800', end: '07870' }, // Franco da Rocha
-        { start: '07900', end: '07999' }, // Francisco Morato
-        { start: '08500', end: '08549' }, // Ferraz de Vasconcelos
-        { start: '08550', end: '08569' }, // Poá
-        { start: '08570', end: '08599' }, // Itaquaquecetuba
-        { start: '08600', end: '08699' }, // Suzano
-        { start: '08700', end: '08899' }, // Mogi das Cruzes
-        { start: '08900', end: '08999' }  // Guararema
-      ];
-      
-      const isNegotiableCep = (addr: string): boolean => {
-        const cepMatch = addr.match(/\b(\d{5})-?(\d{3})\b/);
-        if (!cepMatch) return false;
-        
-        const cep = cepMatch[1] + cepMatch[2];
-        return negotiableCepRanges.some(range => 
-          cep >= range.start + '000' && cep <= range.end + '999'
-        );
-      };
-      
-      const containsNegotiableCity = (addr: string) => {
-        // Verificar se contém alguma cidade negociável pelo nome (sem CEP específico)
-        const hasCityName = negotiableCities.some(city => addr.includes(city));
-        const hasSpecificCep = addr.match(/\d{5}-?\d{3}/);
-        
-        // Se tem nome da cidade e não tem CEP, ou se tem CEP negociável
-        return (hasCityName && !hasSpecificCep) || isNegotiableCep(addr);
-      };
-      
-      return (isAirportOrSaoPaulo(originLower) && containsNegotiableCity(destinationLower)) ||
-             (containsNegotiableCity(originLower) && isAirportOrSaoPaulo(destinationLower));
-    };
-    
-    // Se é uma rota negociável baseada no nome da cidade
-    if (isNegotiableCityRoute(origin, destination)) {
-      console.log(`🤝 Rota negociável detectada (nome da cidade): "${origin}" → "${destination}"`);
-      
-      // Obter dados de distância e tempo para informação
-      let distance: number = 15;
-      let estimatedTime: number = 45;
-      
-      try {
-        const googleMapsData = await getGoogleMapsDistanceAndTime(origin, destination);
-        if (googleMapsData) {
-          distance = googleMapsData.distance;
-          estimatedTime = googleMapsData.duration;
-        } else {
-          distance = await calculateDistanceBetweenAddresses(origin, destination);
-          estimatedTime = estimateTravelTime(distance);
-        }
-      } catch (error) {
-        console.warn('⚠️ Erro ao obter dados de distância/tempo para rota negociável, usando valores padrão');
-      }
-      
-      return {
-        distance: Math.round(distance * 10) / 10,
-        estimatedTime: Math.round(estimatedTime),
-        basePrice: -1, // Indica rota negociável
-        finalPrice: -1 // Indica rota negociável
-      };
-    }
-    
     if (originCep && destinationCep) {
-       console.log(`🏷️ CEPs detectados (com fallback): ${originCep} → ${destinationCep}`);
-      
+      // Usar sistema de precificação por CEP
       const cepPrice = findPriceByCep(originCep, destinationCep, fixedPriceVehicleType);
       
       if (cepPrice !== null) {
-        // Verificar se é uma rota negociável (retorna -1)
-        if (cepPrice === -1) {
-          console.log(`🤝 Rota negociável detectada: ${originCep} → ${destinationCep}`);
-          
-          // Obter dados de distância e tempo para informação
-          let distance: number = 15;
-          let estimatedTime: number = 45;
-          
-          try {
-            const googleMapsData = await getGoogleMapsDistanceAndTime(origin, destination);
-            if (googleMapsData) {
-              distance = googleMapsData.distance;
-              estimatedTime = googleMapsData.duration;
-            } else {
-              distance = await calculateDistanceBetweenAddresses(origin, destination);
-              estimatedTime = estimateTravelTime(distance);
-            }
-          } catch (error) {
-            console.warn('⚠️ Erro ao obter dados de distância/tempo para CEP, usando valores padrão');
-          }
-          
-          return {
-            distance: Math.round(distance * 10) / 10,
-            estimatedTime: Math.round(estimatedTime),
-            basePrice: -1, // Indica rota negociável
-            finalPrice: -1 // Indica rota negociável
-          };
-        }
-        
-        console.log(`✅ Usando precificação por CEP: R$ ${cepPrice.toFixed(2)}`);
+        console.log(`💰 Usando preço por CEP: R$ ${cepPrice.toFixed(2)}`);
         
         // Obter dados de distância e tempo para informação
         let distance: number = 15;
@@ -730,7 +595,7 @@ export const calculateTripPrice = async (
             estimatedTime = estimateTravelTime(distance);
           }
         } catch (error) {
-          console.warn('⚠️ Erro ao obter dados de distância/tempo para CEP, usando valores padrão');
+          console.warn('⚠️ Erro ao obter dados de distância/tempo, usando valores padrão');
         }
         
         return {
@@ -742,41 +607,11 @@ export const calculateTripPrice = async (
       }
     }
     
-    // Verificar regras específicas de Viracopos com validação de CEP
-    if (isValidViracoposRoute(origin, destination)) {
-      const viracoposPrice = getViracoposPriceByVehicleType(vehicleType);
-      
-      if (viracoposPrice !== null) {
-        console.log(`✅ Rota Viracopos → Grande São Paulo detectada: R$ ${viracoposPrice.toFixed(2)} [${vehicleType}]`);
-        
-        // Obter dados de distância e tempo para informação
-        let distance: number = 95; // Distância aproximada Viracopos → SP
-        let estimatedTime: number = 90; // Tempo aproximado
-        
-        try {
-          const googleMapsData = await getGoogleMapsDistanceAndTime(origin, destination);
-          if (googleMapsData) {
-            distance = googleMapsData.distance;
-            estimatedTime = googleMapsData.duration;
-          }
-        } catch (error) {
-          console.warn('⚠️ Erro ao obter dados de distância/tempo para Viracopos, usando valores padrão');
-        }
-        
-        return {
-          distance: Math.round(distance * 10) / 10,
-          estimatedTime: Math.round(estimatedTime),
-          basePrice: viracoposPrice,
-          finalPrice: viracoposPrice
-        };
-      }
-    }
-    
-    // Tentar encontrar tarifa fixa primeiro
+    // Tentar usar sistema de tarifas fixas
     const fixedPrice = findFixedPrice(origin, destination, fixedPriceVehicleType);
     
-    if (fixedPrice !== null) {
-      console.log(`✅ Usando tarifa fixa: R$ ${fixedPrice.toFixed(2)}`);
+    if (fixedPrice) {
+      console.log(`💰 Usando tarifa fixa: R$ ${fixedPrice.toFixed(2)}`);
       
       // Obter dados de distância e tempo para informação
       let distance: number = 15;
@@ -917,119 +752,90 @@ export const calculateTripPrice = async (
   }
 };
 
-// Função utilitária para extrair CEP de um endereço
-// Função para buscar CEP nos dados locais como fallback
+// Função para encontrar CEP nos dados locais
 export const findCepInLocalData = (addressText: string): string | null => {
-  const normalizedQuery = addressText.toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
-    .trim();
-
-  // Buscar nos dados locais com múltiplas estratégias
-  const foundAddress = saoPauloAddresses.find(addr => {
-    const normalizedMainText = addr.main_text.toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
-    const normalizedSecondaryText = addr.secondary_text.toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
+  const normalizedAddress = addressText.toLowerCase().trim();
+  
+  // Procurar nos endereços de São Paulo
+  for (const [key, data] of Object.entries(saoPauloAddresses)) {
+    const normalizedKey = key.toLowerCase();
     
-    // Estratégia 1: Busca exata no texto principal
-    if (normalizedMainText.includes(normalizedQuery) || normalizedQuery.includes(normalizedMainText)) {
-      return true;
+    // Verificar se o endereço contém o nome do local
+    if (normalizedAddress.includes(normalizedKey)) {
+      console.log(`🎯 CEP encontrado nos dados locais: ${key} → ${data.cep}`);
+      return data.cep;
     }
     
-    // Estratégia 2: Busca no texto secundário
-    if (normalizedSecondaryText.includes(normalizedQuery) || normalizedQuery.includes(normalizedSecondaryText)) {
-      return true;
-    }
-    
-    // Estratégia 3: Busca por palavras-chave
-    const queryWords = normalizedQuery.split(/\s+/);
-    const addressWords = [...normalizedMainText.split(/\s+/), ...normalizedSecondaryText.split(/\s+/)];
-    
-    // Verificar se pelo menos 2 palavras coincidem
-    const matchingWords = queryWords.filter(word => 
-      word.length > 2 && addressWords.some(addrWord => 
-        addrWord.includes(word) || word.includes(addrWord)
-      )
-    );
-    
-    if (matchingWords.length >= 2) {
-      return true;
-    }
-    
-    // Estratégia 4: Busca por keywords específicas
-    return addr.keywords.some(keyword => {
-      const normalizedKeyword = keyword.toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
-      return normalizedQuery.includes(normalizedKeyword) || normalizedKeyword.includes(normalizedQuery);
-    });
-  });
-
-  if (foundAddress) {
-    // Extrair CEP do full_address usando a função melhorada
-    return extractCepFromAddress(foundAddress.full_address);
-  }
-
-  return null;
-};
-
-export const extractCepFromAddress = (address: string): string | null => {
-  // Múltiplos padrões para reconhecer CEPs em diferentes formatos
-  const patterns = [
-    /\b(\d{5})-?(\d{3})\b/g,           // 12345-678 ou 12345678
-    /\bCEP:?\s*(\d{5})-?(\d{3})\b/gi, // CEP: 12345-678 ou CEP 12345678
-    /\b(\d{5})\s*-\s*(\d{3})\b/g,     // 12345 - 678 (com espaços)
-    /\b(\d{5})\.(\d{3})\b/g,          // 12345.678
-    /\b(\d{5})\s+(\d{3})\b/g          // 12345 678 (separado por espaço)
-  ];
-
-  for (const pattern of patterns) {
-    const matches = [...address.matchAll(pattern)];
-    if (matches.length > 0) {
-      const match = matches[0];
-      // Normalizar para formato padrão 12345-678
-      if (match[1] && match[2]) {
-        return `${match[1]}-${match[2]}`;
-      } else if (match[0]) {
-        // Para padrões que capturam o CEP completo
-        const digits = match[0].replace(/\D/g, '');
-        if (digits.length === 8) {
-          return `${digits.slice(0, 5)}-${digits.slice(5)}`;
+    // Verificar variações do nome
+    if (data.variations) {
+      for (const variation of data.variations) {
+        const normalizedVariation = variation.toLowerCase();
+        if (normalizedAddress.includes(normalizedVariation)) {
+          console.log(`🎯 CEP encontrado por variação: ${variation} → ${data.cep}`);
+          return data.cep;
         }
       }
     }
   }
-
+  
   return null;
 };
 
-// Função melhorada para extrair CEP com fallback nos dados locais
+// Função para extrair CEP de um endereço
+export const extractCepFromAddress = (address: string): string | null => {
+  // Padrões de CEP: 12345-678 ou 12345678
+  const cepPatterns = [
+    /\b(\d{5})-(\d{3})\b/,  // 12345-678
+    /\b(\d{8})\b/           // 12345678
+  ];
+  
+  for (const pattern of cepPatterns) {
+    const match = address.match(pattern);
+    if (match) {
+      let cep: string;
+      if (match[2]) {
+        // Formato 12345-678
+        cep = match[1] + match[2];
+      } else {
+        // Formato 12345678
+        cep = match[1];
+      }
+      
+      // Validar se é um CEP válido (8 dígitos)
+      if (cep.length === 8 && /^\d{8}$/.test(cep)) {
+        console.log(`📮 CEP extraído: ${cep}`);
+        return cep;
+      }
+    }
+  }
+  
+  return null;
+};
+
+// Função para extrair CEP com fallback nos dados locais
 export const extractCepWithFallback = (address: string): string | null => {
   // Primeiro, tentar extrair CEP diretamente do endereço
   const directCep = extractCepFromAddress(address);
   if (directCep) {
     return directCep;
   }
-
-  // Se não encontrou CEP, buscar nos dados locais
+  
+  // Se não encontrou CEP, procurar nos dados locais
   const localCep = findCepInLocalData(address);
   if (localCep) {
-    console.log(`🔄 CEP encontrado nos dados locais: ${localCep} para "${address}"`);
     return localCep;
   }
-
+  
+  console.log(`⚠️ Nenhum CEP encontrado para: "${address}"`);
   return null;
 };
 
-// Função para verificar se um endereço contém CEP
+// Função para verificar se um endereço tem CEP válido
 export const hasValidCep = (address: string): boolean => {
   return extractCepFromAddress(address) !== null;
 };
 
-// Função para calcular preço usando sistema de CEPs se disponível
+// Função para calcular preço usando sistema de CEPs
 export const calculatePriceWithCepSystem = async (
   origin: string,
   destination: string,

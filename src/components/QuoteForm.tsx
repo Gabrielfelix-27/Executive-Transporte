@@ -5,9 +5,10 @@ import { MapPin, Navigation, Calendar, Clock } from 'lucide-react';
 import { GoogleMapsPlacePicker } from '@/components/GoogleMapsPlacePicker';
 import { DatePicker } from '@/components/ui/date-picker';
 import { TimePicker } from '@/components/ui/time-picker';
-import { calculateTripPrice, cacheSelectedAddressCoordinates } from '@/utils/locationUtils';
+import { calculateTripPrice, cacheSelectedAddressCoordinates, isOutsideSaoPauloState } from '@/utils/locationUtils';
 import { isGoogleMapsConfigured } from '@/config/maps';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { isBlockedRoute, getBlockedRouteMessage } from '@/utils/blockedRoutes';
 
 export const QuoteForm = () => {
   const { t } = useLanguage();
@@ -91,6 +92,71 @@ export const QuoteForm = () => {
     setIsCalculating(true);
 
     try {
+      // Verificar se é uma rota bloqueada ANTES de calcular preços
+      if (isBlockedRoute(pickup, destination)) {
+        setErrorMessage(getBlockedRouteMessage());
+        return;
+      }
+
+      // NOVA LÓGICA: Verificar se origem ou destino estão fora do estado de São Paulo
+      const isOriginOutsideSP = isOutsideSaoPauloState(pickup);
+      const isDestinationOutsideSP = isOutsideSaoPauloState(destination);
+      
+      if (isOriginOutsideSP || isDestinationOutsideSP) {
+        console.log(`🌎 Rota fora do estado de SP detectada: origem=${isOriginOutsideSP}, destino=${isDestinationOutsideSP}`);
+        
+        const outsideStateMessage = `
+          <div style="text-align: center; padding: 20px;">
+            <h3 style="color: #d97706; margin-bottom: 15px;">🌎 Região Fora de São Paulo Detectada</h3>
+            <p style="margin-bottom: 15px;">
+              Esta rota envolve destinos fora do estado de São Paulo e requer cotação personalizada.
+            </p>
+            <p style="margin-bottom: 20px; font-weight: bold;">
+              Entre em contato com nosso consultor para obter um orçamento especializado!
+            </p>
+            <a 
+              href="https://wa.me/5511999999999?text=Olá! Gostaria de solicitar uma cotação para uma viagem de ${encodeURIComponent(pickup)} para ${encodeURIComponent(destination)}. A rota envolve destinos fora do estado de São Paulo." 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style="
+                display: inline-block;
+                background-color: #25D366;
+                color: white;
+                padding: 12px 24px;
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: bold;
+                margin: 10px;
+                transition: background-color 0.3s;
+              "
+              onmouseover="this.style.backgroundColor='#128C7E'"
+              onmouseout="this.style.backgroundColor='#25D366'"
+            >
+              💬 Falar com Consultor via WhatsApp
+            </a>
+            <br>
+            <small style="color: #666; margin-top: 10px; display: block;">
+              Horário de atendimento: Segunda a Sexta, 8h às 18h
+            </small>
+          </div>
+        `;
+        
+        // Criar um elemento temporário para exibir a mensagem HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = outsideStateMessage;
+        
+        // Usar a mensagem de texto simples para o estado de erro
+        setErrorMessage('Esta rota envolve destinos fora do estado de São Paulo e requer cotação personalizada. Entre em contato com nosso consultor para obter um orçamento especializado!');
+        
+        // Abrir WhatsApp automaticamente após 2 segundos
+        setTimeout(() => {
+          const whatsappUrl = `https://wa.me/5511999999999?text=Olá! Gostaria de solicitar uma cotação para uma viagem de ${encodeURIComponent(pickup)} para ${encodeURIComponent(destination)}. A rota envolve destinos fora do estado de São Paulo.`;
+          window.open(whatsappUrl, '_blank');
+        }, 2000);
+        
+        return;
+      }
+
       // Calcular preços para diferentes categorias usando os tipos corretos
       const executivoSedanData = await calculateTripPrice(pickup, destination, 'executivo');
       const executivoComumData = await calculateTripPrice(pickup, destination, 'economico');
