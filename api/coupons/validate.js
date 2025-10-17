@@ -50,6 +50,12 @@ export default async function handler(req, res) {
 
   const normalizedCouponCode = couponCode.toUpperCase().trim();
 
+  // Create a map of uppercase coupon codes to original codes for case-insensitive lookup
+  const couponLookup = {};
+  Object.keys(validCoupons).forEach(code => {
+    couponLookup[code.toUpperCase()] = code;
+  });
+
   // Rate limiting - simple implementation
   const rateLimitFile = '/tmp/rate_limit.json';
   const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown';
@@ -95,15 +101,16 @@ export default async function handler(req, res) {
     // Continue without rate limiting if there's an error
   }
 
-  // Validate coupon
-  if (!validCoupons[normalizedCouponCode]) {
+  // Validate coupon (case-insensitive)
+  const originalCouponCode = couponLookup[normalizedCouponCode];
+  if (!originalCouponCode || !validCoupons[originalCouponCode]) {
     return res.json({
       valid: false,
       message: 'Cupom inválido ou não encontrado'
     });
   }
 
-  const coupon = validCoupons[normalizedCouponCode];
+  const coupon = validCoupons[originalCouponCode];
 
   // Check if coupon is active
   if (!coupon.isActive) {
@@ -126,7 +133,7 @@ export default async function handler(req, res) {
     valid: true,
     message: 'Cupom válido!',
     coupon: {
-      code: normalizedCouponCode,
+      code: originalCouponCode,
       influencerName: coupon.influencerName,
       discountPercentage: coupon.discountPercentage
     }
