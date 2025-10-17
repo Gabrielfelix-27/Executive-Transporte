@@ -9,10 +9,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
-import { Plane, Bus, Luggage, FileText, Download, CreditCard } from 'lucide-react';
+import { Plane, Bus, Luggage, FileText, Download, CreditCard, Tag, Check, X } from 'lucide-react';
 import jsPDF from 'jspdf';
 import { createPaymentLink, formatCpfForApi, formatPhoneForApi } from '@/services/infinitePayService';
 import { toast } from 'sonner';
+import { validateCoupon, applyCouponDiscount, registerCouponUsage, CouponData } from '@/data/coupons';
 
 interface QuoteData {
   pickup: string;
@@ -43,6 +44,7 @@ interface PassengerInfo {
   phoneNumber: string;
   email: string;
   cpf: string;
+  couponCode: string;
 }
 
 const PassengerData = () => {
@@ -64,8 +66,16 @@ const PassengerData = () => {
     passengerName: "",
     phoneNumber: "",
     email: "",
-    cpf: ""
+    cpf: "",
+    couponCode: ""
   });
+
+  // Estados para cupom de desconto
+  const [appliedCoupon, setAppliedCoupon] = useState<CouponData | null>(null);
+  const [couponValidationMessage, setCouponValidationMessage] = useState<string>('');
+  const [isCouponValid, setIsCouponValid] = useState<boolean>(false);
+  const [originalPrice, setOriginalPrice] = useState<number>(0);
+  const [finalPrice, setFinalPrice] = useState<number>(0);
 
   // Estados para controlar o fluxo de finalização
   const [currentStep, setCurrentStep] = useState<'form' | 'confirmation' | 'thanks'>('form');
@@ -109,6 +119,52 @@ const PassengerData = () => {
   const formatTimeDisplay = (timeString: string) => {
     if (!timeString) return "";
     return `${timeString} PM (GMT-3)`;
+  };
+
+  // Inicializar preços quando o componente carrega
+  useEffect(() => {
+    if (selectedVehicle?.price) {
+      setOriginalPrice(selectedVehicle.price);
+      setFinalPrice(selectedVehicle.price);
+    }
+  }, [selectedVehicle]);
+
+  // Função para validar e aplicar cupom
+  const handleCouponValidation = async (couponCode: string) => {
+    if (!couponCode.trim()) {
+      setCouponValidationMessage('');
+      setIsCouponValid(false);
+      setAppliedCoupon(null);
+      setFinalPrice(originalPrice);
+      return;
+    }
+
+    try {
+      const validation = await validateCoupon(couponCode);
+      setCouponValidationMessage(validation.message);
+      setIsCouponValid(validation.valid);
+
+      if (validation.valid && validation.coupon) {
+        setAppliedCoupon(validation.coupon);
+        const discountedPrice = applyCouponDiscount(originalPrice, validation.coupon.discountPercentage);
+        setFinalPrice(discountedPrice);
+      } else {
+        setAppliedCoupon(null);
+        setFinalPrice(originalPrice);
+      }
+    } catch (error) {
+      console.error('Erro ao validar cupom:', error);
+      setCouponValidationMessage('Erro ao validar cupom. Tente novamente.');
+      setIsCouponValid(false);
+      setAppliedCoupon(null);
+      setFinalPrice(originalPrice);
+    }
+  };
+
+  // Função para aplicar cupom quando o campo muda
+  const handleCouponChange = (value: string) => {
+    setPassengerInfo({...passengerInfo, couponCode: value});
+    handleCouponValidation(value);
   };
 
 
@@ -240,9 +296,21 @@ const PassengerData = () => {
     // Veículo Selecionado
     const vehicleSection = [
       { label: 'Categoria', value: selectedVehicle?.name || 'Não informado' },
-      { label: 'Tipo', value: selectedVehicle?.type || 'Não informado' },
-      { label: 'Valor Total', value: formatPrice(selectedVehicle?.price || 0) }
+      { label: 'Tipo', value: selectedVehicle?.type || 'Não informado' }
     ];
+
+    // Adicionar informações de preço e cupom
+    if (appliedCoupon) {
+      vehicleSection.push(
+        { label: 'Preço Original', value: formatPrice(originalPrice) },
+        { label: 'Cupom Aplicado', value: `${appliedCoupon.influencerName} - ${appliedCoupon.discountPercentage}% de desconto` },
+        { label: 'Valor com Desconto', value: formatPrice(finalPrice) }
+      );
+    } else {
+      vehicleSection.push(
+        { label: 'Valor Total', value: formatPrice(selectedVehicle?.price || 0) }
+      );
+    }
     
     // Adicionar informações de pagamento se foi pago
     if (isPaid && paymentDetails) {
@@ -337,7 +405,7 @@ const PassengerData = () => {
         cpf: formatCpfForApi(passengerInfo.cpf),
         phone: formatPhoneForApi(passengerInfo.phoneNumber),
         email: passengerInfo.email,
-        amount_cents: Math.round(selectedVehicle.price * 100),
+        amount_cents: Math.round(finalPrice * 100),
         installments: 1
       };
 
@@ -348,6 +416,16 @@ const PassengerData = () => {
       if (response.ok && response.url) {
         toast.dismiss();
         toast.success('Redirecionando para o pagamento...');
+        
+        // Registrar uso do cupom se aplicado
+        if (appliedCoupon) {
+          try {
+            await registerCouponUsage(appliedCoupon.code);
+            console.log(`✅ Cupom ${appliedCoupon.code} registrado como usado`);
+          } catch (error) {
+            console.error('Erro ao registrar uso do cupom:', error);
+          }
+        }
         
         // Redirecionar diretamente para o InfinitePay
         window.open(response.url, '_blank', 'noopener,noreferrer');
@@ -448,7 +526,7 @@ Reserva feita através do site Executive Premium`;
         cpf: formatCpfForApi(passengerInfo.cpf),
         phone: formatPhoneForApi(passengerInfo.phoneNumber),
         email: passengerInfo.email,
-        amount_cents: Math.round(selectedVehicle.price * 100),
+        amount_cents: Math.round(finalPrice * 100),
         installments: 1
       };
 
@@ -557,7 +635,7 @@ Reserva feita através do site Executive Premium`;
                 >
                   <div className="flex items-center justify-center">
                     <CreditCard className="h-5 w-5 mr-2" />
-                    🔒 Pagar {formatPrice(selectedVehicle.price)} Agora
+                    🔒 Pagar {formatPrice(finalPrice)} Agora
                   </div>
                 </Button>
 
@@ -840,6 +918,45 @@ Reserva feita através do site Executive Premium`;
                     />
                   </div>
 
+                  {/* Coupon Code */}
+                  <div>
+                    <Label className="text-sm text-gray-600 mb-2 block flex items-center">
+                      <Tag className="h-4 w-4 mr-2" />
+                      Cupom de Desconto
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        type="text"
+                        placeholder="Digite o código do cupom"
+                        className={`bg-gray-100 pr-10 ${
+                          passengerInfo.couponCode && isCouponValid 
+                            ? 'border-green-500 bg-green-50' 
+                            : passengerInfo.couponCode && !isCouponValid 
+                            ? 'border-red-500 bg-red-50' 
+                            : ''
+                        }`}
+                        value={passengerInfo.couponCode}
+                        onChange={(e) => handleCouponChange(e.target.value)}
+                      />
+                      {passengerInfo.couponCode && (
+                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                          {isCouponValid ? (
+                            <Check className="h-4 w-4 text-green-500" />
+                          ) : (
+                            <X className="h-4 w-4 text-red-500" />
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    {couponValidationMessage && (
+                      <p className={`text-xs mt-1 ${
+                        isCouponValid ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {couponValidationMessage}
+                      </p>
+                    )}
+                  </div>
+
                   {/* Additional Observations */}
                   <div>
                     <Label className="text-sm text-gray-600 mb-2 block">
@@ -874,6 +991,23 @@ Reserva feita através do site Executive Premium`;
                 </div>
               </div>
               
+              {/* Price Summary with Discount */}
+              {appliedCoupon && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600">Preço original:</p>
+                      <p className="text-sm text-gray-500 line-through">{formatPrice(originalPrice)}</p>
+                    </div>
+                    <div className="text-right">
+                       <p className="text-sm text-green-600 font-medium">
+                         {appliedCoupon.influencerName} - {appliedCoupon.discountPercentage}% de desconto
+                       </p>
+                       <p className="text-lg font-bold text-green-700">{formatPrice(finalPrice)}</p>
+                     </div>
+                  </div>
+                </div>
+              )}
 
               
               <Button 
