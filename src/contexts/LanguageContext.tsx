@@ -227,7 +227,6 @@ const translations = {
     'passenger.pdfGenerated': 'Será gerado automaticamente um PDF com todos os detalhes',
     'passenger.fileDownloaded': 'O arquivo será baixado em seu dispositivo',
     'passenger.whatsappRedirect': 'Você será redirecionado para o WhatsApp da Executive Premium',
-    'passenger.attachPdfConfirm': 'Anexe o PDF baixado na conversa para confirmar a reserva',
     'passenger.finalizeReservation': 'Finalizar reserva',
     'passenger.fillRequiredFields': 'Por favor, preencha todos os campos obrigatórios (*)',
     'passenger.additionalInfoDesc': 'Se desejar, pode adicionar solicitações especiais, por exemplo, número de bagagens, assentos para crianças, etc.',
@@ -279,7 +278,6 @@ const translations = {
     // Form and interface texts
     'form.typeAddress': 'Digite um endereço...',
     'form.chooseOption': 'Escolha uma das opções abaixo para continuar:',
-    'form.attachPdf': 'Anexe o PDF baixado na conversa para confirmar a reserva',
     
     // Placeholders
     'placeholder.flightNumber': 'Ex: G31234',
@@ -502,7 +500,6 @@ const translations = {
     'passenger.pdfGenerated': 'A PDF with all details will be automatically generated',
     'passenger.fileDownloaded': 'The file will be downloaded to your device',
     'passenger.whatsappRedirect': 'You will be redirected to Executive Premium WhatsApp',
-    'passenger.attachPdfConfirm': 'Attach the downloaded PDF to the conversation to confirm the reservation',
     'passenger.finalizeReservation': 'Finalize reservation',
     'passenger.fillRequiredFields': 'Por favor, complete todos los campos obligatorios (*)',
     'passenger.additionalInfoDesc': 'Si lo desea, puede agregar solicitudes especiales, por ejemplo, número de equipajes, asientos para niños, etc.',
@@ -554,7 +551,6 @@ const translations = {
     // Form and interface texts
     'form.typeAddress': 'Type an address...',
     'form.chooseOption': 'Choose one of the options below to continue:',
-    'form.attachPdf': 'Attach the downloaded PDF to the conversation to confirm the reservation',
     
     // Placeholders
     'placeholder.flightNumber': 'Ex: G31234',
@@ -778,7 +774,6 @@ const translations = {
     'passenger.pdfGenerated': 'Se generará automáticamente un PDF con todos los detalles',
     'passenger.fileDownloaded': 'El archivo se descargará en su dispositivo',
     'passenger.whatsappRedirect': 'Será redirigido al WhatsApp de Executive Premium',
-    'passenger.attachPdfConfirm': 'Adjunte el PDF descargado en la conversación para confirmar la reserva',
     'passenger.finalizeReservation': 'Finalizar reserva',
     'passenger.fillRequiredFields': 'Por favor, complete todos los campos obligatorios (*)',
     'passenger.additionalInfoDesc': 'Si lo desea, puede agregar solicitudes especiales, por ejemplo, número de equipajes, asientos para niños, etc.',
@@ -827,10 +822,9 @@ const translations = {
     'trip.originAddressNotInformed': 'Dirección de origen no informada',
     'trip.destinationAddressNotInformed': 'Dirección de destino no informada',
     
-    // Form
+    // Form and interface texts
     'form.typeAddress': 'Escriba una dirección...',
     'form.chooseOption': 'Elija una de las opciones a continuación para continuar:',
-    'form.attachPdf': 'Adjunte el PDF descargado en la conversación para confirmar la reserva',
     
     // Placeholders
     'placeholder.flightNumber': 'Ej: G31234',

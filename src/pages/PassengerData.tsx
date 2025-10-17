@@ -985,7 +985,6 @@ Reserva feita através do site Executive Premium`;
                       <li>• {t('passenger.pdfGenerated')}</li>
                       <li>• {t('passenger.fileDownloaded')}</li>
                       <li>• {t('passenger.whatsappRedirect')}</li>
-                      <li>• {t('form.attachPdf')}</li>
                     </ul>
                   </div>
                 </div>
