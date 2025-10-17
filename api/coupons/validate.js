@@ -3,21 +3,21 @@ import path from 'path';
 
 // Database of valid coupons (in production, this should be in a real database)
 const validCoupons = {
-  'CAMILA10': {
+  'CamilaDias10': {
     influencerName: 'Camila Dias',
     discountPercentage: 10,
     isActive: true,
     usageCount: 0,
     maxUsage: 1000
   },
-  'DAY10': {
+  'Day10': {
     influencerName: 'Day Langaro',
     discountPercentage: 10,
     isActive: true,
     usageCount: 0,
     maxUsage: 1000
   },
-  'DANIELA10': {
+  'DaniChoma10': {
     influencerName: 'Daniela Choma',
     discountPercentage: 10,
     isActive: true,
